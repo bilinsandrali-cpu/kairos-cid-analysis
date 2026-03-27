@@ -578,23 +578,25 @@ function renderEntryCompare() {
   // 明细表
   let html = `<table><thead><tr>
     <th rowspan=2>内容</th>
-    <th colspan=3 style="text-align:center;background:#e8f5e9">第1集分发</th>
-    <th colspan=3 style="text-align:center;background:#fff3e0">非第1集分发</th>
+    <th colspan=4 style="text-align:center;background:#e8f5e9">第1集分发</th>
+    <th colspan=4 style="text-align:center;background:#fff3e0">非第1集分发</th>
     <th rowspan=2>CID整体</th>
     <th rowspan=2>大盘</th>
   </tr><tr>
-    <th style="background:#e8f5e9">底层页VV</th><th style="background:#e8f5e9">总VV</th><th style="background:#e8f5e9">转化率</th>
-    <th style="background:#fff3e0">底层页VV</th><th style="background:#fff3e0">总VV</th><th style="background:#fff3e0">转化率</th>
+    <th style="background:#e8f5e9">当前页VV</th><th style="background:#e8f5e9">底层页VV</th><th style="background:#e8f5e9">总VV</th><th style="background:#e8f5e9">转化率</th>
+    <th style="background:#fff3e0">当前页VV</th><th style="background:#fff3e0">底层页VV</th><th style="background:#fff3e0">总VV</th><th style="background:#fff3e0">转化率</th>
   </tr></thead><tbody>`;
   data.forEach(d=>{
     const bmR=(d.benchmark_rate||0.6056)*100;
+    const ep1CurVv=(d.ep1_total_vv||0)-(d.ep1_detail_vv||0);
+    const midCurVv=(d.mid_total_vv||0)-(d.mid_detail_vv||0);
     const ep1Tag = d.ep1_rate*100<bmR ? `<span class="tag tag-red">${(d.ep1_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-green">${(d.ep1_rate*100).toFixed(1)}%</span>`;
     const midTag = d.mid_rate*100<bmR ? `<span class="tag tag-red">${(d.mid_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-green">${(d.mid_rate*100).toFixed(1)}%</span>`;
     const allTag = d.all_rate*100<bmR ? `<span class="tag tag-orange">${(d.all_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-blue">${(d.all_rate*100).toFixed(1)}%</span>`;
     html+=`<tr>
       <td><b>${d.name}</b></td>
-      <td>${fmt(d.ep1_detail_vv)}</td><td>${fmt(d.ep1_total_vv)}</td><td>${ep1Tag}</td>
-      <td>${fmt(d.mid_detail_vv)}</td><td>${fmt(d.mid_total_vv)}</td><td>${midTag}</td>
+      <td>${fmt(ep1CurVv)}</td><td>${fmt(d.ep1_detail_vv)}</td><td>${fmt(d.ep1_total_vv)}</td><td>${ep1Tag}</td>
+      <td>${fmt(midCurVv)}</td><td>${fmt(d.mid_detail_vv)}</td><td>${fmt(d.mid_total_vv)}</td><td>${midTag}</td>
       <td>${allTag}</td>
       <td>${bmR.toFixed(1)}%</td>
     </tr>`;
