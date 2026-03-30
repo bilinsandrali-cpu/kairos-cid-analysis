@@ -119,7 +119,7 @@ select:focus,input:focus{border-color:#4fc3f7}
   <button class="nav-btn active" data-sec="sec1">📊 CID曝光×完播分布</button>
   <button class="nav-btn" data-sec="sec2">⚠️ 高曝光低完播CID转化明细</button>
   <button class="nav-btn" data-sec="sec3">💎 低曝光高完播CID转化明细</button>
-  <button class="nav-btn" data-sec="sec4">🔍 高曝光低完播弃剧抽样</button>
+  <button class="nav-btn" data-sec="sec4">🔍 首集vs非首集分发转化</button>
 </div>
 
 <!-- Section 1: 气泡图 -->
@@ -205,53 +205,37 @@ select:focus,input:focus{border-color:#4fc3f7}
   </div>
 </div>
 
-<!-- Section 4: 弃剧抽样 -->
+<!-- Section 4: 首集vs非首集分发分析 -->
 <div class="section" id="sec4">
   <div class="note-box">
-    🔍 对高曝光低完播Top20 CID进行弃剧下钻分析。数据限制在底层页（page_detail）播放的用户。
+    🔍 高曝光低完播Top20 CID — 刷刷场景首集 vs 非首集分发转化分析（2026-03-20 ~ 2026-03-26）
   </div>
+
+  <!-- Card 1: CTR Table -->
   <div class="card">
-    <div class="card-title">📉 集数衰减曲线</div>
-    <div class="controls">
-      <div class="ctrl-group">
-        <label>用户口径:</label>
-        <div class="toggle" id="epUserToggle">
-          <button class="toggle-btn active" data-val="all">全量用户</button>
-          <button class="toggle-btn" data-val="ep1only">仅首集进入</button>
-        </div>
-      </div>
-      <div class="ctrl-group">
-        <label>Y轴:</label>
-        <div class="toggle" id="epYToggle">
-          <button class="toggle-btn active" data-val="retention">留存率%</button>
-          <button class="toggle-btn" data-val="absolute">绝对人数</button>
-        </div>
-      </div>
-      <div class="ctrl-group">
-        <label>集数范围:</label>
-        <select id="epRange">
-          <option value="20">前20集</option>
-          <option value="10">前10集</option>
-          <option value="5">前5集</option>
-          <option value="50">前50集</option>
-          <option value="999">全部</option>
-        </select>
-      </div>
+    <div class="card-title">📊 刷刷场景 CTR 对比（PV口径，7天合计）</div>
+    <div class="note-box" style="margin-bottom:12px;font-size:12px">
+      <b>口径说明</b>：曝光 = eid='title' 的曝光PV；点击 = eid IN ('title','album_list','collect') 的点击PV；CTR = 7天点击PV合计 / 7天title曝光PV合计
     </div>
-    <div id="epChart" class="chart-box" style="height:550px"></div>
-    <div class="controls" style="margin-top:8px">
-      <div class="ctrl-group"><label>点击图例切换显示/隐藏CID</label></div>
-    </div>
+    <div class="tbl-wrap" id="sec4CtrTable"></div>
   </div>
+
+  <!-- Card 2: UTR Table -->
   <div class="card">
-    <div class="card-title">🔀 第1集分发 vs 非第1集分发 — 刷刷→底层页转化率</div>
-    <div class="note-box" style="margin-bottom:12px">
-      对比刷刷分发第1集 vs 非第1集时的底层页转化率（底层页播放VV / 一跳=刷刷的总播放VV）。每个CID附CID整体转化率和大盘基准线。
+    <div class="card-title">👥 刷刷场景 UTR 对比（UV口径，7天去重）</div>
+    <div class="note-box" style="margin-bottom:12px;font-size:12px">
+      <b>口径说明</b>：曝光UV = eid='title' 有曝光的7天去重设备数；点击UV = eid IN ('title','album_list','collect') 有点击的7天去重设备数；UTR = 点击UV / 曝光UV
     </div>
-    <div class="dual-chart">
-      <div id="entryMinChart" style="height:380px"></div>
+    <div class="tbl-wrap" id="sec4UtrTable"></div>
+  </div>
+
+  <!-- Card 3: Consume Depth Table -->
+  <div class="card">
+    <div class="card-title">📖 首集 vs 非首集进入用户 — 底层页人均消费集数</div>
+    <div class="note-box" style="margin-bottom:12px;font-size:12px">
+      <b>口径说明</b>：通过 DWD 明细表的 session(usid) 精确串联刷刷入口集数→底层页消费集数。仅展示首集&非首集组7天累计用户数均>1,000的CID。
     </div>
-    <div class="tbl-wrap" style="margin-top:12px" id="entryTable"></div>
+    <div class="tbl-wrap" id="sec4ConsumeTable"></div>
   </div>
 </div>
 
@@ -469,150 +453,43 @@ function renderConversionSection(metrics, chartCtrId, chartSsId, tableId, statsI
   });
 }
 
-// ========== Section 4: 弃剧分析 ==========
-function renderEpisodeChart() {
-  const chart = echarts.init(document.getElementById('epChart'));
-  let userType = 'all'; // all | new | ep1only
-  let yMode = 'retention'; // retention | absolute
-  let maxEp = 20;
+// ========== Section 4: 首集vs非首集分发分析 ==========
+const SEC4 = {"ctr":[{"name":"最强钓鱼王","ep1_imp":226814,"ep1_clck":37055,"ep1_ctr":16.34,"mid_imp":32971,"mid_clck":9067,"mid_ctr":27.5},{"name":"原来我早就无敌了","ep1_imp":69334,"ep1_clck":6140,"ep1_ctr":8.86,"mid_imp":3259,"mid_clck":642,"mid_ctr":19.7},{"name":"史上最强师父","ep1_imp":61872,"ep1_clck":8514,"ep1_ctr":13.76,"mid_imp":8573,"mid_clck":2022,"mid_ctr":23.59},{"name":"开心锤锤","ep1_imp":30829,"ep1_clck":3289,"ep1_ctr":10.67,"mid_imp":2920,"mid_clck":1087,"mid_ctr":37.23},{"name":"死灵法师！我即是天灾","ep1_imp":26654,"ep1_clck":2534,"ep1_ctr":9.51,"mid_imp":1970,"mid_clck":547,"mid_ctr":27.77},{"name":"大国重工物理超度乱世","ep1_imp":22156,"ep1_clck":3039,"ep1_ctr":13.72,"mid_imp":2819,"mid_clck":629,"mid_ctr":22.31},{"name":"我家后院是仙界","ep1_imp":14995,"ep1_clck":2340,"ep1_ctr":15.61,"mid_imp":2037,"mid_clck":581,"mid_ctr":28.52},{"name":"斗罗大陆4终极斗罗 合集","ep1_imp":13186,"ep1_clck":787,"ep1_ctr":5.97,"mid_imp":508,"mid_clck":65,"mid_ctr":12.8},{"name":"五岁魔童叶嘟嘟","ep1_imp":9763,"ep1_clck":2441,"ep1_ctr":25.0,"mid_imp":29180,"mid_clck":1623,"mid_ctr":5.56},{"name":"混元吞天诀","ep1_imp":8420,"ep1_clck":959,"ep1_ctr":11.39,"mid_imp":382000,"mid_clck":58879,"mid_ctr":15.41},{"name":"大小姐，您给恶魔执事调成啥了","ep1_imp":6860,"ep1_clck":841,"ep1_ctr":12.26,"mid_imp":7614,"mid_clck":1105,"mid_ctr":14.51},{"name":"太古十凶：别人御兽我御兽娘","ep1_imp":6432,"ep1_clck":441,"ep1_ctr":6.86,"mid_imp":339,"mid_clck":99,"mid_ctr":29.2},{"name":"系统骗我当恶雌，结果男主们偷听我心声疯了","ep1_imp":5420,"ep1_clck":816,"ep1_ctr":15.06,"mid_imp":461,"mid_clck":66,"mid_ctr":14.32},{"name":"斗罗大陆3龙王传说 合集","ep1_imp":4386,"ep1_clck":364,"ep1_ctr":8.3,"mid_imp":236,"mid_clck":39,"mid_ctr":16.53},{"name":"全民御兽：开局觉醒SSS级天赋","ep1_imp":4313,"ep1_clck":738,"ep1_ctr":17.11,"mid_imp":504,"mid_clck":46,"mid_ctr":9.13},{"name":"斗罗大陆2绝世唐门 合集","ep1_imp":3714,"ep1_clck":391,"ep1_ctr":10.53,"mid_imp":313,"mid_clck":55,"mid_ctr":17.57},{"name":"全球杀戮：开局觉醒SSS天赋动态漫","ep1_imp":2459,"ep1_clck":474,"ep1_ctr":19.28,"mid_imp":336,"mid_clck":61,"mid_ctr":18.15},{"name":"老公装穷考验我","ep1_imp":865,"ep1_clck":172,"ep1_ctr":19.88,"mid_imp":155,"mid_clck":59,"mid_ctr":38.06},{"name":"凡人修仙传仙界篇","ep1_imp":279,"ep1_clck":8,"ep1_ctr":2.87,"mid_imp":19,"mid_clck":3,"mid_ctr":15.79},{"name":"寄养金丝雀","ep1_imp":231,"ep1_clck":10,"ep1_ctr":4.33,"mid_imp":13394,"mid_clck":3231,"mid_ctr":24.12}],"utr":[{"name":"最强钓鱼王","ep1_imp_uv":190356,"ep1_clck_uv":36078,"ep1_utr":18.95,"mid_imp_uv":22787,"mid_clck_uv":5335,"mid_utr":23.41},{"name":"原来我早就无敌了","ep1_imp_uv":55007,"ep1_clck_uv":5403,"ep1_utr":9.82,"mid_imp_uv":2341,"mid_clck_uv":414,"mid_utr":17.68},{"name":"史上最强师父","ep1_imp_uv":46204,"ep1_clck_uv":8009,"ep1_utr":17.33,"mid_imp_uv":6070,"mid_clck_uv":1297,"mid_utr":21.37},{"name":"开心锤锤","ep1_imp_uv":27334,"ep1_clck_uv":3058,"ep1_utr":11.19,"mid_imp_uv":1760,"mid_clck_uv":507,"mid_utr":28.81},{"name":"死灵法师！我即是天灾","ep1_imp_uv":21862,"ep1_clck_uv":2136,"ep1_utr":9.77,"mid_imp_uv":1120,"mid_clck_uv":353,"mid_utr":31.52},{"name":"大国重工物理超度乱世","ep1_imp_uv":19456,"ep1_clck_uv":2957,"ep1_utr":15.2,"mid_imp_uv":2291,"mid_clck_uv":309,"mid_utr":13.49},{"name":"我家后院是仙界","ep1_imp_uv":13285,"ep1_clck_uv":2264,"ep1_utr":17.04,"mid_imp_uv":1443,"mid_clck_uv":348,"mid_utr":24.12},{"name":"斗罗大陆4终极斗罗 合集","ep1_imp_uv":10456,"ep1_clck_uv":700,"ep1_utr":6.69,"mid_imp_uv":363,"mid_clck_uv":48,"mid_utr":13.22},{"name":"五岁魔童叶嘟嘟","ep1_imp_uv":8240,"ep1_clck_uv":2260,"ep1_utr":27.43,"mid_imp_uv":24036,"mid_clck_uv":1489,"mid_utr":6.19},{"name":"混元吞天诀","ep1_imp_uv":7437,"ep1_clck_uv":920,"ep1_utr":12.37,"mid_imp_uv":235176,"mid_clck_uv":45495,"mid_utr":19.35},{"name":"大小姐，您给恶魔执事调成啥了","ep1_imp_uv":4306,"ep1_clck_uv":737,"ep1_utr":17.12,"mid_imp_uv":3892,"mid_clck_uv":840,"mid_utr":21.58},{"name":"太古十凶：别人御兽我御兽娘","ep1_imp_uv":5413,"ep1_clck_uv":396,"ep1_utr":7.32,"mid_imp_uv":204,"mid_clck_uv":60,"mid_utr":29.41},{"name":"系统骗我当恶雌，结果男主们偷听我心声疯了","ep1_imp_uv":3434,"ep1_clck_uv":697,"ep1_utr":20.3,"mid_imp_uv":341,"mid_clck_uv":35,"mid_utr":10.26},{"name":"斗罗大陆3龙王传说 合集","ep1_imp_uv":3539,"ep1_clck_uv":348,"ep1_utr":9.83,"mid_imp_uv":147,"mid_clck_uv":32,"mid_utr":21.77},{"name":"全民御兽：开局觉醒SSS级天赋","ep1_imp_uv":3383,"ep1_clck_uv":672,"ep1_utr":19.86,"mid_imp_uv":429,"mid_clck_uv":30,"mid_utr":6.99},{"name":"斗罗大陆2绝世唐门 合集","ep1_imp_uv":3141,"ep1_clck_uv":354,"ep1_utr":11.27,"mid_imp_uv":199,"mid_clck_uv":49,"mid_utr":24.62},{"name":"全球杀戮：开局觉醒SSS天赋动态漫","ep1_imp_uv":1919,"ep1_clck_uv":440,"ep1_utr":22.93,"mid_imp_uv":244,"mid_clck_uv":41,"mid_utr":16.8},{"name":"老公装穷考验我","ep1_imp_uv":734,"ep1_clck_uv":171,"ep1_utr":23.3,"mid_imp_uv":95,"mid_clck_uv":36,"mid_utr":37.89},{"name":"凡人修仙传仙界篇","ep1_imp_uv":249,"ep1_clck_uv":8,"ep1_utr":3.21,"mid_imp_uv":14,"mid_clck_uv":3,"mid_utr":21.43},{"name":"寄养金丝雀","ep1_imp_uv":192,"ep1_clck_uv":10,"ep1_utr":5.21,"mid_imp_uv":10359,"mid_clck_uv":2866,"mid_utr":27.67}],"consume":[{"name":"最强钓鱼王","ep1_users":37098,"ep1_avg":14.79,"mid_users":1322,"mid_avg":16.51},{"name":"史上最强师父","ep1_users":8795,"ep1_avg":25.7,"mid_users":1087,"mid_avg":18.08},{"name":"混元吞天诀","ep1_users":3272,"ep1_avg":12.21,"mid_users":45175,"mid_avg":9.06},{"name":"五岁魔童叶嘟嘟","ep1_users":2363,"ep1_avg":6.17,"mid_users":1440,"mid_avg":3.62}]};
 
-  const palette = ['#e6194B','#3cb44b','#4363d8','#f58231','#911eb4','#42d4f4','#f032e6','#bfef45','#fabed4','#469990',
-                    '#dcbeff','#9A6324','#800000','#aaffc3','#808000','#ffd8b1','#000075','#a9a9a9','#ffe119','#000000'];
-
-  function update() {
-    const series = [];
-    D.ep_data.forEach((cid, idx) => {
-      const eps = cid.episodes.filter(e=>e.ep<=maxEp);
-      if(eps.length===0) return;
-      const key = userType==='all'?'all':userType==='new'?'new':'ep1only';
-      const ep1Val = eps.find(e=>e.ep===1)?.[key]||1;
-      const data = eps.map(e=>({
-        value: yMode==='retention' ? (e[key]/Math.max(ep1Val,1)*100) : e[key],
-        ep: e.ep, raw: e[key],
-      }));
-      series.push({
-        name: cid.name, type:'line',
-        data: data.map(d=>d.value),
-        smooth: true,
-        lineStyle:{width:2},
-        itemStyle:{color:palette[idx%palette.length]},
-        emphasis:{lineStyle:{width:4}},
-      });
-    });
-    const categories = Array.from({length:maxEp},(_,i)=>'第'+(i+1)+'集');
-    chart.setOption({
-      tooltip:{trigger:'axis',confine:true,formatter:ps=>{
-        if(!ps.length)return'';
-        let html=`<b>${ps[0].axisValue}</b><br>`;
-        ps.sort((a,b)=>b.value-a.value);
-        ps.forEach(p=>{
-          const suffix = yMode==='retention'?'%':'人';
-          html+=`${p.marker}${p.seriesName}: <b>${yMode==='retention'?p.value.toFixed(1):fmt(p.value)}</b>${suffix}<br>`;
-        });
-        return html;
-      }},
-      legend:{type:'scroll',top:0,textStyle:{fontSize:11}},
-      grid:{left:60,right:30,top:50,bottom:40},
-      xAxis:{type:'category',data:categories,axisLabel:{fontSize:11}},
-      yAxis:{type:'value',name:yMode==='retention'?'留存率(%)':'播放人数',axisLabel:{formatter:v=>yMode==='retention'?v+'%':v>=1e3?(v/1e3).toFixed(0)+'K':v}},
-      series,
-      dataZoom:[{type:'inside'}],
-    },true);
-  }
-  update();
-  window.addEventListener('resize',()=>chart.resize());
-
-  document.getElementById('epUserToggle').addEventListener('click',e=>{
-    if(!e.target.classList.contains('toggle-btn'))return;
-    document.querySelectorAll('#epUserToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
-    e.target.classList.add('active');
-    userType = e.target.dataset.val;
-    update();
+function renderSec4() {
+  // ---- CTR Table ----
+  let h = '<table><thead><tr><th rowspan=2>CID名称</th><th colspan=3 style="text-align:center;background:#e8f5e9">首集分发</th><th colspan=3 style="text-align:center;background:#fff3e0">非首集分发</th></tr><tr><th style="background:#e8f5e9">7天曝光PV</th><th style="background:#e8f5e9">7天点击PV</th><th style="background:#e8f5e9">CTR</th><th style="background:#fff3e0">7天曝光PV</th><th style="background:#fff3e0">7天点击PV</th><th style="background:#fff3e0">CTR</th></tr></thead><tbody>';
+  SEC4.ctr.forEach(d=>{
+    const ep1Hi = d.ep1_ctr > d.mid_ctr;
+    h+=`<tr><td><b>${d.name}</b></td><td>${fmt(d.ep1_imp)}</td><td>${fmt(d.ep1_clck)}</td><td><span class="tag ${ep1Hi?'tag-green':'tag-orange'}">${d.ep1_ctr.toFixed(2)}%</span></td><td>${fmt(d.mid_imp)}</td><td>${fmt(d.mid_clck)}</td><td><span class="tag ${!ep1Hi?'tag-green':'tag-orange'}">${d.mid_ctr.toFixed(2)}%</span></td></tr>`;
   });
-  document.getElementById('epYToggle').addEventListener('click',e=>{
-    if(!e.target.classList.contains('toggle-btn'))return;
-    document.querySelectorAll('#epYToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
-    e.target.classList.add('active');
-    yMode = e.target.dataset.val;
-    update();
-  });
-  document.getElementById('epRange').addEventListener('change',e=>{
-    maxEp = parseInt(e.target.value)||20;
-    update();
-  });
-}
+  h+='</tbody></table>';
+  document.getElementById('sec4CtrTable').innerHTML=h;
 
-function renderEntryCompare() {
-  const data = D.entry_compare;
-  if(!data||!data.length) return;
-
-  // 刷刷→底层页转化率对比图
-  const minChart = echarts.init(document.getElementById('entryMinChart'));
-  const names = data.map(d=>d.name);
-  const bmRate = data[0]?.benchmark_rate||0.6056;
-  minChart.setOption({
-    title:{text:'刷刷→底层页转化率（按分发集数分组）',textStyle:{fontSize:13}},
-    tooltip:{trigger:'axis',formatter:ps=>{
-      if(!ps.length)return'';
-      const idx=ps[0].dataIndex;
-      const d=data[idx];
-      let h=`<b>${d.name}</b><br>`;
-      ps.forEach(p=>h+=`${p.marker}${p.seriesName}: <b>${p.value.toFixed(1)}%</b><br>`);
-      h+=`CID整体: ${(d.all_rate*100).toFixed(1)}%<br>大盘: ${(bmRate*100).toFixed(1)}%`;
-      return h;
-    }},
-    legend:{data:['第1集分发','非第1集分发','CID整体','大盘'],top:25},
-    grid:{left:60,right:20,top:60,bottom:60},
-    xAxis:{type:'category',data:names,axisLabel:{rotate:35,fontSize:10}},
-    yAxis:{type:'value',name:'转化率(%)',max:100,axisLabel:{formatter:'{value}%'}},
-    series:[
-      {name:'第1集分发',type:'bar',data:data.map(d=>+(d.ep1_rate*100).toFixed(1)),itemStyle:{color:'#4caf50'},barGap:'10%'},
-      {name:'非第1集分发',type:'bar',data:data.map(d=>+(d.mid_rate*100).toFixed(1)),itemStyle:{color:'#ff9800'}},
-      {name:'CID整体',type:'scatter',data:data.map(d=>+(d.all_rate*100).toFixed(1)),symbolSize:10,itemStyle:{color:'#1565c0'},symbol:'diamond'},
-      {name:'大盘',type:'line',data:data.map(()=>+(bmRate*100).toFixed(1)),lineStyle:{color:'#d32f2f',type:'dashed',width:2},itemStyle:{color:'#d32f2f'},symbol:'none'},
-    ]
+  // ---- UTR Table ----
+  h = '<table><thead><tr><th rowspan=2>CID名称</th><th colspan=3 style="text-align:center;background:#e8f5e9">首集分发</th><th colspan=3 style="text-align:center;background:#fff3e0">非首集分发</th></tr><tr><th style="background:#e8f5e9">7天去重曝光UV</th><th style="background:#e8f5e9">7天去重点击UV</th><th style="background:#e8f5e9">UTR</th><th style="background:#fff3e0">7天去重曝光UV</th><th style="background:#fff3e0">7天去重点击UV</th><th style="background:#fff3e0">UTR</th></tr></thead><tbody>';
+  SEC4.utr.forEach(d=>{
+    const ep1Hi = d.ep1_utr > d.mid_utr;
+    h+=`<tr><td><b>${d.name}</b></td><td>${fmt(d.ep1_imp_uv)}</td><td>${fmt(d.ep1_clck_uv)}</td><td><span class="tag ${ep1Hi?'tag-green':'tag-orange'}">${d.ep1_utr.toFixed(2)}%</span></td><td>${fmt(d.mid_imp_uv)}</td><td>${fmt(d.mid_clck_uv)}</td><td><span class="tag ${!ep1Hi?'tag-green':'tag-orange'}">${d.mid_utr.toFixed(2)}%</span></td></tr>`;
   });
-  window.addEventListener('resize',()=>minChart.resize());
+  h+='</tbody></table>';
+  document.getElementById('sec4UtrTable').innerHTML=h;
 
-  // 明细表
-  let html = `<table><thead><tr>
-    <th rowspan=2>内容</th>
-    <th rowspan=2>完播率</th>
-    <th colspan=4 style="text-align:center;background:#e8f5e9">第1集分发</th>
-    <th colspan=4 style="text-align:center;background:#fff3e0">非第1集分发</th>
-    <th rowspan=2>CID整体</th>
-    <th rowspan=2>大盘</th>
-  </tr><tr>
-    <th style="background:#e8f5e9">当前页VV</th><th style="background:#e8f5e9">底层页VV</th><th style="background:#e8f5e9">总VV</th><th style="background:#e8f5e9">转化率</th>
-    <th style="background:#fff3e0">当前页VV</th><th style="background:#fff3e0">底层页VV</th><th style="background:#fff3e0">总VV</th><th style="background:#fff3e0">转化率</th>
-  </tr></thead><tbody>`;
-  data.forEach(d=>{
-    const bmR=(d.benchmark_rate||0.6056)*100;
-    const ep1CurVv=(d.ep1_total_vv||0)-(d.ep1_detail_vv||0);
-    const midCurVv=(d.mid_total_vv||0)-(d.mid_detail_vv||0);
-    const cr = d.completion_rate!=null ? (d.completion_rate*100).toFixed(1)+'%' : '-';
-    const ep1Tag = d.ep1_rate*100<bmR ? `<span class="tag tag-red">${(d.ep1_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-green">${(d.ep1_rate*100).toFixed(1)}%</span>`;
-    const midTag = d.mid_rate*100<bmR ? `<span class="tag tag-red">${(d.mid_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-green">${(d.mid_rate*100).toFixed(1)}%</span>`;
-    const allTag = d.all_rate*100<bmR ? `<span class="tag tag-orange">${(d.all_rate*100).toFixed(1)}%</span>` : `<span class="tag tag-blue">${(d.all_rate*100).toFixed(1)}%</span>`;
-    html+=`<tr>
-      <td><b>${d.name}</b></td>
-      <td>${cr}</td>
-      <td>${fmt(ep1CurVv)}</td><td>${fmt(d.ep1_detail_vv)}</td><td>${fmt(d.ep1_total_vv)}</td><td>${ep1Tag}</td>
-      <td>${fmt(midCurVv)}</td><td>${fmt(d.mid_detail_vv)}</td><td>${fmt(d.mid_total_vv)}</td><td>${midTag}</td>
-      <td>${allTag}</td>
-      <td>${bmR.toFixed(1)}%</td>
-    </tr>`;
+  // ---- Consume Depth Table ----
+  h = '<table><thead><tr><th rowspan=2>CID名称</th><th colspan=2 style="text-align:center;background:#e8f5e9">首集进入</th><th colspan=2 style="text-align:center;background:#fff3e0">非首集进入</th></tr><tr><th style="background:#e8f5e9">7天累计用户数</th><th style="background:#e8f5e9">人均消费集数</th><th style="background:#fff3e0">7天累计用户数</th><th style="background:#fff3e0">人均消费集数</th></tr></thead><tbody>';
+  SEC4.consume.forEach(d=>{
+    const ep1Hi = d.ep1_avg > d.mid_avg;
+    h+=`<tr><td><b>${d.name}</b></td><td>${fmt(d.ep1_users)}</td><td><span class="tag ${ep1Hi?'tag-green':'tag-orange'}">${d.ep1_avg}</span></td><td>${fmt(d.mid_users)}</td><td><span class="tag ${!ep1Hi?'tag-green':'tag-orange'}">${d.mid_avg}</span></td></tr>`;
   });
-  html+='</tbody></table>';
-  document.getElementById('entryTable').innerHTML=html;
+  h+='</tbody></table>';
+  document.getElementById('sec4ConsumeTable').innerHTML=h;
 }
 
 // ========== Init ==========
 renderBubble();
 renderConversionSection(D.hi_lo_metrics, 'hiLoCtrChart', 'hiLoSsChart', 'hiLoTable', 'hiLoStats', 'hiLoTableSearch', 'hiLoSort', true);
 renderConversionSection(D.lo_hi_metrics, 'loHiCtrChart', 'loHiSsChart', 'loHiTable', 'loHiStats', 'loHiTableSearch', 'loHiSort', false);
-renderEpisodeChart();
-renderEntryCompare();
+renderSec4();
 </script>
 </body>
 </html>
