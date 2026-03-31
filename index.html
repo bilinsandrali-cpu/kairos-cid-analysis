@@ -73,8 +73,7 @@ tr:hover{background:#f5f5ff}
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
       <b>底层页进入率（UV口径）</b>：分母=刷刷当前页（pgid）播放UV，分子=一跳=刷刷的底层页播放UV，按天累加：SUM(每日分子)/SUM(每日分母)<br>
       <b>VV均播时长</b>：刷刷当前页每个VV的平均播放时长(秒)<br>
-      <b>底层页消费深度</b>：一跳归属=刷刷的播放VV中，底层页VV / 总VV<br>
-      <b>基准线</b>：底层页进入率=11.60%<small>（278 CID加权均值：SUM各CID底层页UV/SUM各CID刷刷UV）</small> ｜ 均播=32.72s<small>（278 CID加权）</small> ｜ 消费深度=63.53%<small>（278 CID加权）</small>
+      <b>底层页消费深度</b>：一跳归属=刷刷的播放VV中，底层页VV / 总VV
     </div>
     <div class="tbl-wrap" id="sec2ConvTable"></div>
   </div>
@@ -98,9 +97,7 @@ tr:hover{background:#f5f5ff}
     <div class="card-title">📊 找片场景海报 CTR + 观看≥30s用户率 vs 大盘</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
       <b>口径</b>：CTR = pgid='page_home_channel'（排除猜追位mod_id）的 in_clck_poster_cnt/in_imp_poster_cnt<br>
-      ≥30s率 = 一跳=找片（排除猜追位own_ele__mod_id）且有播放的7天去重UV中，播放时长≥30s的比例<br>
-      <b>基准线</b>：<span class="tag tag-blue">278 CID加权</span> CTR=4.36% ｜ ≥30s率=65.07%&emsp;
-      <span class="tag tag-gray">全量大盘</span> CTR=3.88% ｜ ≥30s率=52.7%
+      ≥30s率 = 一跳=找片（排除猜追位own_ele__mod_id）且有播放的UV中，播放时长≥30s的比例
     </div>
     <div class="controls">
       <div class="ctrl-group"><label>搜索:</label><input type="text" id="zpTableSearch" class="search-input" placeholder="输入CID名称..."></div>
@@ -167,7 +164,7 @@ const SS_ENTER_BM = 11.60;
 const SS_DEPTH_BM = 60.56;
 const SS_PDTM_BM = 29.31;
 const ZP_CTR_BM = 3.88;
-const ZP_30S_BM = 52.7;
+const ZP_30S_BM = 55.36;
 
 // ========== Section 1: 气泡图 ==========
 function renderBubble() {
@@ -230,6 +227,12 @@ function renderSec2() {
   });
   h += `<tr style="background:#f5f5f5;font-weight:bold"><td>278 CID基准</td><td colspan="2"></td><td><span class="tag tag-blue">${SS_ENTER_BM}%</span></td><td></td><td><span class="tag tag-blue">${SS_PDTM_BM}s</span></td><td></td><td colspan="2"></td><td><span class="tag tag-blue">${SS_DEPTH_BM}%</span></td><td></td></tr>`;
   h += '</tbody></table>';
+  h += '<div style="margin-top:8px;font-size:11px;color:#888;line-height:1.6">';
+  h += '<b>基准线计算方式（均为278个CID的加权均值）</b><br>';
+  h += '底层页进入率 = SUM(各CID底层页进入UV) / SUM(各CID刷刷播放UV)<br>';
+  h += 'VV均播时长 = SUM(各CID刷刷当前页播放总时长) / SUM(各CID刷刷当前页总VV)<br>';
+  h += '消费深度 = SUM(各CID一跳=刷刷的底层页VV) / SUM(各CID一跳=刷刷的总VV)';
+  h += '</div>';
   document.getElementById('sec2ConvTable').innerHTML = h;
 
   // 首集 vs 非首集表
@@ -254,7 +257,7 @@ function renderSec3(filter='') {
   if(filter) sorted = sorted.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
   sorted.sort((a,b) => b.zp_ctr - a.zp_ctr);
 
-  let h = '<table><thead><tr><th>#</th><th>CID名称</th><th>找片曝光PV</th><th>点击PV</th><th>CTR</th><th>vs大盘</th><th>播放UV</th><th>≥30s UV</th><th>≥30s率</th><th>vs大盘</th></tr></thead><tbody>';
+  let h = '<table><thead><tr><th>#</th><th>CID名称</th><th>找片曝光PV</th><th>点击PV</th><th>CTR</th><th>vs基准</th><th>播放UV</th><th>≥30s UV</th><th>≥30s率</th><th>vs基准</th></tr></thead><tbody>';
   sorted.forEach((d,i) => {
     const ctrDiff = d.zp_ctr - ZP_CTR_BM;
     const ctrCls = ctrDiff >= 0 ? 'tag-green' : 'tag-red';
@@ -267,8 +270,13 @@ function renderSec3(filter='') {
       <td><span class="tag ${rateCls}">${rateDiff>=0?'+':''}${rateDiff.toFixed(2)}pp</span></td>
     </tr>`;
   });
-  h += `<tr style="background:#f5f5f5;font-weight:bold"><td></td><td>大盘基准（排除猜追）</td><td colspan="2"></td><td><span class="tag tag-blue">${ZP_CTR_BM}%</span></td><td></td><td colspan="2"></td><td><span class="tag tag-blue">${ZP_30S_BM}%</span></td><td></td></tr>`;
+  h += `<tr style="background:#f5f5f5;font-weight:bold"><td></td><td>278 CID基准</td><td colspan="2"></td><td><span class="tag tag-blue">${ZP_CTR_BM}%</span></td><td></td><td colspan="2"></td><td><span class="tag tag-blue">${ZP_30S_BM}%</span></td><td></td></tr>`;
   h += '</tbody></table>';
+  h += '<div style="margin-top:8px;font-size:11px;color:#888;line-height:1.6">';
+  h += '<b>基准线计算方式（均为278个CID的加权均值）</b><br>';
+  h += 'CTR = SUM(各CID找片点击PV) / SUM(各CID找片曝光PV)<br>';
+  h += '≥30s率 = SUM(各CID≥30s播放UV) / SUM(各CID播放UV)';
+  h += '</div>';
   document.getElementById('sec3CtrTable').innerHTML = h;
 }
 renderSec3();
