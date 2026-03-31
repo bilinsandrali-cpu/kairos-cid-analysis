@@ -78,10 +78,9 @@ tr:hover{background:#f5f5ff}
     <div class="tbl-wrap" id="sec2ConvTable"></div>
   </div>
   <div class="card">
-    <div class="card-title">📊 首集 vs 非首集素材 — 底层页进入率 + 单VV均播时长</div>
+    <div class="card-title">📊 首集 vs 非首集素材 — 单VV均播时长</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>均播时长</b>：按vid_episode区分首集(=1)/非首集，刷刷当前页VV口径，不限用户范围<br>
-      <b>底层页进入率</b>：限定当天在刷刷只被推了该CID 1个vid的用户，按vid_episode分组。7天每日进入率的均值。<small>（mid组部分CID样本量较小，仅供参考）</small>
+      <b>均播时长</b>：按vid_episode区分首集(=1)/非首集，刷刷当前页VV口径，不限用户范围
     </div>
     <div class="tbl-wrap" id="sec2Ep1Table"></div>
   </div>
@@ -236,14 +235,11 @@ function renderSec2() {
   document.getElementById('sec2ConvTable').innerHTML = h;
 
   // 首集 vs 非首集表
-  let h2 = '<table><thead><tr><th>CID名称</th><th>首集VV</th><th>首集均播(s)</th><th>非首集VV</th><th>非首集均播(s)</th><th>首集UV<small>(单vid)</small></th><th>首集进入率</th><th>非首集UV<small>(单vid)</small></th><th>非首集进入率</th></tr></thead><tbody>';
+  let h2 = '<table><thead><tr><th>CID名称</th><th>首集VV</th><th>首集均播(s)</th><th>非首集VV</th><th>非首集均播(s)</th></tr></thead><tbody>';
   SS_EP1.forEach(d => {
-    const midNote = d.mid_uv < 200 ? ' <small style="color:#999">(样本少)</small>' : '';
     h2 += `<tr><td><b>${d.name}</b></td>
       <td>${fmt(d.ep1_vv)}</td><td>${d.ep1_pdtm.toFixed(1)}</td>
       <td>${fmt(d.mid_vv)}</td><td>${d.mid_pdtm.toFixed(1)}</td>
-      <td>${fmt(d.ep1_uv)}</td><td>${pct(d.ep1_enter)}</td>
-      <td>${fmt(d.mid_uv)}${midNote}</td><td>${d.mid_uv >= 200 ? pct(d.mid_enter) : '<span class="tag tag-gray">样本不足</span>'}</td>
     </tr>`;
   });
   h2 += '</tbody></table>';
