@@ -127,7 +127,6 @@ tr:hover{background:#f5f5ff}
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:400px"><div id="drillZpCtr" style="height:350px"></div></div>
       <div style="flex:1;min-width:400px"><div id="drillZp30s" style="height:350px"></div></div>
-      <div style="flex:1;min-width:400px"><div id="drillZpComp" style="height:350px"></div></div>
     </div>
   </div>
 
@@ -141,7 +140,6 @@ tr:hover{background:#f5f5ff}
       <div style="flex:1;min-width:300px"><div id="drillSsEnter" style="height:350px"></div></div>
       <div style="flex:1;min-width:300px"><div id="drillSsPdtm" style="height:350px"></div></div>
       <div style="flex:1;min-width:300px"><div id="drillSsConv" style="height:350px"></div></div>
-      <div style="flex:1;min-width:300px"><div id="drillSsComp" style="height:350px"></div></div>
     </div>
   </div>
 </div>
@@ -1879,15 +1877,13 @@ function makeDrillChart(domId, cid, title, barKey, barName, lineKey, lineName, l
 }
 
 function renderAllDrill(cid) {
-  // 找片 3图
+  // 找片 2图
   makeDrillChart('drillZpCtr', cid, '找片曝光渗透 × CTR', 'zp_penetration', '找片曝光渗透(%)', 'zp_ctr', 'CTR(%)', '#e74c3c', 'CTR(%)');
   makeDrillChart('drillZp30s', cid, '找片曝光渗透 × ≥30s率', 'zp_penetration', '找片曝光渗透(%)', 'play_30s_rate', '≥30s率(%)', '#ff9800', '≥30s率(%)');
-  makeDrillChart('drillZpComp', cid, '找片曝光渗透 × 完播率', 'zp_penetration', '找片曝光渗透(%)', 'completion_rate', '完播率(%)', '#9c27b0', '完播率(%)');
-  // 刷刷 4图
+  // 刷刷 3图
   makeDrillChart('drillSsEnter', cid, '刷刷曝光渗透 × 底层页进入率', 'ss_penetration', '刷刷曝光渗透(%)', 'enter_rate', '底层页进入率(%)', '#e74c3c', '进入率(%)');
   makeDrillChart('drillSsPdtm', cid, '刷刷曝光渗透 × 均播时长', 'ss_penetration', '刷刷曝光渗透(%)', 'avg_pdtm_sec', '均播时长(s)', '#4caf50', '秒(s)');
   makeDrillChart('drillSsConv', cid, '刷刷曝光渗透 × 底层页消费深度', 'ss_penetration', '刷刷曝光渗透(%)', 'conv_rate', '消费深度(%)', '#2196f3', '消费深度(%)');
-  makeDrillChart('drillSsComp', cid, '刷刷曝光渗透 × 完播率', 'ss_penetration', '刷刷曝光渗透(%)', 'completion_rate', '完播率(%)', '#9c27b0', '完播率(%)');
 }
 
 document.getElementById('drillCidSelect').addEventListener('change', e => renderAllDrill(e.target.value));
