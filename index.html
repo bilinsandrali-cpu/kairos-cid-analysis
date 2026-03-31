@@ -51,7 +51,7 @@ tr:hover{background:#f5f5ff}
   <button class="nav-btn active" data-sec="sec1">📊 CID曝光×完播分布</button>
   <button class="nav-btn" data-sec="sec2">🔥 刷刷场景高曝低完播</button>
   <button class="nav-btn" data-sec="sec3">🔍 找片场景高曝低完播</button>
-  <button class="nav-btn" data-sec="sec4">💎 低曝光高完播CID转化明细</button>
+  <button class="nav-btn" data-sec="sec5">🔬 曝光反馈下钻</button>
 </div>
 
 <!-- Section 1: 气泡图 -->
@@ -69,19 +69,21 @@ tr:hover{background:#f5f5ff}
     🔥 高曝低完播64个CID中，按刷刷/(刷刷+找片)曝光占比≥50%筛出<b>8个刷刷为主CID</b>。以下为刷刷场景转化分析（2026-03-20 ~ 2026-03-26）。
   </div>
   <div class="card">
-    <div class="card-title">📊 刷刷场景 CTR + 底层页转化率 vs 大盘</div>
+    <div class="card-title">📊 刷刷场景 底层页进入率 + 底层页消费深度 vs 大盘</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>CTR口径</b>：刷刷 title 元素曝光PV 为分母，title+album_list 点击PV 为分子<br>
-      <b>VV均播时长</b>：刷刷当前页（pgid=page_home_immersive）每个VV的平均播放时长(秒)。大盘基准 = 29.31s<br>
-      <b>转化率口径</b>：一跳归属=刷刷（own_pg__pgid='page_home_immersive'）的播放VV中，底层页VV / 总VV。大盘基准 = 60.56%
+      <b>底层页进入率（UV口径）</b>：分母=刷刷当前页（pgid）播放UV，分子=一跳=刷刷的底层页播放UV，按天累加：SUM(每日分子)/SUM(每日分母)<br>
+      <b>VV均播时长</b>：刷刷当前页每个VV的平均播放时长(秒)<br>
+      <b>底层页消费深度</b>：一跳归属=刷刷的播放VV中，底层页VV / 总VV<br>
+      <b>基准线</b>：<span class="tag tag-blue">278 CID加权</span> 底层页进入率=37.43% ｜ 均播=32.72s ｜ 消费深度=63.53%&emsp;
+      <span class="tag tag-gray">全量大盘</span> 底层页进入率=45.17% ｜ 均播=29.31s ｜ 消费深度=60.56%
     </div>
     <div class="tbl-wrap" id="sec2ConvTable"></div>
   </div>
   <div class="card">
-    <div class="card-title">📊 首集 vs 非首集素材 — 底层页转化率 + CTR</div>
+    <div class="card-title">📊 首集 vs 非首集素材 — 底层页进入率 + 单VV均播时长</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>转化率口径</b>：按DWD session表（dwd_kairos_vfinish_dt_di）串联usid，以刷刷页面入口vid的集序号区分首集/非首集入口，计算该入口session内所有底层页VV / 总VV（含续播归因）<br>
-      <b>CTR口径</b>：刷刷 title 元素曝光PV 为分母，title+album_list 点击PV 为分子
+      <b>均播时长</b>：按vid_episode区分首集(=1)/非首集，刷刷当前页VV口径，不限用户范围<br>
+      <b>底层页进入率</b>：限定当天在刷刷只被推了该CID 1个vid的用户，按vid_episode分组。7天每日进入率的均值。<small>（mid组部分CID样本量较小，仅供参考）</small>
     </div>
     <div class="tbl-wrap" id="sec2Ep1Table"></div>
   </div>
@@ -96,8 +98,10 @@ tr:hover{background:#f5f5ff}
   <div class="card">
     <div class="card-title">📊 找片场景海报 CTR + 观看≥30s用户率 vs 大盘</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>口径</b>：CTR = pgid='page_home_channel'（排除猜追位mod_id）的 in_clck_poster_cnt/in_imp_poster_cnt。大盘CTR = 3.88%<br>
-      ≥30s率 = 一跳=找片（排除猜追位own_ele__mod_id）且有播放的7天去重UV中，播放时长≥30s的比例。CID级加权基准 = 52.7%
+      <b>口径</b>：CTR = pgid='page_home_channel'（排除猜追位mod_id）的 in_clck_poster_cnt/in_imp_poster_cnt<br>
+      ≥30s率 = 一跳=找片（排除猜追位own_ele__mod_id）且有播放的7天去重UV中，播放时长≥30s的比例<br>
+      <b>基准线</b>：<span class="tag tag-blue">278 CID加权</span> CTR=4.36% ｜ ≥30s率=65.07%&emsp;
+      <span class="tag tag-gray">全量大盘</span> CTR=3.88% ｜ ≥30s率=52.7%
     </div>
     <div class="controls">
       <div class="ctrl-group"><label>搜索:</label><input type="text" id="zpTableSearch" class="search-input" placeholder="输入CID名称..."></div>
@@ -106,18 +110,39 @@ tr:hover{background:#f5f5ff}
   </div>
 </div>
 
-<!-- Section 4: 低曝高完播CID -->
-<div class="section" id="sec4">
-  <div class="note-box" style="border-left-color:#4caf50;background:#e8f5e9;color:#2e7d32">
-    💎 以下64个CID位于<b>低曝光高完播</b>象限（7天总曝光 < 中位线 30,695 且 完播率 > 中位线 36.45%）。这些内容完播率好但曝光不足。<br>
-    <small>找片指标已排除猜追位（mod_continue_watching）</small>
+<!-- Section 5: 下钻分析 -->
+<div class="section" id="sec5">
+  <div class="note-box" style="border-left-color:#ff9800;background:#fff3e0;color:#e65100">
+    🔬 <b>曝光反馈下钻</b>：《难哄动态漫》和《死灵法师》在CTR、≥30s率低于大盘的情况下仍获大量曝光。<br>
+    以下时序图展示2026-02-24 ~ 2026-03-30期间各项指标与曝光趋势的关系，观察算法对效果指标反馈的敏捷度。
   </div>
+  <div class="controls" style="margin-bottom:16px">
+    <label style="font-weight:600;color:#fff">选择CID：</label>
+    <select id="drillCidSelect" style="padding:8px 16px;border:1px solid #555;border-radius:8px;font-size:14px;background:#1a1a2e;color:#fff;min-width:200px">
+    </select>
+  </div>
+
   <div class="card">
-    <div class="card-title">📊 找片CTR + 观看≥30s率 vs 大盘</div>
-    <div class="controls">
-      <div class="ctrl-group"><label>搜索:</label><input type="text" id="lhTableSearch" class="search-input" placeholder="输入CID名称..."></div>
+    <div class="card-title">📊 找片场景</div>
+    <div class="note-box" style="margin-bottom:12px;font-size:12px">
+      <b>曝光</b>：找片页海报曝光PV（排除猜追mod_id） ｜ <b>CTR</b>：in_clck_poster_cnt/in_imp_poster_cnt ｜ <b>≥30s率</b>：一跳=找片（排除猜追own_ele__mod_id）有播放UV中≥30s占比
     </div>
-    <div class="tbl-wrap" id="sec4Table"></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:400px"><div id="drillZpCtr" style="height:350px"></div></div>
+      <div style="flex:1;min-width:400px"><div id="drillZp30s" style="height:350px"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 刷刷场景</div>
+    <div class="note-box" style="margin-bottom:12px;font-size:12px">
+      <b>曝光</b>：刷刷当前页播放UV ｜ <b>底层页进入率</b>：一跳=刷刷的底层页播放UV / 刷刷当前页播放UV ｜ <b>均播时长</b>：刷刷当前页VV平均播放秒数 ｜ <b>底层页消费深度</b>：一跳=刷刷的底层页VV/总VV
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:300px"><div id="drillSsEnter" style="height:350px"></div></div>
+      <div style="flex:1;min-width:300px"><div id="drillSsPdtm" style="height:350px"></div></div>
+      <div style="flex:1;min-width:300px"><div id="drillSsConv" style="height:350px"></div></div>
+    </div>
   </div>
 </div>
 
@@ -139,14 +164,13 @@ const pct = (n, d=2) => n == null ? '-' : n.toFixed(d)+'%';
 // ========== Data ==========
 const BUBBLE = [{"name": "诡相：开局守灵夜", "cid": "mzc00375kbbz9kj", "avgExposure": 75606, "avgCompletionRate": 0.44799999999999995, "avgPlayUsers": 9837, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "原来我早就无敌了", "cid": "mzc003s9rem8tbg", "avgExposure": 64942, "avgCompletionRate": 0.28809999999999997, "avgPlayUsers": 2994, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "混元吞天诀", "cid": "mzc003lgzr7xs3t", "avgExposure": 60064, "avgCompletionRate": 0.24230000000000002, "avgPlayUsers": 8060, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "史上最强师父", "cid": "mzc0039mf8oy3qm", "avgExposure": 58807, "avgCompletionRate": 0.35619999999999996, "avgPlayUsers": 7029, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "开心锤锤", "cid": "mzc003ihfxlx0oz", "avgExposure": 52460, "avgCompletionRate": 0.29460000000000003, "avgPlayUsers": 1722, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "太古十凶：别人御兽我御兽娘", "cid": "mzc003k73nbry89", "avgExposure": 52349, "avgCompletionRate": 0.22329999999999997, "avgPlayUsers": 2513, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "最强钓鱼王", "cid": "mzc003b21pdgryf", "avgExposure": 45581, "avgCompletionRate": 0.3061, "avgPlayUsers": 6895, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "死灵法师！我即是天灾", "cid": "mzc0035m5r35ex1", "avgExposure": 44244, "avgCompletionRate": 0.3154, "avgPlayUsers": 3324, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "流放路上做女皇", "cid": "mzc0030x78k4hne", "avgExposure": 41467, "avgCompletionRate": 0.29350000000000004, "avgPlayUsers": 2130, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "摆烂后,全家跪求我守边关", "cid": "mzc0039hax5rncp", "avgExposure": 40245, "avgCompletionRate": 0.5015999999999999, "avgPlayUsers": 4261, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "北派盗墓笔记", "cid": "mzc003t9240jba0", "avgExposure": 39591, "avgCompletionRate": 0.4573, "avgPlayUsers": 2510, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "凤傲九天", "cid": "mzc003p7kp5x3gl", "avgExposure": 38993, "avgCompletionRate": 0.5632, "avgPlayUsers": 6509, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "凤九歌", "cid": "mzc0039ujgkebm2", "avgExposure": 38164, "avgCompletionRate": 0.47869999999999996, "avgPlayUsers": 7417, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "难哄 动态漫", "cid": "mzc003skgvfogyn", "avgExposure": 37808, "avgCompletionRate": 0.1779, "avgPlayUsers": 1249, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "表哥白泽", "cid": "mzc003lo5sgqd4y", "avgExposure": 35852, "avgCompletionRate": 0.187, "avgPlayUsers": 936, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "盖世扫地僧，我可以无限融合", "cid": "mzc003r1k4gzdyw", "avgExposure": 35218, "avgCompletionRate": 0.3704, "avgPlayUsers": 1768, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "白骨精传奇第二季", "cid": "mzc003tovo4n6fm", "avgExposure": 35005, "avgCompletionRate": 0.20420000000000002, "avgPlayUsers": 1661, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "鬼捕", "cid": "mzc003b618suxqa", "avgExposure": 34160, "avgCompletionRate": 0.29309999999999997, "avgPlayUsers": 1522, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "碎嘴丫头王怼怼", "cid": "mzc0036pnz7jy2t", "avgExposure": 34002, "avgCompletionRate": 0.1616, "avgPlayUsers": 1948, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "斗罗大陆4终极斗罗 合集", "cid": "mzc0033ty9t0efp", "avgExposure": 33490, "avgCompletionRate": 0.18280000000000002, "avgPlayUsers": 2080, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "末世求生之美女如云", "cid": "mzc003yqy661p92", "avgExposure": 28157, "avgCompletionRate": 0.1957, "avgPlayUsers": 2081, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "万兽独尊", "cid": "mzc003srju6vm6o", "avgExposure": 27370, "avgCompletionRate": 0.5288, "avgPlayUsers": 6831, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "百妖夜行录", "cid": "mzc003nva91t90t", "avgExposure": 26213, "avgCompletionRate": 0.5217, "avgPlayUsers": 5059, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "神道丹尊", "cid": "mzc003mak4k664c", "avgExposure": 25905, "avgCompletionRate": 0.4152, "avgPlayUsers": 2906, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "万界主宰", "cid": "mzc003n3s5diun1", "avgExposure": 24018, "avgCompletionRate": 0.1376, "avgPlayUsers": 695, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "绿光列车", "cid": "mzc003xf81pt74p", "avgExposure": 23590, "avgCompletionRate": 0.37329999999999997, "avgPlayUsers": 2792, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "秒杀大帝", "cid": "mzc003dejquev2w", "avgExposure": 23228, "avgCompletionRate": 0.4536, "avgPlayUsers": 2317, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "白骨精传奇第一季", "cid": "mzc0033mr33fi31", "avgExposure": 22836, "avgCompletionRate": 0.2121, "avgPlayUsers": 1126, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "谎孕焚心", "cid": "mzc003ofryuz6y0", "avgExposure": 22760, "avgCompletionRate": 0.5542, "avgPlayUsers": 3454, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "青山小神医", "cid": "mzc003qxzzf32el", "avgExposure": 22648, "avgCompletionRate": 0.4525, "avgPlayUsers": 4669, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "寒途假死：前夫跪求悔", "cid": "mzc003y4em20i46", "avgExposure": 22600, "avgCompletionRate": 0.5888, "avgPlayUsers": 6569, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "开局物价贬值，我成为了世界首富", "cid": "mzc003pt45lkgzt", "avgExposure": 22562, "avgCompletionRate": 0.38079999999999997, "avgPlayUsers": 1218, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "全球冰封：我打造了末日安全屋", "cid": "mzc003dxezn5lqz", "avgExposure": 21878, "avgCompletionRate": 0.23579999999999998, "avgPlayUsers": 1218, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "我家后院是仙界", "cid": "mzc003jux9d4z6j", "avgExposure": 21797, "avgCompletionRate": 0.3579, "avgPlayUsers": 1721, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "《东风出击》", "cid": "mzc00313aj36gvf", "avgExposure": 21286, "avgCompletionRate": 0.21280000000000002, "avgPlayUsers": 1256, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "师尊虾长生", "cid": "mzc003etruebmos", "avgExposure": 20828, "avgCompletionRate": 0.3898, "avgPlayUsers": 1049, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "开心锤锤Story：我不是杆神", "cid": "mzc0036jhyytasw", "avgExposure": 20613, "avgCompletionRate": 0.32170000000000004, "avgPlayUsers": 759, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "末世神级升级系统 动态漫", "cid": "mzc003hlarvz30j", "avgExposure": 19081, "avgCompletionRate": 0.32909999999999995, "avgPlayUsers": 1163, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "炼气十万年我直接天下无敌", "cid": "mzc003o99j3noal", "avgExposure": 18745, "avgCompletionRate": 0.198, "avgPlayUsers": 1011, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "百岁老天师", "cid": "mzc0032bpgg7cyi", "avgExposure": 18496, "avgCompletionRate": 0.3297, "avgPlayUsers": 999, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "收尸人   短剧", "cid": "mzc003yzxppfk4f", "avgExposure": 18337, "avgCompletionRate": 0.19390000000000002, "avgPlayUsers": 837, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "卖房救岳母", "cid": "mzc003c1nuacdf8", "avgExposure": 17147, "avgCompletionRate": 0.11789999999999999, "avgPlayUsers": 1555, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "狂蟒入侵：女主播惊魂夜", "cid": "mzc003nf800qqxo", "avgExposure": 17034, "avgCompletionRate": 0.40259999999999996, "avgPlayUsers": 3284, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "网游之天下无双", "cid": "mzc0035hykgxlko", "avgExposure": 16966, "avgCompletionRate": 0.2073, "avgPlayUsers": 749, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "魔童闯王府", "cid": "mzc003hi751clev", "avgExposure": 16656, "avgCompletionRate": 0.45049999999999996, "avgPlayUsers": 2023, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "狐骨仙心劫", "cid": "mzc003u3hamzsms", "avgExposure": 16543, "avgCompletionRate": 0.5539999999999999, "avgPlayUsers": 3105, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "全球诡异时代", "cid": "mzc003fqld9wrmn", "avgExposure": 16506, "avgCompletionRate": 0.35259999999999997, "avgPlayUsers": 1853, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "贴身护理瘫痪女总裁，我逆袭了", "cid": "mzc003jub1hr6jz", "avgExposure": 15866, "avgCompletionRate": 0.21660000000000001, "avgPlayUsers": 716, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "萌娃小医仙", "cid": "mzc003b2h4cmta2", "avgExposure": 15701, "avgCompletionRate": 0.3539, "avgPlayUsers": 726, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "八零之错嫁良缘", "cid": "mzc003mpns89ca6", "avgExposure": 15573, "avgCompletionRate": 0.3081, "avgPlayUsers": 1159, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "斩神台下，诸神跪求我原谅", "cid": "mzc0030bbos3miu", "avgExposure": 15541, "avgCompletionRate": 0.3343, "avgPlayUsers": 702, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "重生八零：带着孕肚去随军", "cid": "mzc003dcl6aszug", "avgExposure": 15096, "avgCompletionRate": 0.4746, "avgPlayUsers": 2895, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "大国重工物理超度乱世", "cid": "mzc003oe237cyo3", "avgExposure": 14444, "avgCompletionRate": 0.1471, "avgPlayUsers": 943, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "绝世武神 第七季", "cid": "mzc003e0miywu0a", "avgExposure": 14358, "avgCompletionRate": 0.1475, "avgPlayUsers": 481, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "天弃之人", "cid": "mzc003z9sn739wj", "avgExposure": 14306, "avgCompletionRate": 0.5118, "avgPlayUsers": 2756, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "三岁小道姑，专治赖账爹", "cid": "mzc003rhoiulr0q", "avgExposure": 13946, "avgCompletionRate": 0.5499, "avgPlayUsers": 2285, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "偷偷藏不住 动态漫", "cid": "mzc003p34euhjq6", "avgExposure": 12580, "avgCompletionRate": 0.2934, "avgPlayUsers": 899, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "玄门赘婿：开局觉醒多子多福系统", "cid": "mzc003x0h0sudcm", "avgExposure": 12538, "avgCompletionRate": 0.281, "avgPlayUsers": 646, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "再不死我就真无敌了 动态漫", "cid": "mzc0032pzmup8a4", "avgExposure": 12500, "avgCompletionRate": 0.2324, "avgPlayUsers": 506, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "算了我不要了", "cid": "mzc003dh288hl8s", "avgExposure": 12215, "avgCompletionRate": 0.5956, "avgPlayUsers": 2405, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "老爸收摊后，我成少爷了？", "cid": "mzc0034fbcwjiuq", "avgExposure": 11864, "avgCompletionRate": 0.5427000000000001, "avgPlayUsers": 1507, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "反派萌娃，爹，你的王府归我了", "cid": "mzc003pc5ows36e", "avgExposure": 11549, "avgCompletionRate": 0.5071, "avgPlayUsers": 1678, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "穿越八年才出道", "cid": "mzc003vj6s43bgk", "avgExposure": 11326, "avgCompletionRate": 0.4962, "avgPlayUsers": 1597, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "帝族穷养我，可我悟性逆天", "cid": "mzc00330b7j27ad", "avgExposure": 11213, "avgCompletionRate": 0.48210000000000003, "avgPlayUsers": 1394, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "师尊：这个冲师逆徒才不是圣子", "cid": "mzc003ldujfh9av", "avgExposure": 11095, "avgCompletionRate": 0.2255, "avgPlayUsers": 787, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "单身宠爱", "cid": "mzc0032u411aiap", "avgExposure": 11095, "avgCompletionRate": 0.44079999999999997, "avgPlayUsers": 1408, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "末日狠人：开局囤积万亿物资", "cid": "mzc003a2gm6ogye", "avgExposure": 10984, "avgCompletionRate": 0.3272, "avgPlayUsers": 694, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "七公主带领全家逆天改命", "cid": "mzc003df4xxd70l", "avgExposure": 10896, "avgCompletionRate": 0.3759, "avgPlayUsers": 1034, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "天阶玄猫之我在人间找妈妈", "cid": "mzc003pjm2uq45y", "avgExposure": 10766, "avgCompletionRate": 0.40399999999999997, "avgPlayUsers": 706, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "无敌炼气期", "cid": "mzc0035qdh1rozr", "avgExposure": 10604, "avgCompletionRate": 0.4656, "avgPlayUsers": 1340, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "神兽遍地，你管这叫动物园3D版", "cid": "mzc003ts56iwzu4", "avgExposure": 10483, "avgCompletionRate": 0.4232, "avgPlayUsers": 908, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "假汤乱世", "cid": "mzc003h3sqyr98m", "avgExposure": 10142, "avgCompletionRate": 0.0958, "avgPlayUsers": 1494, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "乙游系统觉醒，我在星际撩疯了", "cid": "mzc0031z82qb9ka", "avgExposure": 10033, "avgCompletionRate": 0.24170000000000003, "avgPlayUsers": 2124, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "靠系统？不如自己考状元！", "cid": "mzc003jja1ll14p", "avgExposure": 10002, "avgCompletionRate": 0.4385, "avgPlayUsers": 894, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "多杀我几次，我就无敌了", "cid": "mzc003sxhowd66q", "avgExposure": 9775, "avgCompletionRate": 0.36619999999999997, "avgPlayUsers": 988, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "三岁判官镇国运将军爹爹跪着护", "cid": "mzc003u9nggt4aa", "avgExposure": 9560, "avgCompletionRate": 0.6097, "avgPlayUsers": 2589, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "新婚夜我退婚", "cid": "mzc003adbjzfial", "avgExposure": 9338, "avgCompletionRate": 0.3775, "avgPlayUsers": 891, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "749秘档：坠龙", "cid": "mzc003rxsjbbtgn", "avgExposure": 9142, "avgCompletionRate": 0.6446999999999999, "avgPlayUsers": 1279, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "梁祝千古怨，今生再续未了缘", "cid": "mzc003wr7z7xoq1", "avgExposure": 9055, "avgCompletionRate": 0.2526, "avgPlayUsers": 559, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "老公装穷考验我", "cid": "mzc003pybgw63yu", "avgExposure": 8808, "avgCompletionRate": 0.33799999999999997, "avgPlayUsers": 938, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "不当舔狗后，我成了亿万神豪", "cid": "mzc003q8gam1fju", "avgExposure": 8781, "avgCompletionRate": 0.22579999999999997, "avgPlayUsers": 490, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "我的乞丐夫君是蛇神", "cid": "mzc00331gqedzw6", "avgExposure": 8584, "avgCompletionRate": 0.5717, "avgPlayUsers": 1465, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "帝王绿与美女校花", "cid": "mzc003dq7g0odse", "avgExposure": 8579, "avgCompletionRate": 0.48619999999999997, "avgPlayUsers": 1265, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "八十年代的江南村", "cid": "mzc003064h5vt5h", "avgExposure": 8503, "avgCompletionRate": 0.36869999999999997, "avgPlayUsers": 1247, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "此爱不售", "cid": "mzc003eg04kvdp0", "avgExposure": 8410, "avgCompletionRate": 0.1593, "avgPlayUsers": 397, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "穿越成了小日子，我给龙军捐武器", "cid": "mzc003v3i7j9547", "avgExposure": 8407, "avgCompletionRate": 0.4154, "avgPlayUsers": 954, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "执掌生死簿", "cid": "mzc0032zlp5dya7", "avgExposure": 8335, "avgCompletionRate": 0.4681, "avgPlayUsers": 1029, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "干饭女将军", "cid": "mzc003d5y8o5pk8", "avgExposure": 8272, "avgCompletionRate": 0.49920000000000003, "avgPlayUsers": 2454, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "师姐，请留步", "cid": "mzc003x387757sv", "avgExposure": 8265, "avgCompletionRate": 0.4322, "avgPlayUsers": 3240, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "封总太太要离婚", "cid": "mzc0039levvb7gj", "avgExposure": 8230, "avgCompletionRate": 0.3131, "avgPlayUsers": 976, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "苹果村传奇", "cid": "mzc003eqs1pgosx", "avgExposure": 7980, "avgCompletionRate": 0.41509999999999997, "avgPlayUsers": 432, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "无上帝尊", "cid": "mzc003yuwfnscon", "avgExposure": 7841, "avgCompletionRate": 0.41159999999999997, "avgPlayUsers": 1149, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "冰与火之歌", "cid": "mzc003hlmhdrf81", "avgExposure": 7725, "avgCompletionRate": 0.4914, "avgPlayUsers": 1951, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "天道榜单，我一男的进了绝色榜", "cid": "mzc003adjmu9sys", "avgExposure": 7325, "avgCompletionRate": 0.4078, "avgPlayUsers": 1285, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "诸葛九九", "cid": "mzc003yxn6ejuo8", "avgExposure": 7168, "avgCompletionRate": 0.09960000000000001, "avgPlayUsers": 781, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "重生八零进山发大财", "cid": "mzc00377m1x914p", "avgExposure": 7123, "avgCompletionRate": 0.5003, "avgPlayUsers": 713, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "五岁魔童叶嘟嘟", "cid": "mzc003nax08qdui", "avgExposure": 7021, "avgCompletionRate": 0.3632, "avgPlayUsers": 1135, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "蛇棺", "cid": "mzc00366cp98cgx", "avgExposure": 7018, "avgCompletionRate": 0.4525, "avgPlayUsers": 2057, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "寄养金丝雀", "cid": "mzc0039mr8cyrqa", "avgExposure": 6941, "avgCompletionRate": 0.1779, "avgPlayUsers": 845, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "幼崽是大佬", "cid": "mzc003irpmezwak", "avgExposure": 6919, "avgCompletionRate": 0.10210000000000001, "avgPlayUsers": 891, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "我的6个超级奶爸", "cid": "mzc003xb0oo39ow", "avgExposure": 6863, "avgCompletionRate": 0.45299999999999996, "avgPlayUsers": 673, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "从哥布林到哥布林神", "cid": "mzc0030llffl6o9", "avgExposure": 6848, "avgCompletionRate": 0.2243, "avgPlayUsers": 565, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "无常小宝", "cid": "mzc003510l5wsfx", "avgExposure": 6413, "avgCompletionRate": 0.5222, "avgPlayUsers": 665, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "逐玉之侯爷的宠爱记", "cid": "mzc0034eyhxwykh", "avgExposure": 6324, "avgCompletionRate": 0.3518, "avgPlayUsers": 659, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "丫鬟替我洞房后，我悔疯了", "cid": "mzc003ns7fve36t", "avgExposure": 6206, "avgCompletionRate": 0.2768, "avgPlayUsers": 648, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "不需要离婚的婚姻", "cid": "mzc003cy2tp4mwt", "avgExposure": 6182, "avgCompletionRate": 0.5405, "avgPlayUsers": 1567, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "错乱情缘", "cid": "mzc0038tjhpufzr", "avgExposure": 6109, "avgCompletionRate": 0.3435, "avgPlayUsers": 799, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "巴掌千金", "cid": "mzc0037ulumy5is", "avgExposure": 6064, "avgCompletionRate": 0.4612, "avgPlayUsers": 2199, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "波光续面", "cid": "mzc003ddshlqat1", "avgExposure": 5960, "avgCompletionRate": 0.3465, "avgPlayUsers": 891, "quadrant": "高曝光低完播 ⚠️", "mainSource": "刷刷为主"}, {"name": "遗落地球", "cid": "mzc003lyzbj4pe5", "avgExposure": 5925, "avgCompletionRate": 0.387, "avgPlayUsers": 1181, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "龙女扶我上青云", "cid": "mzc003k9x5h3sqn", "avgExposure": 5861, "avgCompletionRate": 0.5748, "avgPlayUsers": 1250, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "这个家我做主", "cid": "mzc003303m68xmo", "avgExposure": 5826, "avgCompletionRate": 0.43119999999999997, "avgPlayUsers": 826, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "八零走婚", "cid": "mzc003bixequ1qw", "avgExposure": 5667, "avgCompletionRate": 0.4755, "avgPlayUsers": 1495, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "双胞胎的恐怖传说", "cid": "mzc00360e4s8ag4", "avgExposure": 5530, "avgCompletionRate": 0.3323, "avgPlayUsers": 729, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "全球惊悚：开局万亿资产", "cid": "mzc003cmeia64c2", "avgExposure": 5529, "avgCompletionRate": 0.3898, "avgPlayUsers": 1011, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "探险手札", "cid": "mzc00327h3fheip", "avgExposure": 5523, "avgCompletionRate": 0.516, "avgPlayUsers": 641, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "荒岛求生，我靠神眼鉴定万物", "cid": "mzc00389t2u9qqc", "avgExposure": 5507, "avgCompletionRate": 0.3616, "avgPlayUsers": 629, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "逆鳞之子", "cid": "mzc003eb9gk7gay", "avgExposure": 5481, "avgCompletionRate": 0.5528, "avgPlayUsers": 730, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "1975卫东追妻", "cid": "mzc0038hjn76fnx", "avgExposure": 5478, "avgCompletionRate": 0.556, "avgPlayUsers": 549, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "鬼头山的秘密", "cid": "mzc003twhplatmn", "avgExposure": 5460, "avgCompletionRate": 0.23809999999999998, "avgPlayUsers": 204, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "画皮新娘", "cid": "mzc0037g71li7mv", "avgExposure": 5268, "avgCompletionRate": 0.4797, "avgPlayUsers": 1302, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "召唤之主！当异变降临人间", "cid": "mzc00309hfv9a0p", "avgExposure": 5177, "avgCompletionRate": 0.1524, "avgPlayUsers": 644, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "末世缩小求生", "cid": "mzc003mpzae90ac", "avgExposure": 5087, "avgCompletionRate": 0.4621, "avgPlayUsers": 382, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "小神医岁岁", "cid": "mzc003c51rzrk6p", "avgExposure": 5021, "avgCompletionRate": 0.4047, "avgPlayUsers": 290, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "开心锤锤Story", "cid": "mzc0031gf4sxw1e", "avgExposure": 5018, "avgCompletionRate": 0.2426, "avgPlayUsers": 322, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "弃凤为凰", "cid": "mzc003nulnnojq5", "avgExposure": 5014, "avgCompletionRate": 0.4086, "avgPlayUsers": 999, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "逐玉一次看个够", "cid": "mzc00315at9z7wt", "avgExposure": 5004, "avgCompletionRate": 0.33159999999999995, "avgPlayUsers": 467, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "《狗剩重生记》", "cid": "mzc003na9eqc780", "avgExposure": 4777, "avgCompletionRate": 0.3107, "avgPlayUsers": 363, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "碎裂的暖阳", "cid": "mzc003dpq15rrsl", "avgExposure": 4760, "avgCompletionRate": 0.5710999999999999, "avgPlayUsers": 2756, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "呆萌小胖", "cid": "mzc003p0951wnkv", "avgExposure": 4716, "avgCompletionRate": 0.3669, "avgPlayUsers": 522, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "迟到三年的爱", "cid": "mzc003q4u9524c9", "avgExposure": 4689, "avgCompletionRate": 0.5027, "avgPlayUsers": 1637, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "我，病毒君王横行末世", "cid": "mzc003uyc8cau84", "avgExposure": 4639, "avgCompletionRate": 0.48369999999999996, "avgPlayUsers": 663, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "肥妻皇后夜夜要和离", "cid": "mzc003t1i3bbvo3", "avgExposure": 4623, "avgCompletionRate": 0.41450000000000004, "avgPlayUsers": 495, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "同居学姐", "cid": "mzc003c9x4chumu", "avgExposure": 4613, "avgCompletionRate": 0.41100000000000003, "avgPlayUsers": 454, "quadrant": "高曝光高完播 ⭐", "mainSource": "刷刷为主"}, {"name": "重生封神游戏之最强散人", "cid": "mzc003mnbhhq3h7", "avgExposure": 4582, "avgCompletionRate": 0.2804, "avgPlayUsers": 618, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "三岁小魔女", "cid": "mzc003jh4e65v82", "avgExposure": 4548, "avgCompletionRate": 0.39159999999999995, "avgPlayUsers": 1015, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "钓鱼行李箱", "cid": "mzc003msgnftvhj", "avgExposure": 4541, "avgCompletionRate": 0.4802, "avgPlayUsers": 545, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "陆七娘传", "cid": "mzc003lmfw0mrey", "avgExposure": 4526, "avgCompletionRate": 0.4219, "avgPlayUsers": 249, "quadrant": "高曝光高完播 ⭐", "mainSource": "找片为主"}, {"name": "吃鸡爆笑兄弟之植物生化危机", "cid": "mzc003l0zxplgrj", "avgExposure": 4385, "avgCompletionRate": 0.1489, "avgPlayUsers": 198, "quadrant": "高曝光低完播 ⚠️", "mainSource": "找片为主"}, {"name": "枭起濠城", "cid": "mzc0033m122a5qo", "avgExposure": 4384, "avgCompletionRate": 0.36450000000000005, "avgPlayUsers": 432, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "彩礼初心", "cid": "mzc003uweosoy0o", "avgExposure": 4328, "avgCompletionRate": 0.6587999999999999, "avgPlayUsers": 1122, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "波光虚幻", "cid": "mzc003omwc4xjxw", "avgExposure": 4294, "avgCompletionRate": 0.12380000000000001, "avgPlayUsers": 802, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "捡来的新娘", "cid": "mzc003g6i6ym8cy", "avgExposure": 4250, "avgCompletionRate": 0.3064, "avgPlayUsers": 623, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "神宠御世", "cid": "mzc003u3d4kbwa2", "avgExposure": 4176, "avgCompletionRate": 0.49670000000000003, "avgPlayUsers": 1201, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "枕边的陌生人", "cid": "mzc003levieiz64", "avgExposure": 4155, "avgCompletionRate": 0.345, "avgPlayUsers": 1003, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "惹他，他10000级你不知道", "cid": "mzc003cekd1zdpx", "avgExposure": 4149, "avgCompletionRate": 0.53, "avgPlayUsers": 889, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "小枫暖阳", "cid": "mzc003pf8rbpr0n", "avgExposure": 4101, "avgCompletionRate": 0.31329999999999997, "avgPlayUsers": 252, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "血玉辞", "cid": "mzc0032c6zziskz", "avgExposure": 4078, "avgCompletionRate": 0.6620999999999999, "avgPlayUsers": 831, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "晚风遇南城", "cid": "mzc003tuj51oxe7", "avgExposure": 3833, "avgCompletionRate": 0.34950000000000003, "avgPlayUsers": 683, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "穿越乞丐：开局丞相府大小姐跟我混", "cid": "mzc003pzuimmkxu", "avgExposure": 3815, "avgCompletionRate": 0.593, "avgPlayUsers": 1474, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "我的婚姻我做主", "cid": "mzc0039i373k9yl", "avgExposure": 3751, "avgCompletionRate": 0.5069, "avgPlayUsers": 1102, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "绝世天命大反派", "cid": "mzc003l5iccllcw", "avgExposure": 3740, "avgCompletionRate": 0.4254, "avgPlayUsers": 813, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "萌妹大王", "cid": "mzc003yd1nfepzd", "avgExposure": 3722, "avgCompletionRate": 0.14300000000000002, "avgPlayUsers": 504, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "签到饥荒年", "cid": "mzc003u3nzvspb1", "avgExposure": 3683, "avgCompletionRate": 0.4322, "avgPlayUsers": 559, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "魔神奶团三岁半", "cid": "mzc0038umqmio8a", "avgExposure": 3672, "avgCompletionRate": 0.4682, "avgPlayUsers": 1601, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "老板把我赶走后，公司天塌了", "cid": "mzc003wmultwyox", "avgExposure": 3638, "avgCompletionRate": 0.4072, "avgPlayUsers": 446, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "婚礼窃案", "cid": "mzc003mvd1lxmmj", "avgExposure": 3621, "avgCompletionRate": 0.5008, "avgPlayUsers": 687, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "想要长生就得苟", "cid": "mzc003ejxiqz4u0", "avgExposure": 3616, "avgCompletionRate": 0.4877, "avgPlayUsers": 436, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "妙手农女", "cid": "mzc003q2gama6s6", "avgExposure": 3596, "avgCompletionRate": 0.1724, "avgPlayUsers": 174, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "全民御兽：开局山海经横扫全球", "cid": "mzc00392dck3k9y", "avgExposure": 3596, "avgCompletionRate": 0.4354, "avgPlayUsers": 3573, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "离职反击", "cid": "mzc003bidkgil2a", "avgExposure": 3564, "avgCompletionRate": 0.3789, "avgPlayUsers": 373, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "末日签到：囤货为王", "cid": "mzc003mv94sr8a2", "avgExposure": 3517, "avgCompletionRate": 0.4339, "avgPlayUsers": 875, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "老婆要给白月光传宗接代", "cid": "mzc0036qcllooch", "avgExposure": 3500, "avgCompletionRate": 0.4194, "avgPlayUsers": 877, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "网恋对象是女总裁", "cid": "mzc003n43u2wp6o", "avgExposure": 3465, "avgCompletionRate": 0.1664, "avgPlayUsers": 232, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "荒岛求生", "cid": "mzc003dfkcwj9c8", "avgExposure": 3385, "avgCompletionRate": 0.4303, "avgPlayUsers": 765, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "吞天大圣", "cid": "mzc003eukh90kwl", "avgExposure": 3383, "avgCompletionRate": 0.2122, "avgPlayUsers": 217, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "全民抗日：诸位皆是英豪", "cid": "mzc0031wlnj252x", "avgExposure": 3336, "avgCompletionRate": 0.21489999999999998, "avgPlayUsers": 506, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "龙潜1978", "cid": "mzc003epjuah0uw", "avgExposure": 3322, "avgCompletionRate": 0.3514, "avgPlayUsers": 134, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "破网", "cid": "mzc003n05ll52r3", "avgExposure": 3320, "avgCompletionRate": 0.3306, "avgPlayUsers": 318, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "力量点满？我可是亡灵法师啊！", "cid": "mzc003he1tprob3", "avgExposure": 3238, "avgCompletionRate": 0.2922, "avgPlayUsers": 696, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "千金扮穷：踹掉奇葩亲家", "cid": "mzc003i53ooxc6q", "avgExposure": 3224, "avgCompletionRate": 0.2913, "avgPlayUsers": 290, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "上门拜年：原来儿媳另有其人", "cid": "mzc003hcpzjilqp", "avgExposure": 3198, "avgCompletionRate": 0.5594, "avgPlayUsers": 2723, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "寒庭别梦", "cid": "mzc003062778as7", "avgExposure": 3182, "avgCompletionRate": 0.6218, "avgPlayUsers": 1086, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "这牛马我不当了", "cid": "mzc003gq6k42w8c", "avgExposure": 3161, "avgCompletionRate": 0.5282, "avgPlayUsers": 405, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "系统提前三年，可末世真没降临", "cid": "mzc003ujxbrpi2d", "avgExposure": 3138, "avgCompletionRate": 0.3967, "avgPlayUsers": 3127, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "卖小姨子那天，我重生了", "cid": "mzc003w08eucwku", "avgExposure": 3138, "avgCompletionRate": 0.3467, "avgPlayUsers": 153, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "前夫的新婚礼", "cid": "mzc0035rokkrpw8", "avgExposure": 3082, "avgCompletionRate": 0.336, "avgPlayUsers": 400, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "破茧金丝笼", "cid": "mzc0031hettb3kd", "avgExposure": 3067, "avgCompletionRate": 0.415, "avgPlayUsers": 570, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "夜钓梦中梦", "cid": "mzc0035i704eriy", "avgExposure": 3037, "avgCompletionRate": 0.4178, "avgPlayUsers": 125, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "林舒硬核维权恶邻离场", "cid": "mzc003w37b7lo2d", "avgExposure": 3029, "avgCompletionRate": 0.29969999999999997, "avgPlayUsers": 301, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "婉归", "cid": "mzc003pzww8nxws", "avgExposure": 3004, "avgCompletionRate": 0.36590000000000006, "avgPlayUsers": 371, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "斗罗大陆5重生唐三（下）", "cid": "mzc003hv42mlr2e", "avgExposure": 2964, "avgCompletionRate": 0.1288, "avgPlayUsers": 536, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "末日寒潮我有移动堡垒我怕谁", "cid": "mzc0036trff3i65", "avgExposure": 2942, "avgCompletionRate": 0.326, "avgPlayUsers": 476, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "爱意与牢笼", "cid": "mzc003ry1qqaheo", "avgExposure": 2868, "avgCompletionRate": 0.3871, "avgPlayUsers": 182, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "虾仁小郎君", "cid": "mzc003s55d59i4v", "avgExposure": 2808, "avgCompletionRate": 0.4437, "avgPlayUsers": 558, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "都市神医：七个师姐保我无敌", "cid": "mzc003qrtz338wl", "avgExposure": 2808, "avgCompletionRate": 0.3626, "avgPlayUsers": 505, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "许仙重生之医道称雄", "cid": "mzc003pfo6avtca", "avgExposure": 2785, "avgCompletionRate": 0.19820000000000002, "avgPlayUsers": 192, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "高手下山之逆天神医", "cid": "mzc003ysa40omg4", "avgExposure": 2783, "avgCompletionRate": 0.2987, "avgPlayUsers": 228, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "无尽镇魂", "cid": "mzc003pvkd59349", "avgExposure": 2775, "avgCompletionRate": 0.4593, "avgPlayUsers": 755, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "医馆俏尸夫", "cid": "mzc003ncr5h6vqz", "avgExposure": 2737, "avgCompletionRate": 0.4867, "avgPlayUsers": 768, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "吃土就变强： 百万死士横推末日", "cid": "mzc0038m2l9we0p", "avgExposure": 2734, "avgCompletionRate": 0.3472, "avgPlayUsers": 353, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "离婚后，我被豪门太子宠上天", "cid": "mzc003gfzi27iiw", "avgExposure": 2708, "avgCompletionRate": 0.428, "avgPlayUsers": 507, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "都市古仙医 动态漫", "cid": "mzc003frwp1eajd", "avgExposure": 2666, "avgCompletionRate": 0.25739999999999996, "avgPlayUsers": 486, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "仙尊归来，只手镇人间", "cid": "mzc0035pome4gpu", "avgExposure": 2660, "avgCompletionRate": 0.2658, "avgPlayUsers": 425, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "大小姐，您给恶魔执事调成啥了", "cid": "mzc003uqcx900o5", "avgExposure": 2650, "avgCompletionRate": 0.2775, "avgPlayUsers": 1273, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "换运手串", "cid": "mzc003nkvmm4lmo", "avgExposure": 2616, "avgCompletionRate": 0.0694, "avgPlayUsers": 749, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "我的植物变异了", "cid": "mzc003ez5yivkmw", "avgExposure": 2613, "avgCompletionRate": 0.2157, "avgPlayUsers": 249, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "豪门小福星", "cid": "mzc0033lgmqtbsq", "avgExposure": 2599, "avgCompletionRate": 0.5489999999999999, "avgPlayUsers": 546, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "废柴山主", "cid": "mzc0031adhxnsbj", "avgExposure": 2588, "avgCompletionRate": 0.2349, "avgPlayUsers": 177, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "穿越50：我每天刷新物资", "cid": "mzc0038so62ws0u", "avgExposure": 2585, "avgCompletionRate": 0.4303, "avgPlayUsers": 397, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "重生蚊神", "cid": "mzc003naz1xve7j", "avgExposure": 2566, "avgCompletionRate": 0.5024000000000001, "avgPlayUsers": 471, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "重回1976，我的逆袭人生", "cid": "mzc0037dk4w9340", "avgExposure": 2536, "avgCompletionRate": 0.3333, "avgPlayUsers": 348, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "单开族谱", "cid": "mzc003lboi6fx0e", "avgExposure": 2507, "avgCompletionRate": 0.07980000000000001, "avgPlayUsers": 678, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "出山吧，老爹", "cid": "mzc0032d57fmtvd", "avgExposure": 2496, "avgCompletionRate": 0.3452, "avgPlayUsers": 414, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "战神联盟第一季", "cid": "mzc003mvv4ccdpa", "avgExposure": 2482, "avgCompletionRate": 0.263, "avgPlayUsers": 167, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "诸神香火之争", "cid": "mzc003729nj8b2l", "avgExposure": 2477, "avgCompletionRate": 0.2004, "avgPlayUsers": 254, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "中奖500，却被请客50万", "cid": "mzc0038779p50ib", "avgExposure": 2427, "avgCompletionRate": 0.2314, "avgPlayUsers": 168, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "月光曾照我", "cid": "mzc003mgmdlu4gd", "avgExposure": 2424, "avgCompletionRate": 0.17679999999999998, "avgPlayUsers": 98, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "离婚后，我摊牌了亿万家产", "cid": "mzc0035evg4a3yi", "avgExposure": 2420, "avgCompletionRate": 0.4138, "avgPlayUsers": 222, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "老黑山岁月", "cid": "mzc003mhbhhzuqj", "avgExposure": 2417, "avgCompletionRate": 0.3042, "avgPlayUsers": 101, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "从女荒部落开始打造万古第一城", "cid": "mzc003novnjire1", "avgExposure": 2405, "avgCompletionRate": 0.40549999999999997, "avgPlayUsers": 536, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "废爹带崽奇遇记", "cid": "mzc003c04skwwg8", "avgExposure": 2402, "avgCompletionRate": 0.522, "avgPlayUsers": 360, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "忠心虾仁", "cid": "mzc003be7qmxoz0", "avgExposure": 2373, "avgCompletionRate": 0.1507, "avgPlayUsers": 159, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "致我真正的女儿", "cid": "mzc003gfvl9146f", "avgExposure": 2371, "avgCompletionRate": 0.41609999999999997, "avgPlayUsers": 378, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "半面桃花半修罗", "cid": "mzc003os45taqkl", "avgExposure": 2370, "avgCompletionRate": 0.5473, "avgPlayUsers": 557, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "彪人：独孤木", "cid": "mzc003b2hv34bat", "avgExposure": 2298, "avgCompletionRate": 0.419, "avgPlayUsers": 1535, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "重生60：我把敌特整疯了", "cid": "mzc003sea2iqgw2", "avgExposure": 2262, "avgCompletionRate": 0.4127, "avgPlayUsers": 306, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "儿子认邻居当妈我转身继承家产", "cid": "mzc003un56afgio", "avgExposure": 2251, "avgCompletionRate": 0.4522, "avgPlayUsers": 566, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "全民御兽：开局觉醒SSS级天赋", "cid": "mzc003f9o1xn9sx", "avgExposure": 2212, "avgCompletionRate": 0.2486, "avgPlayUsers": 586, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "隐富继承人", "cid": "mzc003i53fffu6h", "avgExposure": 2186, "avgCompletionRate": 0.22769999999999999, "avgPlayUsers": 139, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "我准点下班后，公司快倒闭了", "cid": "mzc003upn2mdse8", "avgExposure": 2129, "avgCompletionRate": 0.4249, "avgPlayUsers": 472, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "孽海烬苍生", "cid": "mzc003qtnpl7qmb", "avgExposure": 2124, "avgCompletionRate": 0.5203, "avgPlayUsers": 2169, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "断供上岸男友", "cid": "mzc003mfxr7pe6p", "avgExposure": 2076, "avgCompletionRate": 0.284, "avgPlayUsers": 221, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "猎户家的烟火福", "cid": "mzc0038ph6utqu4", "avgExposure": 2065, "avgCompletionRate": 0.2767, "avgPlayUsers": 169, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "致命货源", "cid": "mzc0033wbxd6jir", "avgExposure": 2022, "avgCompletionRate": 0.3293, "avgPlayUsers": 427, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "兵王叶冷锋", "cid": "mzc0031p248l94o", "avgExposure": 2022, "avgCompletionRate": 0.5255, "avgPlayUsers": 656, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "财产公证后，老公后悔了", "cid": "mzc0034lh9hvciz", "avgExposure": 2012, "avgCompletionRate": 0.369, "avgPlayUsers": 347, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "疯狂钓鱼", "cid": "mzc003m7bzzk9zx", "avgExposure": 1987, "avgCompletionRate": 0.40909999999999996, "avgPlayUsers": 364, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "AA制夫妻", "cid": "mzc003b8v4ssxmi", "avgExposure": 1950, "avgCompletionRate": 0.4481, "avgPlayUsers": 792, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "游戏降临我重生氪出SSS级狐族女帝", "cid": "mzc003v0dpllaj3", "avgExposure": 1879, "avgCompletionRate": 0.39490000000000003, "avgPlayUsers": 429, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "罪迹推演之审判者", "cid": "mzc0037k3n7qz29", "avgExposure": 1858, "avgCompletionRate": 0.23800000000000002, "avgPlayUsers": 68, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "诡居", "cid": "mzc003jtokg5b80", "avgExposure": 1848, "avgCompletionRate": 0.2788, "avgPlayUsers": 174, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "进化狂潮", "cid": "mzc003me61drnp9", "avgExposure": 1842, "avgCompletionRate": 0.21489999999999998, "avgPlayUsers": 216, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "蛇骨生花", "cid": "mzc003k193bb46l", "avgExposure": 1836, "avgCompletionRate": 0.5575, "avgPlayUsers": 756, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "摆烂替身", "cid": "mzc003maa5lbjhp", "avgExposure": 1830, "avgCompletionRate": 0.2706, "avgPlayUsers": 656, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "鬼道实录", "cid": "mzc003jqhbzkr21", "avgExposure": 1820, "avgCompletionRate": 0.4522, "avgPlayUsers": 714, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "植物大乱斗", "cid": "mzc003nhs1p7xsx", "avgExposure": 1800, "avgCompletionRate": 0.0784, "avgPlayUsers": 211, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "绝对力量", "cid": "mzc00305v62ibls", "avgExposure": 1790, "avgCompletionRate": 0.2003, "avgPlayUsers": 477, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "极寒冰封，你囤物资我囤美女", "cid": "mzc0031qfz78tex", "avgExposure": 1778, "avgCompletionRate": 0.46380000000000005, "avgPlayUsers": 965, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "魔童女帝", "cid": "mzc003o5pfnfkud", "avgExposure": 1766, "avgCompletionRate": 0.3322, "avgPlayUsers": 252, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "生死疲劳", "cid": "mzc003escph1j19", "avgExposure": 1760, "avgCompletionRate": 0.5022, "avgPlayUsers": 322, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "我的功夫爷爷是狼王", "cid": "mzc003h1ylpbrc5", "avgExposure": 1748, "avgCompletionRate": 0.18289999999999998, "avgPlayUsers": 214, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "疯狂林爷", "cid": "mzc003ygud1uks5", "avgExposure": 1745, "avgCompletionRate": 0.4142, "avgPlayUsers": 331, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "斗罗大陆3龙王传说 合集", "cid": "mzc003l3kxd3di1", "avgExposure": 1738, "avgCompletionRate": 0.22719999999999999, "avgPlayUsers": 899, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "刚上大学，系统说这里是合欢宗", "cid": "mzc003jybbnnubl", "avgExposure": 1724, "avgCompletionRate": 0.1705, "avgPlayUsers": 547, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "古村冥婚怨", "cid": "mzc003p4xsgozyq", "avgExposure": 1709, "avgCompletionRate": 0.21359999999999998, "avgPlayUsers": 107, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "大四实习：我在749局斩妖", "cid": "mzc003oqoa6hf12", "avgExposure": 1682, "avgCompletionRate": 0.1832, "avgPlayUsers": 492, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "诡楼逃生", "cid": "mzc003rbu3f9lcn", "avgExposure": 1673, "avgCompletionRate": 0.16620000000000001, "avgPlayUsers": 214, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "兄弟托孤，护她一世", "cid": "mzc0037fyu6jjou", "avgExposure": 1666, "avgCompletionRate": 0.5033, "avgPlayUsers": 680, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "君负红颜", "cid": "mzc003ne5vrgbat", "avgExposure": 1650, "avgCompletionRate": 0.2087, "avgPlayUsers": 128, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "我靠唱歌打脸全团", "cid": "mzc003zazyi1kv4", "avgExposure": 1641, "avgCompletionRate": 0.4534, "avgPlayUsers": 403, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "当丈夫意外死亡之后", "cid": "mzc00384sfvq6on", "avgExposure": 1625, "avgCompletionRate": 0.139, "avgPlayUsers": 47, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "吃睡龙娘带崽觅食日常", "cid": "mzc003sowo840ok", "avgExposure": 1622, "avgCompletionRate": 0.3249, "avgPlayUsers": 447, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "无限恐怖：满级大佬误入新手局", "cid": "mzc003rz07fw0pb", "avgExposure": 1618, "avgCompletionRate": 0.24109999999999998, "avgPlayUsers": 536, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "弹幕预警校花落魄捡包子", "cid": "mzc003g59qa52eo", "avgExposure": 1582, "avgCompletionRate": 0.3235, "avgPlayUsers": 308, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "江思先生", "cid": "mzc003vl23nsi3n", "avgExposure": 1569, "avgCompletionRate": 0.29600000000000004, "avgPlayUsers": 358, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "无言的老友", "cid": "mzc0036uom62i4i", "avgExposure": 1558, "avgCompletionRate": 0.23870000000000002, "avgPlayUsers": 393, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "小郑卖鱼记", "cid": "mzc003xgx5lyxev", "avgExposure": 1552, "avgCompletionRate": 0.39649999999999996, "avgPlayUsers": 89, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "棺盗天机", "cid": "mzc0039yfkom32y", "avgExposure": 1551, "avgCompletionRate": 0.4889, "avgPlayUsers": 671, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "全职法神！我即是规则·动态漫", "cid": "mzc003k04gsmiy4", "avgExposure": 1548, "avgCompletionRate": 0.33799999999999997, "avgPlayUsers": 845, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "只有我能用召唤术 动态漫", "cid": "mzc003c1fnr495d", "avgExposure": 1546, "avgCompletionRate": 0.3821, "avgPlayUsers": 703, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "完美独宠", "cid": "mzc003mrf1doh77", "avgExposure": 1536, "avgCompletionRate": 0.3131, "avgPlayUsers": 291, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "《怒海狂澜》", "cid": "mzc003ev9889yku", "avgExposure": 1529, "avgCompletionRate": 0.33759999999999996, "avgPlayUsers": 379, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "进厂第一天，专治无良老板", "cid": "mzc003n3inzxd8z", "avgExposure": 1502, "avgCompletionRate": 0.48, "avgPlayUsers": 392, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "盲眼识心，我的枕边摄政王", "cid": "mzc003swk8wwo84", "avgExposure": 1501, "avgCompletionRate": 0.4107, "avgPlayUsers": 300, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "我契约了我自己", "cid": "mzc0039etuaf4xo", "avgExposure": 1497, "avgCompletionRate": 0.2556, "avgPlayUsers": 479, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "青意心心", "cid": "mzc003zu5ei652c", "avgExposure": 1484, "avgCompletionRate": 0.4686, "avgPlayUsers": 581, "quadrant": "低曝光高完播 💎", "mainSource": "刷刷为主"}, {"name": "狗狗的灵魂", "cid": "mzc003pivfrgdi9", "avgExposure": 1458, "avgCompletionRate": 0.053399999999999996, "avgPlayUsers": 647, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "工业普查", "cid": "mzc003xz4swbhgg", "avgExposure": 1458, "avgCompletionRate": 0.5699000000000001, "avgPlayUsers": 325, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "重生控局", "cid": "mzc00302u3f0ucn", "avgExposure": 1416, "avgCompletionRate": 0.2801, "avgPlayUsers": 872, "quadrant": "低曝光低完播", "mainSource": "刷刷为主"}, {"name": "王牌爆笑日常", "cid": "mzc003tpi1hv74x", "avgExposure": 1397, "avgCompletionRate": 0.1604, "avgPlayUsers": 513, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "我在末世当典狱长，囚犯都是S级丧尸", "cid": "mzc00330n772va1", "avgExposure": 1390, "avgCompletionRate": 0.30760000000000004, "avgPlayUsers": 305, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "《调皮的堂弟》", "cid": "mzc0033noj3w01n", "avgExposure": 1298, "avgCompletionRate": 0.36810000000000004, "avgPlayUsers": 376, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "重生都市修仙", "cid": "mzc003yh99pm5ff", "avgExposure": 1295, "avgCompletionRate": 0.21899999999999997, "avgPlayUsers": 403, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "八宝黄牛", "cid": "mzc003mm2w8595c", "avgExposure": 1291, "avgCompletionRate": 0.10529999999999999, "avgPlayUsers": 249, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "红尘择婿录", "cid": "mzc003vpws893so", "avgExposure": 1219, "avgCompletionRate": 0.3619, "avgPlayUsers": 129, "quadrant": "低曝光低完播", "mainSource": "找片为主"}, {"name": "镇魔十年被逼迎娶敌国女帝", "cid": "mzc003iigvn8wsb", "avgExposure": 1196, "avgCompletionRate": 0.4916, "avgPlayUsers": 595, "quadrant": "低曝光高完播 💎", "mainSource": "找片为主"}, {"name": "合欢逆袭称霸末世", "cid": "mzc0034j1wc21zy", "avgExposure": 1156, "avgCompletionRate": 0.26280000000000003, "avgPlayUsers": 286, "quadrant": "低曝光低完播", "mainSource": "找片为主"}];
 const ZP_DATA = [{"name": "原来我早就无敌了", "cid": "mzc003s9rem8tbg", "zp_imp": 382004, "zp_clck": 11584, "zp_ctr": 3.0324, "play_uv": 9336, "play_30s_uv": 4069, "play_30s_rate": 43.584}, {"name": "史上最强师父", "cid": "mzc0039mf8oy3qm", "zp_imp": 341203, "zp_clck": 17129, "zp_ctr": 5.0202, "play_uv": 14016, "play_30s_uv": 7506, "play_30s_rate": 53.5531}, {"name": "开心锤锤", "cid": "mzc003ihfxlx0oz", "zp_imp": 333471, "zp_clck": 8186, "zp_ctr": 2.4548, "play_uv": 6299, "play_30s_uv": 3386, "play_30s_rate": 53.7546}, {"name": "太古十凶：别人御兽我御兽娘", "cid": "mzc003k73nbry89", "zp_imp": 359675, "zp_clck": 15130, "zp_ctr": 4.2066, "play_uv": 12187, "play_30s_uv": 5073, "play_30s_rate": 41.6263}, {"name": "死灵法师！我即是天灾", "cid": "mzc0035m5r35ex1", "zp_imp": 281087, "zp_clck": 10266, "zp_ctr": 3.6523, "play_uv": 8122, "play_30s_uv": 3203, "play_30s_rate": 39.4361}, {"name": "流放路上做女皇", "cid": "mzc0030x78k4hne", "zp_imp": 251559, "zp_clck": 9554, "zp_ctr": 3.7979, "play_uv": 7374, "play_30s_uv": 3466, "play_30s_rate": 47.003}, {"name": "难哄 动态漫", "cid": "mzc003skgvfogyn", "zp_imp": 251043, "zp_clck": 7323, "zp_ctr": 2.917, "play_uv": 5757, "play_30s_uv": 1811, "play_30s_rate": 31.4574}, {"name": "表哥白泽", "cid": "mzc003lo5sgqd4y", "zp_imp": 217708, "zp_clck": 3548, "zp_ctr": 1.6297, "play_uv": 2769, "play_30s_uv": 1187, "play_30s_rate": 42.8675}, {"name": "白骨精传奇第二季", "cid": "mzc003tovo4n6fm", "zp_imp": 219082, "zp_clck": 8624, "zp_ctr": 3.9364, "play_uv": 6877, "play_30s_uv": 3289, "play_30s_rate": 47.8261}, {"name": "鬼捕", "cid": "mzc003b618suxqa", "zp_imp": 227632, "zp_clck": 8378, "zp_ctr": 3.6805, "play_uv": 6836, "play_30s_uv": 3448, "play_30s_rate": 50.4389}, {"name": "碎嘴丫头王怼怼", "cid": "mzc0036pnz7jy2t", "zp_imp": 197169, "zp_clck": 10566, "zp_ctr": 5.3589, "play_uv": 8839, "play_30s_uv": 5548, "play_30s_rate": 62.7673}, {"name": "斗罗大陆4终极斗罗 合集", "cid": "mzc0033ty9t0efp", "zp_imp": 220739, "zp_clck": 8178, "zp_ctr": 3.7048, "play_uv": 6645, "play_30s_uv": 2049, "play_30s_rate": 30.8352}, {"name": "末世求生之美女如云", "cid": "mzc003yqy661p92", "zp_imp": 188609, "zp_clck": 12388, "zp_ctr": 6.5681, "play_uv": 9783, "play_30s_uv": 4537, "play_30s_rate": 46.3764}, {"name": "万界主宰", "cid": "mzc003n3s5diun1", "zp_imp": 165527, "zp_clck": 4724, "zp_ctr": 2.8539, "play_uv": 3696, "play_30s_uv": 1287, "play_30s_rate": 34.8214}, {"name": "白骨精传奇第一季", "cid": "mzc0033mr33fi31", "zp_imp": 167306, "zp_clck": 8074, "zp_ctr": 4.8259, "play_uv": 6344, "play_30s_uv": 3791, "play_30s_rate": 59.7573}, {"name": "全球冰封：我打造了末日安全屋", "cid": "mzc003dxezn5lqz", "zp_imp": 150371, "zp_clck": 6353, "zp_ctr": 4.2249, "play_uv": 5042, "play_30s_uv": 2002, "play_30s_rate": 39.7065}, {"name": "我家后院是仙界", "cid": "mzc003jux9d4z6j", "zp_imp": 157222, "zp_clck": 10022, "zp_ctr": 6.3744, "play_uv": 7927, "play_30s_uv": 5507, "play_30s_rate": 69.4714}, {"name": "《东风出击》", "cid": "mzc00313aj36gvf", "zp_imp": 151488, "zp_clck": 6786, "zp_ctr": 4.4796, "play_uv": 5530, "play_30s_uv": 3284, "play_30s_rate": 59.3852}, {"name": "开心锤锤Story：我不是杆神", "cid": "mzc0036jhyytasw", "zp_imp": 119750, "zp_clck": 2924, "zp_ctr": 2.4418, "play_uv": 2314, "play_30s_uv": 1232, "play_30s_rate": 53.2411}, {"name": "末世神级升级系统 动态漫", "cid": "mzc003hlarvz30j", "zp_imp": 116116, "zp_clck": 4162, "zp_ctr": 3.5843, "play_uv": 3389, "play_30s_uv": 1545, "play_30s_rate": 45.5887}, {"name": "炼气十万年我直接天下无敌", "cid": "mzc003o99j3noal", "zp_imp": 128218, "zp_clck": 6317, "zp_ctr": 4.9268, "play_uv": 5095, "play_30s_uv": 2141, "play_30s_rate": 42.0216}, {"name": "百岁老天师", "cid": "mzc0032bpgg7cyi", "zp_imp": 141131, "zp_clck": 6721, "zp_ctr": 4.7622, "play_uv": 5377, "play_30s_uv": 2734, "play_30s_rate": 50.8462}, {"name": "收尸人   短剧", "cid": "mzc003yzxppfk4f", "zp_imp": 127088, "zp_clck": 5757, "zp_ctr": 4.5299, "play_uv": 4574, "play_30s_uv": 2320, "play_30s_rate": 50.7215}, {"name": "网游之天下无双", "cid": "mzc0035hykgxlko", "zp_imp": 123823, "zp_clck": 4312, "zp_ctr": 3.4824, "play_uv": 3425, "play_30s_uv": 1529, "play_30s_rate": 44.6423}, {"name": "全球诡异时代", "cid": "mzc003fqld9wrmn", "zp_imp": 117055, "zp_clck": 4501, "zp_ctr": 3.8452, "play_uv": 3495, "play_30s_uv": 1105, "play_30s_rate": 31.6166}, {"name": "贴身护理瘫痪女总裁，我逆袭了", "cid": "mzc003jub1hr6jz", "zp_imp": 109333, "zp_clck": 3769, "zp_ctr": 3.4473, "play_uv": 3039, "play_30s_uv": 1484, "play_30s_rate": 48.8319}, {"name": "萌娃小医仙", "cid": "mzc003b2h4cmta2", "zp_imp": 102701, "zp_clck": 3562, "zp_ctr": 3.4683, "play_uv": 2641, "play_30s_uv": 1543, "play_30s_rate": 58.4248}, {"name": "八零之错嫁良缘", "cid": "mzc003mpns89ca6", "zp_imp": 111955, "zp_clck": 8438, "zp_ctr": 7.537, "play_uv": 6496, "play_30s_uv": 4309, "play_30s_rate": 66.3331}, {"name": "斩神台下，诸神跪求我原谅", "cid": "mzc0030bbos3miu", "zp_imp": 106864, "zp_clck": 2919, "zp_ctr": 2.7315, "play_uv": 2415, "play_30s_uv": 1131, "play_30s_rate": 46.8323}, {"name": "大国重工物理超度乱世", "cid": "mzc003oe237cyo3", "zp_imp": 82891, "zp_clck": 3570, "zp_ctr": 4.3069, "play_uv": 2885, "play_30s_uv": 1558, "play_30s_rate": 54.0035}, {"name": "绝世武神 第七季", "cid": "mzc003e0miywu0a", "zp_imp": 116033, "zp_clck": 3231, "zp_ctr": 2.7846, "play_uv": 2472, "play_30s_uv": 922, "play_30s_rate": 37.2977}, {"name": "偷偷藏不住 动态漫", "cid": "mzc003p34euhjq6", "zp_imp": 90589, "zp_clck": 3260, "zp_ctr": 3.5987, "play_uv": 2509, "play_30s_uv": 916, "play_30s_rate": 36.5086}, {"name": "玄门赘婿：开局觉醒多子多福系统", "cid": "mzc003x0h0sudcm", "zp_imp": 92762, "zp_clck": 3011, "zp_ctr": 3.2459, "play_uv": 2361, "play_30s_uv": 1144, "play_30s_rate": 48.454}, {"name": "再不死我就真无敌了 动态漫", "cid": "mzc0032pzmup8a4", "zp_imp": 99132, "zp_clck": 3012, "zp_ctr": 3.0384, "play_uv": 2292, "play_30s_uv": 971, "play_30s_rate": 42.3647}, {"name": "师尊：这个冲师逆徒才不是圣子", "cid": "mzc003ldujfh9av", "zp_imp": 104685, "zp_clck": 3958, "zp_ctr": 3.7809, "play_uv": 3061, "play_30s_uv": 1055, "play_30s_rate": 34.4659}, {"name": "末日狠人：开局囤积万亿物资", "cid": "mzc003a2gm6ogye", "zp_imp": 88163, "zp_clck": 2942, "zp_ctr": 3.337, "play_uv": 2292, "play_30s_uv": 1043, "play_30s_rate": 45.5061}, {"name": "乙游系统觉醒，我在星际撩疯了", "cid": "mzc0031z82qb9ka", "zp_imp": 105344, "zp_clck": 4333, "zp_ctr": 4.1132, "play_uv": 3457, "play_30s_uv": 1409, "play_30s_rate": 40.7579}, {"name": "梁祝千古怨，今生再续未了缘", "cid": "mzc003wr7z7xoq1", "zp_imp": 31801, "zp_clck": 1146, "zp_ctr": 3.6037, "play_uv": 901, "play_30s_uv": 610, "play_30s_rate": 67.7026}, {"name": "老公装穷考验我", "cid": "mzc003pybgw63yu", "zp_imp": 73130, "zp_clck": 7015, "zp_ctr": 9.5925, "play_uv": 5345, "play_30s_uv": 3905, "play_30s_rate": 73.0589}, {"name": "不当舔狗后，我成了亿万神豪", "cid": "mzc003q8gam1fju", "zp_imp": 89602, "zp_clck": 2812, "zp_ctr": 3.1383, "play_uv": 2149, "play_30s_uv": 797, "play_30s_rate": 37.087}, {"name": "此爱不售", "cid": "mzc003eg04kvdp0", "zp_imp": 88895, "zp_clck": 2572, "zp_ctr": 2.8933, "play_uv": 1928, "play_30s_uv": 816, "play_30s_rate": 42.3237}, {"name": "封总太太要离婚", "cid": "mzc0039levvb7gj", "zp_imp": 76483, "zp_clck": 5700, "zp_ctr": 7.4526, "play_uv": 4180, "play_30s_uv": 2707, "play_30s_rate": 64.7608}, {"name": "诸葛九九", "cid": "mzc003yxn6ejuo8", "zp_imp": 54106, "zp_clck": 831, "zp_ctr": 1.5359, "play_uv": 686, "play_30s_uv": 352, "play_30s_rate": 51.312}, {"name": "寄养金丝雀", "cid": "mzc0039mr8cyrqa", "zp_imp": 39629, "zp_clck": 2965, "zp_ctr": 7.4819, "play_uv": 2459, "play_30s_uv": 1438, "play_30s_rate": 58.4791}, {"name": "幼崽是大佬", "cid": "mzc003irpmezwak", "zp_imp": 35751, "zp_clck": 1733, "zp_ctr": 4.8474, "play_uv": 1496, "play_30s_uv": 825, "play_30s_rate": 55.1471}, {"name": "从哥布林到哥布林神", "cid": "mzc0030llffl6o9", "zp_imp": 84419, "zp_clck": 3105, "zp_ctr": 3.6781, "play_uv": 2396, "play_30s_uv": 989, "play_30s_rate": 41.2771}, {"name": "丫鬟替我洞房后，我悔疯了", "cid": "mzc003ns7fve36t", "zp_imp": 71097, "zp_clck": 4565, "zp_ctr": 6.4208, "play_uv": 3400, "play_30s_uv": 2295, "play_30s_rate": 67.5}, {"name": "双胞胎的恐怖传说", "cid": "mzc00360e4s8ag4", "zp_imp": 36741, "zp_clck": 2839, "zp_ctr": 7.7271, "play_uv": 2232, "play_30s_uv": 1435, "play_30s_rate": 64.2921}, {"name": "荒岛求生，我靠神眼鉴定万物", "cid": "mzc00389t2u9qqc", "zp_imp": 67925, "zp_clck": 4130, "zp_ctr": 6.0802, "play_uv": 3342, "play_30s_uv": 2389, "play_30s_rate": 71.4841}, {"name": "鬼头山的秘密", "cid": "mzc003twhplatmn", "zp_imp": 44466, "zp_clck": 1228, "zp_ctr": 2.7617, "play_uv": 922, "play_30s_uv": 439, "play_30s_rate": 47.6139}, {"name": "召唤之主！当异变降临人间", "cid": "mzc00309hfv9a0p", "zp_imp": 73359, "zp_clck": 4092, "zp_ctr": 5.578, "play_uv": 3087, "play_30s_uv": 1072, "play_30s_rate": 34.7263}, {"name": "开心锤锤Story", "cid": "mzc0031gf4sxw1e", "zp_imp": 60945, "zp_clck": 1037, "zp_ctr": 1.7015, "play_uv": 848, "play_30s_uv": 362, "play_30s_rate": 42.6887}, {"name": "逐玉一次看个够", "cid": "mzc00315at9z7wt", "zp_imp": 34127, "zp_clck": 1401, "zp_ctr": 4.1053, "play_uv": 1126, "play_30s_uv": 463, "play_30s_rate": 41.119}, {"name": "《狗剩重生记》", "cid": "mzc003na9eqc780", "zp_imp": 37349, "zp_clck": 2615, "zp_ctr": 7.0015, "play_uv": 1815, "play_30s_uv": 986, "play_30s_rate": 54.3251}, {"name": "重生封神游戏之最强散人", "cid": "mzc003mnbhhq3h7", "zp_imp": 53322, "zp_clck": 1479, "zp_ctr": 2.7737, "play_uv": 1182, "play_30s_uv": 485, "play_30s_rate": 41.0321}, {"name": "吃鸡爆笑兄弟之植物生化危机", "cid": "mzc003l0zxplgrj", "zp_imp": 60378, "zp_clck": 1217, "zp_ctr": 2.0156, "play_uv": 987, "play_30s_uv": 379, "play_30s_rate": 38.3992}];
-const SS_CONV = [{"name": "混元吞天诀", "cid": "mzc003lgzr7xs3t", "total_vv": 966385, "detail_vv": 423298, "conv_rate": 43.8, "ss_title_imp": 390420, "ss_clck": 4848, "ss_ctr": 1.2417, "avg_pdtm_sec": 13.55}, {"name": "最强钓鱼王", "cid": "mzc003b21pdgryf", "total_vv": 828637, "detail_vv": 570127, "conv_rate": 68.8, "ss_title_imp": 259785, "ss_clck": 2118, "ss_ctr": 0.8153, "avg_pdtm_sec": 19.13}, {"name": "卖房救岳母", "cid": "mzc003c1nuacdf8", "total_vv": 215593, "detail_vv": 74624, "conv_rate": 34.61, "ss_title_imp": 102959, "ss_clck": 1788, "ss_ctr": 1.7366, "avg_pdtm_sec": 24.21}, {"name": "假汤乱世", "cid": "mzc003h3sqyr98m", "total_vv": 153662, "detail_vv": 65299, "conv_rate": 42.5, "ss_title_imp": 72654, "ss_clck": 1969, "ss_ctr": 2.7101, "avg_pdtm_sec": 28.76}, {"name": "五岁魔童叶嘟嘟", "cid": "mzc003nax08qdui", "total_vv": 77725, "detail_vv": 22456, "conv_rate": 28.89, "ss_title_imp": 38943, "ss_clck": 918, "ss_ctr": 2.3573, "avg_pdtm_sec": 35.38}, {"name": "逐玉之侯爷的宠爱记", "cid": "mzc0034eyhxwykh", "total_vv": 55204, "detail_vv": 22170, "conv_rate": 40.16, "ss_title_imp": 34782, "ss_clck": 316, "ss_ctr": 0.9085, "avg_pdtm_sec": 19.96}, {"name": "错乱情缘", "cid": "mzc0038tjhpufzr", "total_vv": 107478, "detail_vv": 48456, "conv_rate": 45.08, "ss_title_imp": 52632, "ss_clck": 1526, "ss_ctr": 2.8994, "avg_pdtm_sec": 34.38}, {"name": "波光续面", "cid": "mzc003ddshlqat1", "total_vv": 132878, "detail_vv": 46861, "conv_rate": 35.27, "ss_title_imp": 70236, "ss_clck": 1182, "ss_ctr": 1.6829, "avg_pdtm_sec": 38.53}];
-const SS_EP1 = [{"name": "混元吞天诀", "cid": "mzc003lgzr7xs3t", "ep1_conv": 46.24, "mid_conv": 42.25, "ep1_total_vv": 80822, "mid_total_vv": 862511, "ep1_ctr": 1.2114, "mid_ctr": 1.2424, "ep1_imp": 8420, "mid_imp": 382000}, {"name": "最强钓鱼王", "cid": "mzc003b21pdgryf", "ep1_conv": 66.4, "mid_conv": 77.06, "ep1_total_vv": 750737, "mid_total_vv": 25184, "ep1_ctr": 0.72, "mid_ctr": 1.471, "ep1_imp": 226814, "mid_imp": 32971}, {"name": "卖房救岳母", "cid": "mzc003c1nuacdf8", "ep1_conv": 33.92, "mid_conv": 60.94, "ep1_total_vv": 212643, "mid_total_vv": 448, "ep1_ctr": 1.7963, "mid_ctr": 1.0105, "ep1_imp": 95141, "mid_imp": 7818}, {"name": "假汤乱世", "cid": "mzc003h3sqyr98m", "ep1_conv": 41.49, "mid_conv": 69.78, "ep1_total_vv": 150472, "mid_total_vv": 761, "ep1_ctr": 2.9222, "mid_ctr": 0.748, "ep1_imp": 65568, "mid_imp": 7086}, {"name": "五岁魔童叶嘟嘟", "cid": "mzc003nax08qdui", "ep1_conv": 45.98, "mid_conv": 10.63, "ep1_total_vv": 29021, "mid_total_vv": 44125, "ep1_ctr": 2.3661, "mid_ctr": 2.3544, "ep1_imp": 9763, "mid_imp": 29180}, {"name": "逐玉之侯爷的宠爱记", "cid": "mzc0034eyhxwykh", "ep1_conv": 38.61, "mid_conv": 62.18, "ep1_total_vv": 53487, "mid_total_vv": 394, "ep1_ctr": 0.8566, "mid_ctr": 1.5021, "ep1_imp": 31986, "mid_imp": 2796}, {"name": "错乱情缘", "cid": "mzc0038tjhpufzr", "ep1_conv": 44.23, "mid_conv": 77.36, "ep1_total_vv": 105565, "mid_total_vv": 614, "ep1_ctr": 3.0365, "mid_ctr": 0.9915, "ep1_imp": 49102, "mid_imp": 3530}, {"name": "波光续面", "cid": "mzc003ddshlqat1", "ep1_conv": 34.21, "mid_conv": 75.45, "ep1_total_vv": 130351, "mid_total_vv": 558, "ep1_ctr": 1.7166, "mid_ctr": 1.1647, "ep1_imp": 65943, "mid_imp": 4293}];
-const SS_CONV_BM = 60.56;
-const SS_CTR_BM = 2.43;
+const SS_CONV = [{"name": "混元吞天诀", "cid": "mzc003lgzr7xs3t", "avg_pdtm_sec": 13.55, "ss_play_uv": 363152, "detail_enter_uv": 40065, "enter_rate": 11.03, "total_vv": 966385, "detail_vv": 423298, "depth_rate": 43.8}, {"name": "最强钓鱼王", "cid": "mzc003b21pdgryf", "avg_pdtm_sec": 19.13, "ss_play_uv": 227200, "detail_enter_uv": 33985, "enter_rate": 14.96, "total_vv": 828637, "detail_vv": 570127, "depth_rate": 68.8}, {"name": "卖房救岳母", "cid": "mzc003c1nuacdf8", "avg_pdtm_sec": 24.21, "ss_play_uv": 130936, "detail_enter_uv": 9183, "enter_rate": 7.01, "total_vv": 215593, "detail_vv": 74624, "depth_rate": 34.61}, {"name": "假汤乱世", "cid": "mzc003h3sqyr98m", "avg_pdtm_sec": 28.76, "ss_play_uv": 79500, "detail_enter_uv": 8411, "enter_rate": 10.58, "total_vv": 153662, "detail_vv": 65299, "depth_rate": 42.5}, {"name": "五岁魔童叶嘟嘟", "cid": "mzc003nax08qdui", "avg_pdtm_sec": 35.38, "ss_play_uv": 50499, "detail_enter_uv": 3647, "enter_rate": 7.22, "total_vv": 77725, "detail_vv": 22456, "depth_rate": 28.89}, {"name": "逐玉之侯爷的宠爱记", "cid": "mzc0034eyhxwykh", "avg_pdtm_sec": 19.96, "ss_play_uv": 30343, "detail_enter_uv": 2910, "enter_rate": 9.59, "total_vv": 55204, "detail_vv": 22170, "depth_rate": 40.16}, {"name": "错乱情缘", "cid": "mzc0038tjhpufzr", "avg_pdtm_sec": 34.38, "ss_play_uv": 54000, "detail_enter_uv": 4330, "enter_rate": 8.02, "total_vv": 107478, "detail_vv": 48456, "depth_rate": 45.08}, {"name": "波光续面", "cid": "mzc003ddshlqat1", "avg_pdtm_sec": 38.53, "ss_play_uv": 80108, "detail_enter_uv": 5178, "enter_rate": 6.46, "total_vv": 132878, "detail_vv": 46861, "depth_rate": 35.27}];
+const SS_EP1 = [{"name": "混元吞天诀", "cid": "mzc003lgzr7xs3t", "ep1_pdtm": 16.64, "mid_pdtm": 13.46, "ep1_vv": 15513, "mid_vv": 527574, "ep1_enter": 4.04, "mid_enter": 3.87, "ep1_uv": 3626, "mid_uv": 267590}, {"name": "最强钓鱼王", "cid": "mzc003b21pdgryf", "ep1_pdtm": 19.2, "mid_pdtm": 18.61, "ep1_vv": 226832, "mid_vv": 31678, "ep1_enter": 6.12, "mid_enter": 31.14, "ep1_uv": 202724, "mid_uv": 2901}, {"name": "卖房救岳母", "cid": "mzc003c1nuacdf8", "ep1_pdtm": 24.0, "mid_pdtm": 27.91, "ep1_vv": 133240, "mid_vv": 7729, "ep1_enter": 2.1, "mid_enter": 52.98, "ep1_uv": 123723, "mid_uv": 124}, {"name": "假汤乱世", "cid": "mzc003h3sqyr98m", "ep1_pdtm": 29.97, "mid_pdtm": 15.01, "ep1_vv": 81226, "mid_vv": 7137, "ep1_enter": 3.24, "mid_enter": 68.77, "ep1_uv": 72626, "mid_uv": 144}, {"name": "五岁魔童叶嘟嘟", "cid": "mzc003nax08qdui", "ep1_pdtm": 30.1, "mid_pdtm": 37.05, "ep1_vv": 13315, "mid_vv": 41954, "ep1_enter": 6.49, "mid_enter": 67.83, "ep1_uv": 10403, "mid_uv": 37349}, {"name": "逐玉之侯爷的宠爱记", "cid": "mzc0034eyhxwykh", "ep1_pdtm": 16.23, "mid_pdtm": 70.62, "ep1_vv": 30773, "mid_vv": 2261, "ep1_enter": 2.32, "mid_enter": 48.72, "ep1_uv": 28668, "mid_uv": 18}, {"name": "错乱情缘", "cid": "mzc0038tjhpufzr", "ep1_pdtm": 36.17, "mid_pdtm": 6.74, "ep1_vv": 55426, "mid_vv": 3596, "ep1_enter": 2.36, "mid_enter": 61.75, "ep1_uv": 50602, "mid_uv": 110}, {"name": "波光续面", "cid": "mzc003ddshlqat1", "ep1_pdtm": 38.92, "mid_pdtm": 30.99, "ep1_vv": 81816, "mid_vv": 4201, "ep1_enter": 2.21, "mid_enter": 75.96, "ep1_uv": 76233, "mid_uv": 69}];
+const SS_ENTER_BM = 45.17;
+const SS_DEPTH_BM = 60.56;
 const SS_PDTM_BM = 29.31;
 const ZP_CTR_BM = 3.88;
 const ZP_30S_BM = 52.7;
-const LH_DATA = [{"name": "血玉辞", "cid": "mzc0032c6zziskz", "completion_rate": 66.21, "total_exp": 28547, "main_source": "刷刷为主", "zp_imp": 850, "zp_clck": 32, "zp_ctr": 3.7647, "play_uv": 82, "play_30s_uv": 64, "play_30s_rate": 78.0488, "ss_total_vv": 126370, "ss_conv_rate": 64.81}, {"name": "彩礼初心", "cid": "mzc003uweosoy0o", "completion_rate": 65.88, "total_exp": 30294, "main_source": "刷刷为主", "zp_imp": 10237, "zp_clck": 338, "zp_ctr": 3.3017, "play_uv": 445, "play_30s_uv": 307, "play_30s_rate": 68.9888, "ss_total_vv": 199049, "ss_conv_rate": 78.5}, {"name": "寒庭别梦", "cid": "mzc003062778as7", "completion_rate": 62.18, "total_exp": 22273, "main_source": "刷刷为主", "zp_imp": 2132, "zp_clck": 76, "zp_ctr": 3.5647, "play_uv": 73, "play_30s_uv": 51, "play_30s_rate": 69.863, "ss_total_vv": 111194, "ss_conv_rate": 61.78}, {"name": "穿越乞丐：开局丞相府大小姐跟我混", "cid": "mzc003pzuimmkxu", "completion_rate": 59.3, "total_exp": 26708, "main_source": "刷刷为主", "zp_imp": 31361, "zp_clck": 2340, "zp_ctr": 7.4615, "play_uv": 1831, "play_30s_uv": 1334, "play_30s_rate": 72.8564, "ss_total_vv": 191172, "ss_conv_rate": 84.04}, {"name": "工业普查", "cid": "mzc003xz4swbhgg", "completion_rate": 56.99, "total_exp": 10206, "main_source": "找片为主", "zp_imp": 18687, "zp_clck": 378, "zp_ctr": 2.0228, "play_uv": 321, "play_30s_uv": 207, "play_30s_rate": 64.486, "ss_total_vv": 48107, "ss_conv_rate": 61.87}, {"name": "上门拜年：原来儿媳另有其人", "cid": "mzc003hcpzjilqp", "completion_rate": 55.94, "total_exp": 22386, "main_source": "刷刷为主", "zp_imp": 7050, "zp_clck": 746, "zp_ctr": 10.5816, "play_uv": 1258, "play_30s_uv": 926, "play_30s_rate": 73.6089, "ss_total_vv": 404320, "ss_conv_rate": 83.05}, {"name": "蛇骨生花", "cid": "mzc003k193bb46l", "completion_rate": 55.75, "total_exp": 12851, "main_source": "刷刷为主", "zp_imp": 3514, "zp_clck": 64, "zp_ctr": 1.8213, "play_uv": 205, "play_30s_uv": 142, "play_30s_rate": 69.2683, "ss_total_vv": 102207, "ss_conv_rate": 55.38}, {"name": "豪门小福星", "cid": "mzc0033lgmqtbsq", "completion_rate": 54.9, "total_exp": 18192, "main_source": "刷刷为主", "zp_imp": 10590, "zp_clck": 332, "zp_ctr": 3.135, "play_uv": 270, "play_30s_uv": 146, "play_30s_rate": 54.0741, "ss_total_vv": 111795, "ss_conv_rate": 72.47}, {"name": "半面桃花半修罗", "cid": "mzc003os45taqkl", "completion_rate": 54.73, "total_exp": 16591, "main_source": "刷刷为主", "zp_imp": 6512, "zp_clck": 108, "zp_ctr": 1.6585, "play_uv": 117, "play_30s_uv": 56, "play_30s_rate": 47.8632, "ss_total_vv": 105232, "ss_conv_rate": 56.66}, {"name": "惹他，他10000级你不知道", "cid": "mzc003cekd1zdpx", "completion_rate": 53.0, "total_exp": 29044, "main_source": "找片为主", "zp_imp": 26221, "zp_clck": 1161, "zp_ctr": 4.4277, "play_uv": 1093, "play_30s_uv": 662, "play_30s_rate": 60.5672, "ss_total_vv": 116450, "ss_conv_rate": 81.28}, {"name": "这牛马我不当了", "cid": "mzc003gq6k42w8c", "completion_rate": 52.82, "total_exp": 22126, "main_source": "找片为主", "zp_imp": 25912, "zp_clck": 1924, "zp_ctr": 7.4251, "play_uv": 1508, "play_30s_uv": 1129, "play_30s_rate": 74.8674, "ss_total_vv": 25334, "ss_conv_rate": 71.23}, {"name": "兵王叶冷锋", "cid": "mzc0031p248l94o", "completion_rate": 52.55, "total_exp": 14152, "main_source": "刷刷为主", "zp_imp": 20058, "zp_clck": 853, "zp_ctr": 4.2527, "play_uv": 708, "play_30s_uv": 361, "play_30s_rate": 50.9887, "ss_total_vv": 81485, "ss_conv_rate": 49.75}, {"name": "废爹带崽奇遇记", "cid": "mzc003c04skwwg8", "completion_rate": 52.2, "total_exp": 16811, "main_source": "找片为主", "zp_imp": 32135, "zp_clck": 1159, "zp_ctr": 3.6067, "play_uv": 888, "play_30s_uv": 588, "play_30s_rate": 66.2162, "ss_total_vv": 41796, "ss_conv_rate": 61.77}, {"name": "孽海烬苍生", "cid": "mzc003qtnpl7qmb", "completion_rate": 52.03, "total_exp": 14870, "main_source": "刷刷为主", "zp_imp": 7693, "zp_clck": 402, "zp_ctr": 5.2255, "play_uv": 517, "play_30s_uv": 327, "play_30s_rate": 63.2495, "ss_total_vv": 314124, "ss_conv_rate": 79.09}, {"name": "我的婚姻我做主", "cid": "mzc0039i373k9yl", "completion_rate": 50.69, "total_exp": 26259, "main_source": "找片为主", "zp_imp": 35720, "zp_clck": 2938, "zp_ctr": 8.2251, "play_uv": 2562, "play_30s_uv": 1758, "play_30s_rate": 68.6183, "ss_total_vv": 73647, "ss_conv_rate": 61.41}, {"name": "兄弟托孤，护她一世", "cid": "mzc0037fyu6jjou", "completion_rate": 50.33, "total_exp": 11661, "main_source": "刷刷为主", "zp_imp": 8833, "zp_clck": 420, "zp_ctr": 4.7549, "play_uv": 361, "play_30s_uv": 258, "play_30s_rate": 71.4681, "ss_total_vv": 59861, "ss_conv_rate": 68.16}, {"name": "重生蚊神", "cid": "mzc003naz1xve7j", "completion_rate": 50.24, "total_exp": 17962, "main_source": "刷刷为主", "zp_imp": 12678, "zp_clck": 451, "zp_ctr": 3.5573, "play_uv": 451, "play_30s_uv": 267, "play_30s_rate": 59.2018, "ss_total_vv": 64565, "ss_conv_rate": 75.74}, {"name": "生死疲劳", "cid": "mzc003escph1j19", "completion_rate": 50.22, "total_exp": 12317, "main_source": "刷刷为主", "zp_imp": 5391, "zp_clck": 95, "zp_ctr": 1.7622, "play_uv": 91, "play_30s_uv": 44, "play_30s_rate": 48.3516, "ss_total_vv": 59805, "ss_conv_rate": 54.48}, {"name": "婚礼窃案", "cid": "mzc003mvd1lxmmj", "completion_rate": 50.08, "total_exp": 25345, "main_source": "刷刷为主", "zp_imp": 312, "zp_clck": 5, "zp_ctr": 1.6026, "play_uv": 14, "play_30s_uv": 9, "play_30s_rate": 64.2857, "ss_total_vv": 102481, "ss_conv_rate": 55.88}, {"name": "神宠御世", "cid": "mzc003u3d4kbwa2", "completion_rate": 49.67, "total_exp": 29234, "main_source": "刷刷为主", "zp_imp": 14750, "zp_clck": 650, "zp_ctr": 4.4068, "play_uv": 616, "play_30s_uv": 333, "play_30s_rate": 54.0584, "ss_total_vv": 179479, "ss_conv_rate": 79.17}, {"name": "镇魔十年被逼迎娶敌国女帝", "cid": "mzc003iigvn8wsb", "completion_rate": 49.16, "total_exp": 8369, "main_source": "找片为主", "zp_imp": 25600, "zp_clck": 835, "zp_ctr": 3.2617, "play_uv": 707, "play_30s_uv": 476, "play_30s_rate": 67.3267, "ss_total_vv": 74579, "ss_conv_rate": 67.35}, {"name": "棺盗天机", "cid": "mzc0039yfkom32y", "completion_rate": 48.89, "total_exp": 10855, "main_source": "刷刷为主", "zp_imp": 15607, "zp_clck": 658, "zp_ctr": 4.2161, "play_uv": 628, "play_30s_uv": 397, "play_30s_rate": 63.2166, "ss_total_vv": 73720, "ss_conv_rate": 54.37}, {"name": "想要长生就得苟", "cid": "mzc003ejxiqz4u0", "completion_rate": 48.77, "total_exp": 25314, "main_source": "刷刷为主", "zp_imp": 15740, "zp_clck": 658, "zp_ctr": 4.1804, "play_uv": 533, "play_30s_uv": 243, "play_30s_rate": 45.591, "ss_total_vv": 73728, "ss_conv_rate": 70.89}, {"name": "医馆俏尸夫", "cid": "mzc003ncr5h6vqz", "completion_rate": 48.67, "total_exp": 19156, "main_source": "刷刷为主", "zp_imp": 6935, "zp_clck": 136, "zp_ctr": 1.9611, "play_uv": 163, "play_30s_uv": 111, "play_30s_rate": 68.0982, "ss_total_vv": 129601, "ss_conv_rate": 49.24}, {"name": "进厂第一天，专治无良老板", "cid": "mzc003n3inzxd8z", "completion_rate": 48.0, "total_exp": 10511, "main_source": "找片为主", "zp_imp": 38572, "zp_clck": 1013, "zp_ctr": 2.6263, "play_uv": 851, "play_30s_uv": 522, "play_30s_rate": 61.3396, "ss_total_vv": 43714, "ss_conv_rate": 44.87}, {"name": "青意心心", "cid": "mzc003zu5ei652c", "completion_rate": 46.86, "total_exp": 10385, "main_source": "刷刷为主", "zp_imp": 2935, "zp_clck": 61, "zp_ctr": 2.0784, "play_uv": 121, "play_30s_uv": 70, "play_30s_rate": 57.8512, "ss_total_vv": 91131, "ss_conv_rate": 69.77}, {"name": "魔神奶团三岁半", "cid": "mzc0038umqmio8a", "completion_rate": 46.82, "total_exp": 25707, "main_source": "找片为主", "zp_imp": 40289, "zp_clck": 2766, "zp_ctr": 6.8654, "play_uv": 2458, "play_30s_uv": 1633, "play_30s_rate": 66.4361, "ss_total_vv": 105773, "ss_conv_rate": 71.82}, {"name": "极寒冰封，你囤物资我囤美女", "cid": "mzc0031qfz78tex", "completion_rate": 46.38, "total_exp": 12447, "main_source": "找片为主", "zp_imp": 38909, "zp_clck": 2342, "zp_ctr": 6.0192, "play_uv": 1994, "play_30s_uv": 1229, "play_30s_rate": 61.6349, "ss_total_vv": 94502, "ss_conv_rate": 71.6}, {"name": "无尽镇魂", "cid": "mzc003pvkd59349", "completion_rate": 45.93, "total_exp": 19426, "main_source": "刷刷为主", "zp_imp": 29303, "zp_clck": 1245, "zp_ctr": 4.2487, "play_uv": 1041, "play_30s_uv": 504, "play_30s_rate": 48.415, "ss_total_vv": 106643, "ss_conv_rate": 72.16}, {"name": "我靠唱歌打脸全团", "cid": "mzc003zazyi1kv4", "completion_rate": 45.34, "total_exp": 11489, "main_source": "找片为主", "zp_imp": 45431, "zp_clck": 2940, "zp_ctr": 6.4714, "play_uv": 2097, "play_30s_uv": 1464, "play_30s_rate": 69.814, "ss_total_vv": 5838, "ss_conv_rate": 38.35}, {"name": "儿子认邻居当妈我转身继承家产", "cid": "mzc003un56afgio", "completion_rate": 45.22, "total_exp": 15758, "main_source": "找片为主", "zp_imp": 37336, "zp_clck": 3292, "zp_ctr": 8.8172, "play_uv": 2548, "play_30s_uv": 1882, "play_30s_rate": 73.8619, "ss_total_vv": 17265, "ss_conv_rate": 70.24}, {"name": "鬼道实录", "cid": "mzc003jqhbzkr21", "completion_rate": 45.22, "total_exp": 12742, "main_source": "找片为主", "zp_imp": 37856, "zp_clck": 2062, "zp_ctr": 5.447, "play_uv": 1717, "play_30s_uv": 898, "play_30s_rate": 52.3005, "ss_total_vv": 61471, "ss_conv_rate": 61.51}, {"name": "AA制夫妻", "cid": "mzc003b8v4ssxmi", "completion_rate": 44.81, "total_exp": 13650, "main_source": "找片为主", "zp_imp": 51305, "zp_clck": 4771, "zp_ctr": 9.2993, "play_uv": 3686, "play_30s_uv": 2646, "play_30s_rate": 71.7851, "ss_total_vv": 22754, "ss_conv_rate": 66.22}, {"name": "虾仁小郎君", "cid": "mzc003s55d59i4v", "completion_rate": 44.37, "total_exp": 19655, "main_source": "找片为主", "zp_imp": 63902, "zp_clck": 2018, "zp_ctr": 3.158, "play_uv": 1538, "play_30s_uv": 775, "play_30s_rate": 50.3901, "ss_total_vv": 29989, "ss_conv_rate": 50.27}, {"name": "全民御兽：开局山海经横扫全球", "cid": "mzc00392dck3k9y", "completion_rate": 43.54, "total_exp": 25171, "main_source": "找片为主", "zp_imp": 32828, "zp_clck": 1295, "zp_ctr": 3.9448, "play_uv": 1053, "play_30s_uv": 435, "play_30s_rate": 41.3105, "ss_total_vv": 145509, "ss_conv_rate": 68.73}, {"name": "末日签到：囤货为王", "cid": "mzc003mv94sr8a2", "completion_rate": 43.39, "total_exp": 24622, "main_source": "刷刷为主", "zp_imp": 14358, "zp_clck": 811, "zp_ctr": 5.6484, "play_uv": 672, "play_30s_uv": 379, "play_30s_rate": 56.3988, "ss_total_vv": 102364, "ss_conv_rate": 71.9}, {"name": "签到饥荒年", "cid": "mzc003u3nzvspb1", "completion_rate": 43.22, "total_exp": 25781, "main_source": "刷刷为主", "zp_imp": 31262, "zp_clck": 1569, "zp_ctr": 5.0189, "play_uv": 1271, "play_30s_uv": 673, "play_30s_rate": 52.9504, "ss_total_vv": 52031, "ss_conv_rate": 57.53}, {"name": "荒岛求生", "cid": "mzc003dfkcwj9c8", "completion_rate": 43.03, "total_exp": 23697, "main_source": "找片为主", "zp_imp": 44203, "zp_clck": 3390, "zp_ctr": 7.6692, "play_uv": 2618, "play_30s_uv": 1906, "play_30s_rate": 72.8037, "ss_total_vv": 39814, "ss_conv_rate": 79.55}, {"name": "穿越50：我每天刷新物资", "cid": "mzc0038so62ws0u", "completion_rate": 43.03, "total_exp": 18098, "main_source": "找片为主", "zp_imp": 26392, "zp_clck": 1295, "zp_ctr": 4.9068, "play_uv": 1064, "play_30s_uv": 675, "play_30s_rate": 63.4398, "ss_total_vv": 31565, "ss_conv_rate": 58.74}, {"name": "离婚后，我被豪门太子宠上天", "cid": "mzc003gfzi27iiw", "completion_rate": 42.8, "total_exp": 18958, "main_source": "找片为主", "zp_imp": 40580, "zp_clck": 3518, "zp_ctr": 8.6693, "play_uv": 2639, "play_30s_uv": 2104, "play_30s_rate": 79.7272, "ss_total_vv": 7741, "ss_conv_rate": 57.32}, {"name": "绝世天命大反派", "cid": "mzc003l5iccllcw", "completion_rate": 42.54, "total_exp": 26178, "main_source": "刷刷为主", "zp_imp": 22982, "zp_clck": 1110, "zp_ctr": 4.8299, "play_uv": 995, "play_30s_uv": 482, "play_30s_rate": 48.4422, "ss_total_vv": 61477, "ss_conv_rate": 67.35}, {"name": "我准点下班后，公司快倒闭了", "cid": "mzc003upn2mdse8", "completion_rate": 42.49, "total_exp": 14901, "main_source": "找片为主", "zp_imp": 34964, "zp_clck": 3117, "zp_ctr": 8.9149, "play_uv": 2465, "play_30s_uv": 1799, "play_30s_rate": 72.9817, "ss_total_vv": 9560, "ss_conv_rate": 75.68}, {"name": "老婆要给白月光传宗接代", "cid": "mzc0036qcllooch", "completion_rate": 41.94, "total_exp": 24497, "main_source": "找片为主", "zp_imp": 48667, "zp_clck": 3731, "zp_ctr": 7.6664, "play_uv": 3098, "play_30s_uv": 2232, "play_30s_rate": 72.0465, "ss_total_vv": 49258, "ss_conv_rate": 73.77}, {"name": "彪人：独孤木", "cid": "mzc003b2hv34bat", "completion_rate": 41.9, "total_exp": 16087, "main_source": "刷刷为主", "zp_imp": 15453, "zp_clck": 615, "zp_ctr": 3.9798, "play_uv": 737, "play_30s_uv": 514, "play_30s_rate": 69.7422, "ss_total_vv": 117284, "ss_conv_rate": 55.81}, {"name": "夜钓梦中梦", "cid": "mzc0035i704eriy", "completion_rate": 41.78, "total_exp": 21256, "main_source": "找片为主", "zp_imp": 15465, "zp_clck": 290, "zp_ctr": 1.8752, "play_uv": 208, "play_30s_uv": 126, "play_30s_rate": 60.5769, "ss_total_vv": 27608, "ss_conv_rate": 18.45}, {"name": "致我真正的女儿", "cid": "mzc003gfvl9146f", "completion_rate": 41.61, "total_exp": 16594, "main_source": "刷刷为主", "zp_imp": 2678, "zp_clck": 71, "zp_ctr": 2.6512, "play_uv": 60, "play_30s_uv": 37, "play_30s_rate": 61.6667, "ss_total_vv": 84663, "ss_conv_rate": 42.47}, {"name": "破茧金丝笼", "cid": "mzc0031hettb3kd", "completion_rate": 41.5, "total_exp": 21472, "main_source": "刷刷为主", "zp_imp": 1810, "zp_clck": 19, "zp_ctr": 1.0497, "play_uv": 84, "play_30s_uv": 53, "play_30s_rate": 63.0952, "ss_total_vv": 111049, "ss_conv_rate": 40.62}, {"name": "疯狂林爷", "cid": "mzc003ygud1uks5", "completion_rate": 41.42, "total_exp": 12216, "main_source": "刷刷为主", "zp_imp": 12265, "zp_clck": 172, "zp_ctr": 1.4024, "play_uv": 153, "play_30s_uv": 50, "play_30s_rate": 32.6797, "ss_total_vv": 50809, "ss_conv_rate": 50.87}, {"name": "离婚后，我摊牌了亿万家产", "cid": "mzc0035evg4a3yi", "completion_rate": 41.38, "total_exp": 16939, "main_source": "找片为主", "zp_imp": 16929, "zp_clck": 1076, "zp_ctr": 6.356, "play_uv": 809, "play_30s_uv": 572, "play_30s_rate": 70.7046, "ss_total_vv": 11508, "ss_conv_rate": 49.96}, {"name": "重生60：我把敌特整疯了", "cid": "mzc003sea2iqgw2", "completion_rate": 41.27, "total_exp": 15834, "main_source": "找片为主", "zp_imp": 20810, "zp_clck": 1170, "zp_ctr": 5.6223, "play_uv": 918, "play_30s_uv": 590, "play_30s_rate": 64.2702, "ss_total_vv": 21954, "ss_conv_rate": 59.95}, {"name": "盲眼识心，我的枕边摄政王", "cid": "mzc003swk8wwo84", "completion_rate": 41.07, "total_exp": 10509, "main_source": "找片为主", "zp_imp": 7871, "zp_clck": 230, "zp_ctr": 2.9221, "play_uv": 187, "play_30s_uv": 110, "play_30s_rate": 58.8235, "ss_total_vv": 37967, "ss_conv_rate": 65.26}, {"name": "疯狂钓鱼", "cid": "mzc003m7bzzk9zx", "completion_rate": 40.91, "total_exp": 13912, "main_source": "找片为主", "zp_imp": 42190, "zp_clck": 1663, "zp_ctr": 3.9417, "play_uv": 1358, "play_30s_uv": 800, "play_30s_rate": 58.9102, "ss_total_vv": 22179, "ss_conv_rate": 49.29}, {"name": "老板把我赶走后，公司天塌了", "cid": "mzc003wmultwyox", "completion_rate": 40.72, "total_exp": 25464, "main_source": "找片为主", "zp_imp": 34447, "zp_clck": 3196, "zp_ctr": 9.278, "play_uv": 2476, "play_30s_uv": 1798, "play_30s_rate": 72.6171, "ss_total_vv": 3522, "ss_conv_rate": 75.98}, {"name": "从女荒部落开始打造万古第一城", "cid": "mzc003novnjire1", "completion_rate": 40.55, "total_exp": 16837, "main_source": "找片为主", "zp_imp": 25920, "zp_clck": 1189, "zp_ctr": 4.5872, "play_uv": 1070, "play_30s_uv": 576, "play_30s_rate": 53.8318, "ss_total_vv": 54213, "ss_conv_rate": 66.89}, {"name": "系统提前三年，可末世真没降临", "cid": "mzc003ujxbrpi2d", "completion_rate": 39.67, "total_exp": 21967, "main_source": "找片为主", "zp_imp": 43540, "zp_clck": 2119, "zp_ctr": 4.8668, "play_uv": 2082, "play_30s_uv": 1261, "play_30s_rate": 60.5668, "ss_total_vv": 151917, "ss_conv_rate": 81.66}, {"name": "小郑卖鱼记", "cid": "mzc003xgx5lyxev", "completion_rate": 39.65, "total_exp": 10864, "main_source": "找片为主", "zp_imp": 18398, "zp_clck": 425, "zp_ctr": 2.31, "play_uv": 325, "play_30s_uv": 161, "play_30s_rate": 49.5385, "ss_total_vv": 7269, "ss_conv_rate": 30.1}, {"name": "游戏降临我重生氪出SSS级狐族女帝", "cid": "mzc003v0dpllaj3", "completion_rate": 39.49, "total_exp": 13151, "main_source": "找片为主", "zp_imp": 37976, "zp_clck": 1639, "zp_ctr": 4.3159, "play_uv": 1313, "play_30s_uv": 705, "play_30s_rate": 53.6938, "ss_total_vv": 20876, "ss_conv_rate": 69.16}, {"name": "爱意与牢笼", "cid": "mzc003ry1qqaheo", "completion_rate": 38.71, "total_exp": 20076, "main_source": "刷刷为主", "zp_imp": 10226, "zp_clck": 167, "zp_ctr": 1.6331, "play_uv": 145, "play_30s_uv": 45, "play_30s_rate": 31.0345, "ss_total_vv": 29609, "ss_conv_rate": 36.86}, {"name": "只有我能用召唤术 动态漫", "cid": "mzc003c1fnr495d", "completion_rate": 38.21, "total_exp": 10819, "main_source": "找片为主", "zp_imp": 47890, "zp_clck": 2405, "zp_ctr": 5.0219, "play_uv": 1835, "play_30s_uv": 818, "play_30s_rate": 44.5777, "ss_total_vv": 35905, "ss_conv_rate": 70.61}, {"name": "离职反击", "cid": "mzc003bidkgil2a", "completion_rate": 37.89, "total_exp": 24951, "main_source": "找片为主", "zp_imp": 31340, "zp_clck": 2425, "zp_ctr": 7.7377, "play_uv": 1863, "play_30s_uv": 1227, "play_30s_rate": 65.8615, "ss_total_vv": 5991, "ss_conv_rate": 58.67}, {"name": "财产公证后，老公后悔了", "cid": "mzc0034lh9hvciz", "completion_rate": 36.9, "total_exp": 14087, "main_source": "找片为主", "zp_imp": 26988, "zp_clck": 2331, "zp_ctr": 8.6372, "play_uv": 1798, "play_30s_uv": 1293, "play_30s_rate": 71.9132, "ss_total_vv": 4019, "ss_conv_rate": 64.15}, {"name": "《调皮的堂弟》", "cid": "mzc0033noj3w01n", "completion_rate": 36.81, "total_exp": 9085, "main_source": "找片为主", "zp_imp": 9232, "zp_clck": 134, "zp_ctr": 1.4515, "play_uv": 128, "play_30s_uv": 65, "play_30s_rate": 50.7813, "ss_total_vv": 47700, "ss_conv_rate": 48.51}, {"name": "婉归", "cid": "mzc003pzww8nxws", "completion_rate": 36.59, "total_exp": 21029, "main_source": "找片为主", "zp_imp": 16431, "zp_clck": 806, "zp_ctr": 4.9054, "play_uv": 703, "play_30s_uv": 407, "play_30s_rate": 57.8947, "ss_total_vv": 31426, "ss_conv_rate": 57.89}, {"name": "枭起濠城", "cid": "mzc0033m122a5qo", "completion_rate": 36.45, "total_exp": 30687, "main_source": "找片为主", "zp_imp": 54091, "zp_clck": 3306, "zp_ctr": 6.1119, "play_uv": 2521, "play_30s_uv": 1735, "play_30s_rate": 68.8219, "ss_total_vv": 1064, "ss_conv_rate": 39.19}];
 
 // ========== Section 1: 气泡图 ==========
 function renderBubble() {
@@ -197,28 +221,29 @@ renderBubble();
 
 // ========== Section 2: 刷刷场景 ==========
 function renderSec2() {
-  let h = '<table><thead><tr><th>CID名称</th><th>title曝光PV</th><th>点击PV</th><th>刷刷CTR</th><th>vs大盘</th><th>刷刷VV均播时长</th><th>vs大盘</th><th>刷刷总VV</th><th>底层页VV</th><th>转化率</th><th>vs大盘</th></tr></thead><tbody>';
+  let h = '<table><thead><tr><th>CID名称</th><th>刷刷播放UV</th><th>底层页进入UV</th><th>底层页进入率</th><th>vs大盘</th><th>VV均播时长</th><th>vs大盘</th><th>刷刷总VV</th><th>底层页VV</th><th>消费深度</th><th>vs大盘</th></tr></thead><tbody>';
   SS_CONV.forEach(d => {
-    const convDiff = d.conv_rate - SS_CONV_BM;
-    const convCls = convDiff >= 0 ? 'tag-green' : 'tag-red';
-    const ctrDiff = d.ss_ctr - SS_CTR_BM;
-    const ctrCls = ctrDiff >= 0 ? 'tag-green' : 'tag-red';
+    const enterDiff = d.enter_rate - SS_ENTER_BM;
+    const enterCls = enterDiff >= 0 ? 'tag-green' : 'tag-red';
     const pdtmDiff = d.avg_pdtm_sec - SS_PDTM_BM;
     const pdtmCls = pdtmDiff >= 0 ? 'tag-green' : 'tag-red';
-    h += `<tr><td><b>${d.name}</b></td><td>${fmt(d.ss_title_imp)}</td><td>${fmt(d.ss_clck)}</td><td>${pct(d.ss_ctr)}</td><td><span class="tag ${ctrCls}">${ctrDiff>=0?'+':''}${ctrDiff.toFixed(2)}pp</span></td><td>${d.avg_pdtm_sec.toFixed(1)}s</td><td><span class="tag ${pdtmCls}">${pdtmDiff>=0?'+':''}${pdtmDiff.toFixed(1)}s</span></td><td>${fmt(d.total_vv)}</td><td>${fmt(d.detail_vv)}</td><td>${pct(d.conv_rate)}</td><td><span class="tag ${convCls}">${convDiff>=0?'+':''}${convDiff.toFixed(2)}pp</span></td></tr>`;
+    const depthDiff = d.depth_rate - SS_DEPTH_BM;
+    const depthCls = depthDiff >= 0 ? 'tag-green' : 'tag-red';
+    h += `<tr><td><b>${d.name}</b></td><td>${fmt(d.ss_play_uv)}</td><td>${fmt(d.detail_enter_uv)}</td><td>${pct(d.enter_rate)}</td><td><span class="tag ${enterCls}">${enterDiff>=0?'+':''}${enterDiff.toFixed(2)}pp</span></td><td>${d.avg_pdtm_sec.toFixed(1)}s</td><td><span class="tag ${pdtmCls}">${pdtmDiff>=0?'+':''}${pdtmDiff.toFixed(1)}s</span></td><td>${fmt(d.total_vv)}</td><td>${fmt(d.detail_vv)}</td><td>${pct(d.depth_rate)}</td><td><span class="tag ${depthCls}">${depthDiff>=0?'+':''}${depthDiff.toFixed(2)}pp</span></td></tr>`;
   });
-  h += `<tr style="background:#f5f5f5;font-weight:bold"><td>大盘基准</td><td colspan="2"></td><td><span class="tag tag-blue">${SS_CTR_BM}%</span></td><td></td><td><span class="tag tag-blue">${SS_PDTM_BM}s</span></td><td></td><td colspan="2"></td><td><span class="tag tag-blue">${SS_CONV_BM}%</span></td><td></td></tr>`;
+  h += `<tr style="background:#f5f5f5;font-weight:bold"><td>大盘基准</td><td colspan="2"></td><td><span class="tag tag-blue">${SS_ENTER_BM}%</span></td><td></td><td><span class="tag tag-blue">${SS_PDTM_BM}s</span></td><td></td><td colspan="2"></td><td><span class="tag tag-blue">${SS_DEPTH_BM}%</span></td><td></td></tr>`;
   h += '</tbody></table>';
   document.getElementById('sec2ConvTable').innerHTML = h;
 
   // 首集 vs 非首集表
-  let h2 = '<table><thead><tr><th>CID名称</th><th>首集曝光PV</th><th>首集CTR</th><th>非首集曝光PV</th><th>非首集CTR</th><th>首集VV</th><th>首集转化率</th><th>非首集VV</th><th>非首集转化率</th></tr></thead><tbody>';
+  let h2 = '<table><thead><tr><th>CID名称</th><th>首集VV</th><th>首集均播(s)</th><th>非首集VV</th><th>非首集均播(s)</th><th>首集UV<small>(单vid)</small></th><th>首集进入率</th><th>非首集UV<small>(单vid)</small></th><th>非首集进入率</th></tr></thead><tbody>';
   SS_EP1.forEach(d => {
+    const midNote = d.mid_uv < 200 ? ' <small style="color:#999">(样本少)</small>' : '';
     h2 += `<tr><td><b>${d.name}</b></td>
-      <td>${fmt(d.ep1_imp)}</td><td>${pct(d.ep1_ctr)}</td>
-      <td>${fmt(d.mid_imp)}</td><td>${pct(d.mid_ctr)}</td>
-      <td>${fmt(d.ep1_total_vv)}</td><td>${pct(d.ep1_conv)}</td>
-      <td>${fmt(d.mid_total_vv)}</td><td>${pct(d.mid_conv)}</td>
+      <td>${fmt(d.ep1_vv)}</td><td>${d.ep1_pdtm.toFixed(1)}</td>
+      <td>${fmt(d.mid_vv)}</td><td>${d.mid_pdtm.toFixed(1)}</td>
+      <td>${fmt(d.ep1_uv)}</td><td>${pct(d.ep1_enter)}</td>
+      <td>${fmt(d.mid_uv)}${midNote}</td><td>${d.mid_uv >= 200 ? pct(d.mid_enter) : '<span class="tag tag-gray">样本不足</span>'}</td>
     </tr>`;
   });
   h2 += '</tbody></table>';
@@ -252,36 +277,1416 @@ function renderSec3(filter='') {
 renderSec3();
 document.getElementById('zpTableSearch').addEventListener('input', e => renderSec3(e.target.value));
 
-// ========== Section 4: 低曝高完播 ==========
-function renderSec4(filter='') {
-  let sorted = [...LH_DATA];
-  if(filter) sorted = sorted.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
-  sorted.sort((a,b) => b.completion_rate - a.completion_rate);
+// ========== Section 5: 下钻分析 ==========
+const DRILL = {
+  "mzc0035m5r35ex1": {
+    "name": "死灵法师！我即是天灾",
+    "dates": [
+      "20260224",
+      "20260225",
+      "20260226",
+      "20260227",
+      "20260228",
+      "20260301",
+      "20260302",
+      "20260303",
+      "20260304",
+      "20260305",
+      "20260306",
+      "20260307",
+      "20260308",
+      "20260309",
+      "20260310",
+      "20260311",
+      "20260312",
+      "20260313",
+      "20260314",
+      "20260315",
+      "20260316",
+      "20260317",
+      "20260318",
+      "20260319",
+      "20260320",
+      "20260321",
+      "20260322",
+      "20260323",
+      "20260324",
+      "20260325",
+      "20260326",
+      "20260327",
+      "20260328",
+      "20260329",
+      "20260330"
+    ],
+    "data": {
+      "20260224": {
+        "zp_imp": 4509,
+        "zp_clck": 209,
+        "zp_ctr": 4.6352,
+        "play_uv": 198,
+        "play_30s_uv": 60,
+        "play_30s_rate": 30.303,
+        "ss_imp": 1625,
+        "ss_clck": 93,
+        "ss_ctr": 5.7231,
+        "ss_vv": 3219,
+        "avg_pdtm_sec": 100.65,
+        "detail_vv": 2059,
+        "conv_rate": 63.96,
+        "ss_play_uv": 1044,
+        "detail_enter_uv": 78,
+        "enter_rate": 7.47
+      },
+      "20260225": {
+        "zp_imp": 4030,
+        "zp_clck": 227,
+        "zp_ctr": 5.6328,
+        "play_uv": 198,
+        "play_30s_uv": 61,
+        "play_30s_rate": 30.8081,
+        "ss_imp": 977,
+        "ss_clck": 52,
+        "ss_ctr": 5.3224,
+        "ss_vv": 2123,
+        "avg_pdtm_sec": 96.31,
+        "detail_vv": 1404,
+        "conv_rate": 66.13,
+        "ss_play_uv": 654,
+        "detail_enter_uv": 54,
+        "enter_rate": 8.26
+      },
+      "20260226": {
+        "zp_imp": 3743,
+        "zp_clck": 210,
+        "zp_ctr": 5.6105,
+        "play_uv": 192,
+        "play_30s_uv": 55,
+        "play_30s_rate": 28.6458,
+        "ss_imp": 859,
+        "ss_clck": 58,
+        "ss_ctr": 6.752,
+        "ss_vv": 1707,
+        "avg_pdtm_sec": 84.01,
+        "detail_vv": 1078,
+        "conv_rate": 63.15,
+        "ss_play_uv": 562,
+        "detail_enter_uv": 52,
+        "enter_rate": 9.25
+      },
+      "20260227": {
+        "zp_imp": 4654,
+        "zp_clck": 271,
+        "zp_ctr": 5.8229,
+        "play_uv": 252,
+        "play_30s_uv": 78,
+        "play_30s_rate": 30.9524,
+        "ss_imp": 1485,
+        "ss_clck": 102,
+        "ss_ctr": 6.8687,
+        "ss_vv": 2669,
+        "avg_pdtm_sec": 95.28,
+        "detail_vv": 1599,
+        "conv_rate": 59.91,
+        "ss_play_uv": 946,
+        "detail_enter_uv": 105,
+        "enter_rate": 11.1
+      },
+      "20260228": {
+        "zp_imp": 7375,
+        "zp_clck": 382,
+        "zp_ctr": 5.1797,
+        "play_uv": 352,
+        "play_30s_uv": 106,
+        "play_30s_rate": 30.1136,
+        "ss_imp": 2829,
+        "ss_clck": 191,
+        "ss_ctr": 6.7515,
+        "ss_vv": 5156,
+        "avg_pdtm_sec": 83.28,
+        "detail_vv": 3209,
+        "conv_rate": 62.24,
+        "ss_play_uv": 1761,
+        "detail_enter_uv": 180,
+        "enter_rate": 10.22
+      },
+      "20260301": {
+        "zp_imp": 6510,
+        "zp_clck": 400,
+        "zp_ctr": 6.1444,
+        "play_uv": 352,
+        "play_30s_uv": 108,
+        "play_30s_rate": 30.6818,
+        "ss_imp": 1760,
+        "ss_clck": 112,
+        "ss_ctr": 6.3636,
+        "ss_vv": 3576,
+        "avg_pdtm_sec": 107.7,
+        "detail_vv": 2294,
+        "conv_rate": 64.15,
+        "ss_play_uv": 1160,
+        "detail_enter_uv": 120,
+        "enter_rate": 10.34
+      },
+      "20260302": {
+        "zp_imp": 6855,
+        "zp_clck": 413,
+        "zp_ctr": 6.0248,
+        "play_uv": 373,
+        "play_30s_uv": 130,
+        "play_30s_rate": 34.8525,
+        "ss_imp": 1895,
+        "ss_clck": 125,
+        "ss_ctr": 6.5963,
+        "ss_vv": 3506,
+        "avg_pdtm_sec": 80.97,
+        "detail_vv": 2076,
+        "conv_rate": 59.21,
+        "ss_play_uv": 1290,
+        "detail_enter_uv": 121,
+        "enter_rate": 9.38
+      },
+      "20260303": {
+        "zp_imp": 5748,
+        "zp_clck": 377,
+        "zp_ctr": 6.5588,
+        "play_uv": 328,
+        "play_30s_uv": 91,
+        "play_30s_rate": 27.7439,
+        "ss_imp": 1627,
+        "ss_clck": 97,
+        "ss_ctr": 5.9619,
+        "ss_vv": 3116,
+        "avg_pdtm_sec": 85.89,
+        "detail_vv": 1920,
+        "conv_rate": 61.62,
+        "ss_play_uv": 1084,
+        "detail_enter_uv": 94,
+        "enter_rate": 8.67
+      },
+      "20260304": {
+        "zp_imp": 6374,
+        "zp_clck": 421,
+        "zp_ctr": 6.605,
+        "play_uv": 389,
+        "play_30s_uv": 119,
+        "play_30s_rate": 30.5913,
+        "ss_imp": 1825,
+        "ss_clck": 127,
+        "ss_ctr": 6.9589,
+        "ss_vv": 3264,
+        "avg_pdtm_sec": 67.82,
+        "detail_vv": 1931,
+        "conv_rate": 59.16,
+        "ss_play_uv": 1214,
+        "detail_enter_uv": 121,
+        "enter_rate": 9.97
+      },
+      "20260305": {
+        "zp_imp": 9658,
+        "zp_clck": 554,
+        "zp_ctr": 5.7362,
+        "play_uv": 502,
+        "play_30s_uv": 156,
+        "play_30s_rate": 31.0757,
+        "ss_imp": 3311,
+        "ss_clck": 194,
+        "ss_ctr": 5.8593,
+        "ss_vv": 5777,
+        "avg_pdtm_sec": 72.46,
+        "detail_vv": 3290,
+        "conv_rate": 56.95,
+        "ss_play_uv": 2259,
+        "detail_enter_uv": 182,
+        "enter_rate": 8.06
+      },
+      "20260306": {
+        "zp_imp": 9523,
+        "zp_clck": 568,
+        "zp_ctr": 5.9645,
+        "play_uv": 518,
+        "play_30s_uv": 189,
+        "play_30s_rate": 36.4865,
+        "ss_imp": 3122,
+        "ss_clck": 193,
+        "ss_ctr": 6.1819,
+        "ss_vv": 6512,
+        "avg_pdtm_sec": 103.95,
+        "detail_vv": 4144,
+        "conv_rate": 63.64,
+        "ss_play_uv": 2162,
+        "detail_enter_uv": 193,
+        "enter_rate": 8.93
+      },
+      "20260307": {
+        "zp_imp": 14241,
+        "zp_clck": 868,
+        "zp_ctr": 6.0951,
+        "play_uv": 794,
+        "play_30s_uv": 282,
+        "play_30s_rate": 35.5164,
+        "ss_imp": 4401,
+        "ss_clck": 237,
+        "ss_ctr": 5.3851,
+        "ss_vv": 8782,
+        "avg_pdtm_sec": 92.56,
+        "detail_vv": 5480,
+        "conv_rate": 62.4,
+        "ss_play_uv": 3013,
+        "detail_enter_uv": 256,
+        "enter_rate": 8.5
+      },
+      "20260308": {
+        "zp_imp": 11181,
+        "zp_clck": 692,
+        "zp_ctr": 6.1891,
+        "play_uv": 642,
+        "play_30s_uv": 237,
+        "play_30s_rate": 36.9159,
+        "ss_imp": 2775,
+        "ss_clck": 159,
+        "ss_ctr": 5.7297,
+        "ss_vv": 5992,
+        "avg_pdtm_sec": 106.23,
+        "detail_vv": 3792,
+        "conv_rate": 63.28,
+        "ss_play_uv": 2036,
+        "detail_enter_uv": 182,
+        "enter_rate": 8.94
+      },
+      "20260309": {
+        "zp_imp": 19069,
+        "zp_clck": 1168,
+        "zp_ctr": 6.1251,
+        "play_uv": 1063,
+        "play_30s_uv": 368,
+        "play_30s_rate": 34.619,
+        "ss_imp": 5685,
+        "ss_clck": 328,
+        "ss_ctr": 5.7696,
+        "ss_vv": 13445,
+        "avg_pdtm_sec": 103.81,
+        "detail_vv": 8836,
+        "conv_rate": 65.72,
+        "ss_play_uv": 4261,
+        "detail_enter_uv": 341,
+        "enter_rate": 8.0
+      },
+      "20260310": {
+        "zp_imp": 30140,
+        "zp_clck": 1674,
+        "zp_ctr": 5.5541,
+        "play_uv": 1554,
+        "play_30s_uv": 580,
+        "play_30s_rate": 37.323,
+        "ss_imp": 9544,
+        "ss_clck": 535,
+        "ss_ctr": 5.6056,
+        "ss_vv": 18686,
+        "avg_pdtm_sec": 92.92,
+        "detail_vv": 10974,
+        "conv_rate": 58.73,
+        "ss_play_uv": 7107,
+        "detail_enter_uv": 569,
+        "enter_rate": 8.01
+      },
+      "20260311": {
+        "zp_imp": 19476,
+        "zp_clck": 1120,
+        "zp_ctr": 5.7507,
+        "play_uv": 1076,
+        "play_30s_uv": 419,
+        "play_30s_rate": 38.9405,
+        "ss_imp": 5405,
+        "ss_clck": 285,
+        "ss_ctr": 5.2729,
+        "ss_vv": 12298,
+        "avg_pdtm_sec": 108.13,
+        "detail_vv": 7912,
+        "conv_rate": 64.34,
+        "ss_play_uv": 4057,
+        "detail_enter_uv": 350,
+        "enter_rate": 8.63
+      },
+      "20260312": {
+        "zp_imp": 31445,
+        "zp_clck": 1798,
+        "zp_ctr": 5.7179,
+        "play_uv": 1681,
+        "play_30s_uv": 651,
+        "play_30s_rate": 38.7269,
+        "ss_imp": 10136,
+        "ss_clck": 441,
+        "ss_ctr": 4.3508,
+        "ss_vv": 19269,
+        "avg_pdtm_sec": 89.7,
+        "detail_vv": 10930,
+        "conv_rate": 56.72,
+        "ss_play_uv": 7716,
+        "detail_enter_uv": 593,
+        "enter_rate": 7.69
+      },
+      "20260313": {
+        "zp_imp": 18344,
+        "zp_clck": 1095,
+        "zp_ctr": 5.9693,
+        "play_uv": 1041,
+        "play_30s_uv": 423,
+        "play_30s_rate": 40.634,
+        "ss_imp": 5832,
+        "ss_clck": 314,
+        "ss_ctr": 5.3841,
+        "ss_vv": 15065,
+        "avg_pdtm_sec": 111.39,
+        "detail_vv": 10327,
+        "conv_rate": 68.55,
+        "ss_play_uv": 4297,
+        "detail_enter_uv": 415,
+        "enter_rate": 9.66
+      },
+      "20260314": {
+        "zp_imp": 19986,
+        "zp_clck": 1238,
+        "zp_ctr": 6.1943,
+        "play_uv": 1146,
+        "play_30s_uv": 465,
+        "play_30s_rate": 40.5759,
+        "ss_imp": 4700,
+        "ss_clck": 248,
+        "ss_ctr": 5.2766,
+        "ss_vv": 11397,
+        "avg_pdtm_sec": 115.29,
+        "detail_vv": 7745,
+        "conv_rate": 67.96,
+        "ss_play_uv": 3280,
+        "detail_enter_uv": 331,
+        "enter_rate": 10.09
+      },
+      "20260315": {
+        "zp_imp": 13461,
+        "zp_clck": 727,
+        "zp_ctr": 5.4008,
+        "play_uv": 707,
+        "play_30s_uv": 285,
+        "play_30s_rate": 40.3112,
+        "ss_imp": 3191,
+        "ss_clck": 189,
+        "ss_ctr": 5.9229,
+        "ss_vv": 8061,
+        "avg_pdtm_sec": 112.51,
+        "detail_vv": 5435,
+        "conv_rate": 67.42,
+        "ss_play_uv": 2333,
+        "detail_enter_uv": 245,
+        "enter_rate": 10.5
+      },
+      "20260316": {
+        "zp_imp": 10644,
+        "zp_clck": 566,
+        "zp_ctr": 5.3175,
+        "play_uv": 534,
+        "play_30s_uv": 231,
+        "play_30s_rate": 43.2584,
+        "ss_imp": 2390,
+        "ss_clck": 144,
+        "ss_ctr": 6.0251,
+        "ss_vv": 7557,
+        "avg_pdtm_sec": 139.94,
+        "detail_vv": 5512,
+        "conv_rate": 72.94,
+        "ss_play_uv": 1823,
+        "detail_enter_uv": 226,
+        "enter_rate": 12.4
+      },
+      "20260317": {
+        "zp_imp": 11277,
+        "zp_clck": 593,
+        "zp_ctr": 5.2585,
+        "play_uv": 542,
+        "play_30s_uv": 220,
+        "play_30s_rate": 40.5904,
+        "ss_imp": 2858,
+        "ss_clck": 165,
+        "ss_ctr": 5.7733,
+        "ss_vv": 7708,
+        "avg_pdtm_sec": 145.55,
+        "detail_vv": 5282,
+        "conv_rate": 68.53,
+        "ss_play_uv": 2116,
+        "detail_enter_uv": 242,
+        "enter_rate": 11.44
+      },
+      "20260318": {
+        "zp_imp": 16635,
+        "zp_clck": 902,
+        "zp_ctr": 5.4223,
+        "play_uv": 812,
+        "play_30s_uv": 326,
+        "play_30s_rate": 40.1478,
+        "ss_imp": 5257,
+        "ss_clck": 228,
+        "ss_ctr": 4.3371,
+        "ss_vv": 11047,
+        "avg_pdtm_sec": 106.83,
+        "detail_vv": 6652,
+        "conv_rate": 60.22,
+        "ss_play_uv": 3990,
+        "detail_enter_uv": 359,
+        "enter_rate": 9.0
+      },
+      "20260319": {
+        "zp_imp": 15571,
+        "zp_clck": 734,
+        "zp_ctr": 4.7139,
+        "play_uv": 695,
+        "play_30s_uv": 309,
+        "play_30s_rate": 44.4604,
+        "ss_imp": 2878,
+        "ss_clck": 138,
+        "ss_ctr": 4.795,
+        "ss_vv": 8718,
+        "avg_pdtm_sec": 130.68,
+        "detail_vv": 6175,
+        "conv_rate": 70.83,
+        "ss_play_uv": 2307,
+        "detail_enter_uv": 208,
+        "enter_rate": 9.02
+      },
+      "20260320": {
+        "zp_imp": 16855,
+        "zp_clck": 814,
+        "zp_ctr": 4.8294,
+        "play_uv": 703,
+        "play_30s_uv": 311,
+        "play_30s_rate": 44.239,
+        "ss_imp": 2761,
+        "ss_clck": 131,
+        "ss_ctr": 4.7447,
+        "ss_vv": 6658,
+        "avg_pdtm_sec": 112.45,
+        "detail_vv": 3858,
+        "conv_rate": 57.95,
+        "ss_play_uv": 2524,
+        "detail_enter_uv": 188,
+        "enter_rate": 7.45
+      },
+      "20260321": {
+        "zp_imp": 28772,
+        "zp_clck": 1315,
+        "zp_ctr": 4.5704,
+        "play_uv": 1120,
+        "play_30s_uv": 383,
+        "play_30s_rate": 34.1964,
+        "ss_imp": 2486,
+        "ss_clck": 130,
+        "ss_ctr": 5.2293,
+        "ss_vv": 8360,
+        "avg_pdtm_sec": 120.94,
+        "detail_vv": 5615,
+        "conv_rate": 67.17,
+        "ss_play_uv": 2498,
+        "detail_enter_uv": 226,
+        "enter_rate": 9.05
+      },
+      "20260322": {
+        "zp_imp": 33164,
+        "zp_clck": 1306,
+        "zp_ctr": 3.938,
+        "play_uv": 1107,
+        "play_30s_uv": 421,
+        "play_30s_rate": 38.0307,
+        "ss_imp": 2839,
+        "ss_clck": 109,
+        "ss_ctr": 3.8394,
+        "ss_vv": 7305,
+        "avg_pdtm_sec": 105.78,
+        "detail_vv": 4073,
+        "conv_rate": 55.76,
+        "ss_play_uv": 3009,
+        "detail_enter_uv": 204,
+        "enter_rate": 6.78
+      },
+      "20260323": {
+        "zp_imp": 35701,
+        "zp_clck": 1274,
+        "zp_ctr": 3.5685,
+        "play_uv": 1035,
+        "play_30s_uv": 430,
+        "play_30s_rate": 41.5459,
+        "ss_imp": 4156,
+        "ss_clck": 167,
+        "ss_ctr": 4.0183,
+        "ss_vv": 12250,
+        "avg_pdtm_sec": 96.31,
+        "detail_vv": 6610,
+        "conv_rate": 53.96,
+        "ss_play_uv": 5316,
+        "detail_enter_uv": 290,
+        "enter_rate": 5.46
+      },
+      "20260324": {
+        "zp_imp": 61230,
+        "zp_clck": 2062,
+        "zp_ctr": 3.3676,
+        "play_uv": 1638,
+        "play_30s_uv": 672,
+        "play_30s_rate": 41.0256,
+        "ss_imp": 6468,
+        "ss_clck": 161,
+        "ss_ctr": 2.4892,
+        "ss_vv": 15516,
+        "avg_pdtm_sec": 78.29,
+        "detail_vv": 5709,
+        "conv_rate": 36.79,
+        "ss_play_uv": 9404,
+        "detail_enter_uv": 377,
+        "enter_rate": 4.01
+      },
+      "20260325": {
+        "zp_imp": 62604,
+        "zp_clck": 2144,
+        "zp_ctr": 3.4247,
+        "play_uv": 1749,
+        "play_30s_uv": 756,
+        "play_30s_rate": 43.2247,
+        "ss_imp": 5238,
+        "ss_clck": 139,
+        "ss_ctr": 2.6537,
+        "ss_vv": 17619,
+        "avg_pdtm_sec": 114.32,
+        "detail_vv": 8644,
+        "conv_rate": 49.06,
+        "ss_play_uv": 8538,
+        "detail_enter_uv": 403,
+        "enter_rate": 4.72
+      },
+      "20260326": {
+        "zp_imp": 42761,
+        "zp_clck": 1395,
+        "zp_ctr": 3.2623,
+        "play_uv": 1132,
+        "play_30s_uv": 474,
+        "play_30s_rate": 41.8728,
+        "ss_imp": 4676,
+        "ss_clck": 115,
+        "ss_ctr": 2.4594,
+        "ss_vv": 14573,
+        "avg_pdtm_sec": 98.32,
+        "detail_vv": 6816,
+        "conv_rate": 46.77,
+        "ss_play_uv": 7432,
+        "detail_enter_uv": 298,
+        "enter_rate": 4.01
+      },
+      "20260327": {
+        "zp_imp": 34321,
+        "zp_clck": 1266,
+        "zp_ctr": 3.6887,
+        "play_uv": 1015,
+        "play_30s_uv": 404,
+        "play_30s_rate": 39.803,
+        "ss_imp": 4804,
+        "ss_clck": 115,
+        "ss_ctr": 2.3938,
+        "ss_vv": 15898,
+        "avg_pdtm_sec": 97.2,
+        "detail_vv": 7146,
+        "conv_rate": 44.95,
+        "ss_play_uv": 8417,
+        "detail_enter_uv": 304,
+        "enter_rate": 3.61
+      },
+      "20260328": {
+        "zp_imp": 47242,
+        "zp_clck": 1811,
+        "zp_ctr": 3.8335,
+        "play_uv": 1464,
+        "play_30s_uv": 523,
+        "play_30s_rate": 35.724,
+        "ss_imp": 4858,
+        "ss_clck": 143,
+        "ss_ctr": 2.9436,
+        "ss_vv": 16540,
+        "avg_pdtm_sec": 113.45,
+        "detail_vv": 8039,
+        "conv_rate": 48.6,
+        "ss_play_uv": 8168,
+        "detail_enter_uv": 335,
+        "enter_rate": 4.1
+      },
+      "20260329": {
+        "zp_imp": 45757,
+        "zp_clck": 1545,
+        "zp_ctr": 3.3765,
+        "play_uv": 1237,
+        "play_30s_uv": 490,
+        "play_30s_rate": 39.612,
+        "ss_imp": 4977,
+        "ss_clck": 123,
+        "ss_ctr": 2.4714,
+        "ss_vv": 17135,
+        "avg_pdtm_sec": 115.73,
+        "detail_vv": 7868,
+        "conv_rate": 45.92,
+        "ss_play_uv": 8891,
+        "detail_enter_uv": 369,
+        "enter_rate": 4.15
+      },
+      "20260330": {
+        "zp_imp": 43506,
+        "zp_clck": 1405,
+        "zp_ctr": 3.2294,
+        "play_uv": 1096,
+        "play_30s_uv": 447,
+        "play_30s_rate": 40.7847,
+        "ss_imp": 3693,
+        "ss_clck": 118,
+        "ss_ctr": 3.1952,
+        "ss_vv": 14648,
+        "avg_pdtm_sec": 128.56,
+        "detail_vv": 7673,
+        "conv_rate": 52.38,
+        "ss_play_uv": 6620,
+        "detail_enter_uv": 302,
+        "enter_rate": 4.56
+      }
+    }
+  },
+  "mzc003skgvfogyn": {
+    "name": "难哄 动态漫",
+    "dates": [
+      "20260224",
+      "20260225",
+      "20260226",
+      "20260227",
+      "20260228",
+      "20260301",
+      "20260302",
+      "20260303",
+      "20260304",
+      "20260305",
+      "20260306",
+      "20260307",
+      "20260308",
+      "20260309",
+      "20260310",
+      "20260311",
+      "20260312",
+      "20260313",
+      "20260314",
+      "20260315",
+      "20260316",
+      "20260317",
+      "20260318",
+      "20260319",
+      "20260320",
+      "20260321",
+      "20260322",
+      "20260323",
+      "20260324",
+      "20260325",
+      "20260326",
+      "20260327",
+      "20260328",
+      "20260329",
+      "20260330"
+    ],
+    "data": {
+      "20260224": {
+        "zp_imp": 6193,
+        "zp_clck": 211,
+        "zp_ctr": 3.4071,
+        "play_uv": 192,
+        "play_30s_uv": 37,
+        "play_30s_rate": 19.2708,
+        "ss_imp": 3149,
+        "ss_clck": 73,
+        "ss_ctr": 2.3182,
+        "ss_vv": 3379,
+        "avg_pdtm_sec": 24.93,
+        "detail_vv": 944,
+        "conv_rate": 27.94,
+        "ss_play_uv": 2325,
+        "detail_enter_uv": 68,
+        "enter_rate": 2.92
+      },
+      "20260225": {
+        "zp_imp": 6312,
+        "zp_clck": 230,
+        "zp_ctr": 3.6439,
+        "play_uv": 203,
+        "play_30s_uv": 37,
+        "play_30s_rate": 18.2266,
+        "ss_imp": 2843,
+        "ss_clck": 44,
+        "ss_ctr": 1.5477,
+        "ss_vv": 2776,
+        "avg_pdtm_sec": 19.3,
+        "detail_vv": 607,
+        "conv_rate": 21.87,
+        "ss_play_uv": 2087,
+        "detail_enter_uv": 50,
+        "enter_rate": 2.4
+      },
+      "20260226": {
+        "zp_imp": 6408,
+        "zp_clck": 237,
+        "zp_ctr": 3.6985,
+        "play_uv": 212,
+        "play_30s_uv": 36,
+        "play_30s_rate": 16.9811,
+        "ss_imp": 2056,
+        "ss_clck": 40,
+        "ss_ctr": 1.9455,
+        "ss_vv": 2091,
+        "avg_pdtm_sec": 20.8,
+        "detail_vv": 479,
+        "conv_rate": 22.91,
+        "ss_play_uv": 1536,
+        "detail_enter_uv": 36,
+        "enter_rate": 2.34
+      },
+      "20260227": {
+        "zp_imp": 8054,
+        "zp_clck": 265,
+        "zp_ctr": 3.2903,
+        "play_uv": 243,
+        "play_30s_uv": 46,
+        "play_30s_rate": 18.93,
+        "ss_imp": 1888,
+        "ss_clck": 29,
+        "ss_ctr": 1.536,
+        "ss_vv": 1606,
+        "avg_pdtm_sec": 12.02,
+        "detail_vv": 131,
+        "conv_rate": 8.16,
+        "ss_play_uv": 1419,
+        "detail_enter_uv": 30,
+        "enter_rate": 2.11
+      },
+      "20260228": {
+        "zp_imp": 9741,
+        "zp_clck": 319,
+        "zp_ctr": 3.2748,
+        "play_uv": 285,
+        "play_30s_uv": 48,
+        "play_30s_rate": 16.8421,
+        "ss_imp": 2132,
+        "ss_clck": 39,
+        "ss_ctr": 1.8293,
+        "ss_vv": 1986,
+        "avg_pdtm_sec": 15.93,
+        "detail_vv": 343,
+        "conv_rate": 17.27,
+        "ss_play_uv": 1575,
+        "detail_enter_uv": 43,
+        "enter_rate": 2.73
+      },
+      "20260301": {
+        "zp_imp": 10797,
+        "zp_clck": 338,
+        "zp_ctr": 3.1305,
+        "play_uv": 319,
+        "play_30s_uv": 72,
+        "play_30s_rate": 22.5705,
+        "ss_imp": 2106,
+        "ss_clck": 48,
+        "ss_ctr": 2.2792,
+        "ss_vv": 2116,
+        "avg_pdtm_sec": 18.83,
+        "detail_vv": 414,
+        "conv_rate": 19.57,
+        "ss_play_uv": 1626,
+        "detail_enter_uv": 46,
+        "enter_rate": 2.83
+      },
+      "20260302": {
+        "zp_imp": 10225,
+        "zp_clck": 388,
+        "zp_ctr": 3.7946,
+        "play_uv": 352,
+        "play_30s_uv": 72,
+        "play_30s_rate": 20.4545,
+        "ss_imp": 1621,
+        "ss_clck": 42,
+        "ss_ctr": 2.591,
+        "ss_vv": 1932,
+        "avg_pdtm_sec": 23.39,
+        "detail_vv": 620,
+        "conv_rate": 32.09,
+        "ss_play_uv": 1243,
+        "detail_enter_uv": 37,
+        "enter_rate": 2.98
+      },
+      "20260303": {
+        "zp_imp": 12588,
+        "zp_clck": 438,
+        "zp_ctr": 3.4795,
+        "play_uv": 384,
+        "play_30s_uv": 72,
+        "play_30s_rate": 18.75,
+        "ss_imp": 2534,
+        "ss_clck": 52,
+        "ss_ctr": 2.0521,
+        "ss_vv": 2550,
+        "avg_pdtm_sec": 17.61,
+        "detail_vv": 465,
+        "conv_rate": 18.24,
+        "ss_play_uv": 1991,
+        "detail_enter_uv": 46,
+        "enter_rate": 2.31
+      },
+      "20260304": {
+        "zp_imp": 12559,
+        "zp_clck": 413,
+        "zp_ctr": 3.2885,
+        "play_uv": 378,
+        "play_30s_uv": 62,
+        "play_30s_rate": 16.4021,
+        "ss_imp": 2167,
+        "ss_clck": 44,
+        "ss_ctr": 2.0305,
+        "ss_vv": 2308,
+        "avg_pdtm_sec": 21.85,
+        "detail_vv": 581,
+        "conv_rate": 25.17,
+        "ss_play_uv": 1647,
+        "detail_enter_uv": 51,
+        "enter_rate": 3.1
+      },
+      "20260305": {
+        "zp_imp": 12626,
+        "zp_clck": 440,
+        "zp_ctr": 3.4849,
+        "play_uv": 395,
+        "play_30s_uv": 80,
+        "play_30s_rate": 20.2532,
+        "ss_imp": 2947,
+        "ss_clck": 64,
+        "ss_ctr": 2.1717,
+        "ss_vv": 2974,
+        "avg_pdtm_sec": 16.03,
+        "detail_vv": 658,
+        "conv_rate": 22.13,
+        "ss_play_uv": 2207,
+        "detail_enter_uv": 69,
+        "enter_rate": 3.13
+      },
+      "20260306": {
+        "zp_imp": 15988,
+        "zp_clck": 577,
+        "zp_ctr": 3.609,
+        "play_uv": 525,
+        "play_30s_uv": 78,
+        "play_30s_rate": 14.8571,
+        "ss_imp": 3931,
+        "ss_clck": 72,
+        "ss_ctr": 1.8316,
+        "ss_vv": 4178,
+        "avg_pdtm_sec": 25.36,
+        "detail_vv": 1015,
+        "conv_rate": 24.29,
+        "ss_play_uv": 3027,
+        "detail_enter_uv": 77,
+        "enter_rate": 2.54
+      },
+      "20260307": {
+        "zp_imp": 16570,
+        "zp_clck": 629,
+        "zp_ctr": 3.796,
+        "play_uv": 569,
+        "play_30s_uv": 122,
+        "play_30s_rate": 21.4411,
+        "ss_imp": 4127,
+        "ss_clck": 76,
+        "ss_ctr": 1.8415,
+        "ss_vv": 4629,
+        "avg_pdtm_sec": 28.87,
+        "detail_vv": 1346,
+        "conv_rate": 29.08,
+        "ss_play_uv": 3127,
+        "detail_enter_uv": 86,
+        "enter_rate": 2.75
+      },
+      "20260308": {
+        "zp_imp": 12802,
+        "zp_clck": 498,
+        "zp_ctr": 3.89,
+        "play_uv": 456,
+        "play_30s_uv": 112,
+        "play_30s_rate": 24.5614,
+        "ss_imp": 2212,
+        "ss_clck": 40,
+        "ss_ctr": 1.8083,
+        "ss_vv": 2574,
+        "avg_pdtm_sec": 26.54,
+        "detail_vv": 719,
+        "conv_rate": 27.93,
+        "ss_play_uv": 1772,
+        "detail_enter_uv": 48,
+        "enter_rate": 2.71
+      },
+      "20260309": {
+        "zp_imp": 14192,
+        "zp_clck": 433,
+        "zp_ctr": 3.051,
+        "play_uv": 395,
+        "play_30s_uv": 102,
+        "play_30s_rate": 25.8228,
+        "ss_imp": 1838,
+        "ss_clck": 39,
+        "ss_ctr": 2.1219,
+        "ss_vv": 2388,
+        "avg_pdtm_sec": 29.78,
+        "detail_vv": 830,
+        "conv_rate": 34.76,
+        "ss_play_uv": 1477,
+        "detail_enter_uv": 45,
+        "enter_rate": 3.05
+      },
+      "20260310": {
+        "zp_imp": 23595,
+        "zp_clck": 874,
+        "zp_ctr": 3.7042,
+        "play_uv": 801,
+        "play_30s_uv": 202,
+        "play_30s_rate": 25.2185,
+        "ss_imp": 4198,
+        "ss_clck": 72,
+        "ss_ctr": 1.7151,
+        "ss_vv": 5026,
+        "avg_pdtm_sec": 22.03,
+        "detail_vv": 1394,
+        "conv_rate": 27.74,
+        "ss_play_uv": 3469,
+        "detail_enter_uv": 92,
+        "enter_rate": 2.65
+      },
+      "20260311": {
+        "zp_imp": 21457,
+        "zp_clck": 787,
+        "zp_ctr": 3.6678,
+        "play_uv": 724,
+        "play_30s_uv": 199,
+        "play_30s_rate": 27.4862,
+        "ss_imp": 4722,
+        "ss_clck": 100,
+        "ss_ctr": 2.1177,
+        "ss_vv": 6171,
+        "avg_pdtm_sec": 34.32,
+        "detail_vv": 2130,
+        "conv_rate": 34.52,
+        "ss_play_uv": 3855,
+        "detail_enter_uv": 136,
+        "enter_rate": 3.53
+      },
+      "20260312": {
+        "zp_imp": 30052,
+        "zp_clck": 1124,
+        "zp_ctr": 3.7402,
+        "play_uv": 1023,
+        "play_30s_uv": 297,
+        "play_30s_rate": 29.0323,
+        "ss_imp": 6466,
+        "ss_clck": 99,
+        "ss_ctr": 1.5311,
+        "ss_vv": 7876,
+        "avg_pdtm_sec": 32.52,
+        "detail_vv": 2178,
+        "conv_rate": 27.65,
+        "ss_play_uv": 5443,
+        "detail_enter_uv": 163,
+        "enter_rate": 2.99
+      },
+      "20260313": {
+        "zp_imp": 16549,
+        "zp_clck": 609,
+        "zp_ctr": 3.68,
+        "play_uv": 546,
+        "play_30s_uv": 147,
+        "play_30s_rate": 26.9231,
+        "ss_imp": 2564,
+        "ss_clck": 40,
+        "ss_ctr": 1.5601,
+        "ss_vv": 3635,
+        "avg_pdtm_sec": 34.44,
+        "detail_vv": 1323,
+        "conv_rate": 36.4,
+        "ss_play_uv": 2195,
+        "detail_enter_uv": 71,
+        "enter_rate": 3.23
+      },
+      "20260314": {
+        "zp_imp": 14873,
+        "zp_clck": 607,
+        "zp_ctr": 4.0812,
+        "play_uv": 567,
+        "play_30s_uv": 118,
+        "play_30s_rate": 20.8113,
+        "ss_imp": 1744,
+        "ss_clck": 21,
+        "ss_ctr": 1.2041,
+        "ss_vv": 2317,
+        "avg_pdtm_sec": 39.02,
+        "detail_vv": 733,
+        "conv_rate": 31.64,
+        "ss_play_uv": 1516,
+        "detail_enter_uv": 41,
+        "enter_rate": 2.7
+      },
+      "20260315": {
+        "zp_imp": 13097,
+        "zp_clck": 447,
+        "zp_ctr": 3.413,
+        "play_uv": 418,
+        "play_30s_uv": 96,
+        "play_30s_rate": 22.9665,
+        "ss_imp": 1558,
+        "ss_clck": 22,
+        "ss_ctr": 1.4121,
+        "ss_vv": 2198,
+        "avg_pdtm_sec": 40.07,
+        "detail_vv": 783,
+        "conv_rate": 35.62,
+        "ss_play_uv": 1335,
+        "detail_enter_uv": 42,
+        "enter_rate": 3.15
+      },
+      "20260316": {
+        "zp_imp": 11701,
+        "zp_clck": 340,
+        "zp_ctr": 2.9057,
+        "play_uv": 297,
+        "play_30s_uv": 68,
+        "play_30s_rate": 22.8956,
+        "ss_imp": 1356,
+        "ss_clck": 18,
+        "ss_ctr": 1.3274,
+        "ss_vv": 2005,
+        "avg_pdtm_sec": 49.54,
+        "detail_vv": 758,
+        "conv_rate": 37.81,
+        "ss_play_uv": 1167,
+        "detail_enter_uv": 37,
+        "enter_rate": 3.17
+      },
+      "20260317": {
+        "zp_imp": 11677,
+        "zp_clck": 346,
+        "zp_ctr": 2.9631,
+        "play_uv": 324,
+        "play_30s_uv": 84,
+        "play_30s_rate": 25.9259,
+        "ss_imp": 1112,
+        "ss_clck": 19,
+        "ss_ctr": 1.7086,
+        "ss_vv": 1497,
+        "avg_pdtm_sec": 34.9,
+        "detail_vv": 441,
+        "conv_rate": 29.46,
+        "ss_play_uv": 987,
+        "detail_enter_uv": 30,
+        "enter_rate": 3.04
+      },
+      "20260318": {
+        "zp_imp": 11203,
+        "zp_clck": 361,
+        "zp_ctr": 3.2224,
+        "play_uv": 331,
+        "play_30s_uv": 82,
+        "play_30s_rate": 24.7734,
+        "ss_imp": 1013,
+        "ss_clck": 11,
+        "ss_ctr": 1.0859,
+        "ss_vv": 1455,
+        "avg_pdtm_sec": 40.75,
+        "detail_vv": 494,
+        "conv_rate": 33.95,
+        "ss_play_uv": 918,
+        "detail_enter_uv": 33,
+        "enter_rate": 3.59
+      },
+      "20260319": {
+        "zp_imp": 16481,
+        "zp_clck": 486,
+        "zp_ctr": 2.9489,
+        "play_uv": 435,
+        "play_30s_uv": 122,
+        "play_30s_rate": 28.046,
+        "ss_imp": 1016,
+        "ss_clck": 12,
+        "ss_ctr": 1.1811,
+        "ss_vv": 1725,
+        "avg_pdtm_sec": 49.59,
+        "detail_vv": 705,
+        "conv_rate": 40.87,
+        "ss_play_uv": 974,
+        "detail_enter_uv": 27,
+        "enter_rate": 2.77
+      },
+      "20260320": {
+        "zp_imp": 22193,
+        "zp_clck": 669,
+        "zp_ctr": 3.0145,
+        "play_uv": 575,
+        "play_30s_uv": 142,
+        "play_30s_rate": 24.6957,
+        "ss_imp": 1058,
+        "ss_clck": 19,
+        "ss_ctr": 1.7958,
+        "ss_vv": 2019,
+        "avg_pdtm_sec": 41.97,
+        "detail_vv": 703,
+        "conv_rate": 34.82,
+        "ss_play_uv": 1222,
+        "detail_enter_uv": 44,
+        "enter_rate": 3.6
+      },
+      "20260321": {
+        "zp_imp": 27419,
+        "zp_clck": 934,
+        "zp_ctr": 3.4064,
+        "play_uv": 779,
+        "play_30s_uv": 191,
+        "play_30s_rate": 24.5186,
+        "ss_imp": 959,
+        "ss_clck": 11,
+        "ss_ctr": 1.147,
+        "ss_vv": 1797,
+        "avg_pdtm_sec": 40.69,
+        "detail_vv": 534,
+        "conv_rate": 29.72,
+        "ss_play_uv": 1209,
+        "detail_enter_uv": 32,
+        "enter_rate": 2.65
+      },
+      "20260322": {
+        "zp_imp": 26622,
+        "zp_clck": 800,
+        "zp_ctr": 3.005,
+        "play_uv": 671,
+        "play_30s_uv": 202,
+        "play_30s_rate": 30.1043,
+        "ss_imp": 1221,
+        "ss_clck": 13,
+        "ss_ctr": 1.0647,
+        "ss_vv": 2500,
+        "avg_pdtm_sec": 38.9,
+        "detail_vv": 846,
+        "conv_rate": 33.84,
+        "ss_play_uv": 1591,
+        "detail_enter_uv": 42,
+        "enter_rate": 2.64
+      },
+      "20260323": {
+        "zp_imp": 30837,
+        "zp_clck": 852,
+        "zp_ctr": 2.7629,
+        "play_uv": 673,
+        "play_30s_uv": 210,
+        "play_30s_rate": 31.2036,
+        "ss_imp": 1705,
+        "ss_clck": 23,
+        "ss_ctr": 1.349,
+        "ss_vv": 4594,
+        "avg_pdtm_sec": 42.51,
+        "detail_vv": 1519,
+        "conv_rate": 33.06,
+        "ss_play_uv": 2963,
+        "detail_enter_uv": 78,
+        "enter_rate": 2.63
+      },
+      "20260324": {
+        "zp_imp": 43613,
+        "zp_clck": 1218,
+        "zp_ctr": 2.7927,
+        "play_uv": 942,
+        "play_30s_uv": 330,
+        "play_30s_rate": 35.0318,
+        "ss_imp": 2401,
+        "ss_clck": 16,
+        "ss_ctr": 0.6664,
+        "ss_vv": 7576,
+        "avg_pdtm_sec": 45.81,
+        "detail_vv": 2247,
+        "conv_rate": 29.66,
+        "ss_play_uv": 5149,
+        "detail_enter_uv": 141,
+        "enter_rate": 2.74
+      },
+      "20260325": {
+        "zp_imp": 50289,
+        "zp_clck": 1402,
+        "zp_ctr": 2.7879,
+        "play_uv": 1074,
+        "play_30s_uv": 384,
+        "play_30s_rate": 35.7542,
+        "ss_imp": 3232,
+        "ss_clck": 47,
+        "ss_ctr": 1.4542,
+        "ss_vv": 12427,
+        "avg_pdtm_sec": 65.46,
+        "detail_vv": 5400,
+        "conv_rate": 43.45,
+        "ss_play_uv": 6644,
+        "detail_enter_uv": 280,
+        "enter_rate": 4.21
+      },
+      "20260326": {
+        "zp_imp": 50070,
+        "zp_clck": 1475,
+        "zp_ctr": 2.9459,
+        "play_uv": 1134,
+        "play_30s_uv": 382,
+        "play_30s_rate": 33.6861,
+        "ss_imp": 3035,
+        "ss_clck": 25,
+        "ss_ctr": 0.8237,
+        "ss_vv": 11641,
+        "avg_pdtm_sec": 75.31,
+        "detail_vv": 5652,
+        "conv_rate": 48.55,
+        "ss_play_uv": 5683,
+        "detail_enter_uv": 274,
+        "enter_rate": 4.82
+      },
+      "20260327": {
+        "zp_imp": 52261,
+        "zp_clck": 1572,
+        "zp_ctr": 3.008,
+        "play_uv": 1227,
+        "play_30s_uv": 412,
+        "play_30s_rate": 33.5778,
+        "ss_imp": 2463,
+        "ss_clck": 24,
+        "ss_ctr": 0.9744,
+        "ss_vv": 7948,
+        "avg_pdtm_sec": 47.75,
+        "detail_vv": 2254,
+        "conv_rate": 28.36,
+        "ss_play_uv": 5508,
+        "detail_enter_uv": 129,
+        "enter_rate": 2.34
+      },
+      "20260328": {
+        "zp_imp": 50327,
+        "zp_clck": 1641,
+        "zp_ctr": 3.2607,
+        "play_uv": 1283,
+        "play_30s_uv": 370,
+        "play_30s_rate": 28.8387,
+        "ss_imp": 2886,
+        "ss_clck": 31,
+        "ss_ctr": 1.0742,
+        "ss_vv": 10760,
+        "avg_pdtm_sec": 61.03,
+        "detail_vv": 4331,
+        "conv_rate": 40.25,
+        "ss_play_uv": 6178,
+        "detail_enter_uv": 217,
+        "enter_rate": 3.51
+      },
+      "20260329": {
+        "zp_imp": 42178,
+        "zp_clck": 1203,
+        "zp_ctr": 2.8522,
+        "play_uv": 943,
+        "play_30s_uv": 273,
+        "play_30s_rate": 28.9502,
+        "ss_imp": 4861,
+        "ss_clck": 73,
+        "ss_ctr": 1.5017,
+        "ss_vv": 15277,
+        "avg_pdtm_sec": 45.3,
+        "detail_vv": 4649,
+        "conv_rate": 30.43,
+        "ss_play_uv": 10232,
+        "detail_enter_uv": 267,
+        "enter_rate": 2.61
+      },
+      "20260330": {
+        "zp_imp": 44940,
+        "zp_clck": 1152,
+        "zp_ctr": 2.5634,
+        "play_uv": 883,
+        "play_30s_uv": 326,
+        "play_30s_rate": 36.9196,
+        "ss_imp": 3492,
+        "ss_clck": 44,
+        "ss_ctr": 1.26,
+        "ss_vv": 12184,
+        "avg_pdtm_sec": 46.3,
+        "detail_vv": 3525,
+        "conv_rate": 28.93,
+        "ss_play_uv": 8378,
+        "detail_enter_uv": 182,
+        "enter_rate": 2.17
+      }
+    }
+  }
+};
+const DRILL_CIDS = Object.keys(DRILL);
+const drillCharts = {};
 
-  let h = '<table><thead><tr><th>#</th><th>CID名称</th><th>完播率</th><th>7天总曝光</th><th>主曝光源</th><th>刷刷VV</th><th>刷刷转化率</th><th>vs大盘</th><th>找片曝光PV</th><th>找片CTR</th><th>vs大盘</th><th>播放UV</th><th>≥30s率</th><th>vs大盘</th></tr></thead><tbody>';
-  sorted.forEach((d,i) => {
-    const ctrDiff = d.zp_ctr - ZP_CTR_BM;
-    const ctrCls = d.zp_imp < 100 ? 'tag-gray' : (ctrDiff >= 0 ? 'tag-green' : 'tag-red');
-    const ctrTag = d.zp_imp < 100 ? '<span class="tag tag-gray">曝光不足</span>' : `<span class="tag ${ctrCls}">${ctrDiff>=0?'+':''}${ctrDiff.toFixed(2)}pp</span>`;
-    const rateDiff = d.play_30s_rate - ZP_30S_BM;
-    const rateCls = d.play_uv < 30 ? 'tag-gray' : (rateDiff >= 0 ? 'tag-green' : 'tag-red');
-    const rateTag = d.play_uv < 30 ? '<span class="tag tag-gray">样本不足</span>' : `<span class="tag ${rateCls}">${rateDiff>=0?'+':''}${rateDiff.toFixed(2)}pp</span>`;
-    const ssConvDiff = d.ss_conv_rate - SS_CONV_BM;
-    const ssConvCls = d.ss_total_vv < 100 ? 'tag-gray' : (ssConvDiff >= 0 ? 'tag-green' : 'tag-red');
-    const ssConvTag = d.ss_total_vv < 100 ? '<span class="tag tag-gray">VV不足</span>' : `<span class="tag ${ssConvCls}">${ssConvDiff>=0?'+':''}${ssConvDiff.toFixed(2)}pp</span>`;
-    h += `<tr><td>${i+1}</td><td title="${d.cid}"><b>${d.name}</b></td>
-      <td>${pct(d.completion_rate)}</td><td>${fmt(d.total_exp)}</td><td>${d.main_source}</td>
-      <td>${d.ss_total_vv>100 ? fmt(d.ss_total_vv) : '-'}</td><td>${d.ss_total_vv>100 ? pct(d.ss_conv_rate) : '-'}</td><td>${ssConvTag}</td>
-      <td>${fmt(d.zp_imp)}</td><td>${d.zp_imp>100 ? pct(d.zp_ctr) : '-'}</td><td>${ctrTag}</td>
-      <td>${fmt(d.play_uv)}</td><td>${d.play_uv>30 ? pct(d.play_30s_rate) : '-'}</td><td>${rateTag}</td>
-    </tr>`;
+// 填充下拉框
+DRILL_CIDS.forEach((cid, i) => {
+  const opt = document.createElement('option');
+  opt.value = cid;
+  opt.textContent = DRILL[cid].name;
+  if(i === 0) opt.selected = true;
+  document.getElementById('drillCidSelect').appendChild(opt);
+});
+
+function fmtDate(d) { return d.slice(4,6)+'/'+d.slice(6,8); }
+
+function makeDrillChart(domId, cid, title, barKey, barName, lineKey, lineName, lineColor, yRightName) {
+  const d = DRILL[cid];
+  const dates = d.dates;
+  const xLabels = dates.map(fmtDate);
+  const barData = dates.map(dt => d.data[dt]?.[barKey] ?? null);
+  const lineData = dates.map(dt => d.data[dt]?.[lineKey] ?? null);
+
+  if(drillCharts[domId]) drillCharts[domId].dispose();
+  const chart = echarts.init(document.getElementById(domId));
+  drillCharts[domId] = chart;
+
+  chart.setOption({
+    title: { text: title, textStyle: {fontSize:13, color:'#333'}, left:'center', top:5 },
+    tooltip: { trigger:'axis', axisPointer:{type:'cross'} },
+    legend: { top:28, textStyle:{fontSize:11}, data:[barName, lineName] },
+    grid: { left:55, right:55, top:65, bottom:35 },
+    xAxis: { type:'category', data:xLabels, axisLabel:{rotate:45, fontSize:9} },
+    yAxis: [
+      { type:'value', name:barName, position:'left', nameTextStyle:{fontSize:10}, axisLabel:{formatter:v=>v>=1e3?(v/1e3).toFixed(0)+'K':v, fontSize:10} },
+      { type:'value', name:yRightName||lineName, position:'right', nameTextStyle:{fontSize:10}, axisLabel:{fontSize:10} }
+    ],
+    series: [
+      { name:barName, type:'line', yAxisIndex:0, data:barData, lineStyle:{color:'#90caf9',width:2}, itemStyle:{color:'#90caf9'}, symbol:'circle', symbolSize:3, smooth:true, areaStyle:{color:'rgba(144,202,249,0.15)'} },
+      { name:lineName, type:'line', yAxisIndex:1, data:lineData, lineStyle:{color:lineColor,width:2.5}, itemStyle:{color:lineColor}, symbol:'circle', symbolSize:3, smooth:true }
+    ],
+    dataZoom:[{ type:'inside', xAxisIndex:0 }]
   });
-  h += `<tr style="background:#f5f5f5;font-weight:bold"><td></td><td>大盘基准（排除猜追）</td><td colspan="3"></td><td></td><td><span class="tag tag-blue">${SS_CONV_BM}%</span></td><td></td><td></td><td><span class="tag tag-blue">${ZP_CTR_BM}%</span></td><td></td><td></td><td><span class="tag tag-blue">${ZP_30S_BM}%</span></td><td></td></tr>`;
-  h += '</tbody></table>';
-  document.getElementById('sec4Table').innerHTML = h;
+  window.addEventListener('resize', () => chart.resize());
 }
-renderSec4();
-document.getElementById('lhTableSearch').addEventListener('input', e => renderSec4(e.target.value));
+
+function renderAllDrill(cid) {
+  // 找片 2图
+  makeDrillChart('drillZpCtr', cid, '找片曝光 × CTR', 'zp_imp', '找片曝光PV', 'zp_ctr', 'CTR(%)', '#e74c3c', 'CTR(%)');
+  makeDrillChart('drillZp30s', cid, '找片曝光 × ≥30s率', 'zp_imp', '找片曝光PV', 'play_30s_rate', '≥30s率(%)', '#ff9800', '≥30s率(%)');
+  // 刷刷 3图
+  makeDrillChart('drillSsEnter', cid, '刷刷播放UV × 底层页进入率', 'ss_play_uv', '刷刷播放UV', 'enter_rate', '底层页进入率(%)', '#e74c3c', '进入率(%)');
+  makeDrillChart('drillSsPdtm', cid, '刷刷播放UV × 均播时长', 'ss_play_uv', '刷刷播放UV', 'avg_pdtm_sec', '均播时长(s)', '#4caf50', '秒(s)');
+  makeDrillChart('drillSsConv', cid, '刷刷播放UV × 底层页消费深度', 'ss_play_uv', '刷刷播放UV', 'conv_rate', '消费深度(%)', '#2196f3', '消费深度(%)');
+}
+
+document.getElementById('drillCidSelect').addEventListener('change', e => renderAllDrill(e.target.value));
+// tab切换时渲染
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if(btn.dataset.sec === 'sec5') {
+      setTimeout(() => renderAllDrill(document.getElementById('drillCidSelect').value), 200);
+    }
+  });
+});
 </script>
 </body>
 </html>
