@@ -125,7 +125,7 @@ tr:hover{background:#f5f5ff}
   <div class="card">
     <div class="card-title">📊 找片场景</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>曝光</b>：找片页海报曝光PV（排除猜追mod_id） ｜ <b>CTR</b>：in_clck_poster_cnt/in_imp_poster_cnt ｜ <b>≥30s率</b>：一跳=找片（排除猜追own_ele__mod_id）有播放UV中≥30s占比
+      <b>曝光渗透</b>：该CID在找片场景（排除猜追）曝光UV / 当日找片场景总曝光UV ｜ <b>CTR</b>：in_clck_poster_cnt/in_imp_poster_cnt ｜ <b>≥30s率</b>：一跳=找片（排除猜追own_ele__mod_id）有播放UV中≥30s占比
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:400px"><div id="drillZpCtr" style="height:350px"></div></div>
@@ -136,7 +136,7 @@ tr:hover{background:#f5f5ff}
   <div class="card">
     <div class="card-title">📊 刷刷场景</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>曝光</b>：刷刷当前页播放UV ｜ <b>底层页进入率</b>：一跳=刷刷的底层页播放UV / 刷刷当前页播放UV ｜ <b>均播时长</b>：刷刷当前页VV平均播放秒数 ｜ <b>底层页消费深度</b>：一跳=刷刷的底层页VV/总VV
+      <b>曝光渗透</b>：该CID在刷刷场景播放UV / 当日刷刷场景总播放UV ｜ <b>底层页进入率</b>：一跳=刷刷的底层页播放UV / 刷刷当前页播放UV ｜ <b>均播时长</b>：刷刷当前页VV平均播放秒数 ｜ <b>底层页消费深度</b>：一跳=刷刷的底层页VV/总VV
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:300px"><div id="drillSsEnter" style="height:350px"></div></div>
@@ -335,7 +335,9 @@ const DRILL = {
         "conv_rate": 63.96,
         "ss_play_uv": 1044,
         "detail_enter_uv": 78,
-        "enter_rate": 7.47
+        "enter_rate": 7.47,
+        "zp_penetration": 15.8064,
+        "ss_penetration": 3.4264
       },
       "20260225": {
         "zp_imp": 4030,
@@ -353,7 +355,9 @@ const DRILL = {
         "conv_rate": 66.13,
         "ss_play_uv": 654,
         "detail_enter_uv": 54,
-        "enter_rate": 8.26
+        "enter_rate": 8.26,
+        "zp_penetration": 14.3103,
+        "ss_penetration": 2.1985
       },
       "20260226": {
         "zp_imp": 3743,
@@ -371,7 +375,9 @@ const DRILL = {
         "conv_rate": 63.15,
         "ss_play_uv": 562,
         "detail_enter_uv": 52,
-        "enter_rate": 9.25
+        "enter_rate": 9.25,
+        "zp_penetration": 13.3181,
+        "ss_penetration": 2.2658
       },
       "20260227": {
         "zp_imp": 4654,
@@ -389,7 +395,9 @@ const DRILL = {
         "conv_rate": 59.91,
         "ss_play_uv": 946,
         "detail_enter_uv": 105,
-        "enter_rate": 11.1
+        "enter_rate": 11.1,
+        "zp_penetration": 15.2429,
+        "ss_penetration": 4.097
       },
       "20260228": {
         "zp_imp": 7375,
@@ -407,7 +415,9 @@ const DRILL = {
         "conv_rate": 62.24,
         "ss_play_uv": 1761,
         "detail_enter_uv": 180,
-        "enter_rate": 10.22
+        "enter_rate": 10.22,
+        "zp_penetration": 20.8489,
+        "ss_penetration": 6.5699
       },
       "20260301": {
         "zp_imp": 6510,
@@ -425,7 +435,9 @@ const DRILL = {
         "conv_rate": 64.15,
         "ss_play_uv": 1160,
         "detail_enter_uv": 120,
-        "enter_rate": 10.34
+        "enter_rate": 10.34,
+        "zp_penetration": 16.4472,
+        "ss_penetration": 3.9319
       },
       "20260302": {
         "zp_imp": 6855,
@@ -443,7 +455,9 @@ const DRILL = {
         "conv_rate": 59.21,
         "ss_play_uv": 1290,
         "detail_enter_uv": 121,
-        "enter_rate": 9.38
+        "enter_rate": 9.38,
+        "zp_penetration": 16.3613,
+        "ss_penetration": 4.0788
       },
       "20260303": {
         "zp_imp": 5748,
@@ -461,7 +475,9 @@ const DRILL = {
         "conv_rate": 61.62,
         "ss_play_uv": 1084,
         "detail_enter_uv": 94,
-        "enter_rate": 8.67
+        "enter_rate": 8.67,
+        "zp_penetration": 13.8706,
+        "ss_penetration": 3.4926
       },
       "20260304": {
         "zp_imp": 6374,
@@ -479,7 +495,9 @@ const DRILL = {
         "conv_rate": 59.16,
         "ss_play_uv": 1214,
         "detail_enter_uv": 121,
-        "enter_rate": 9.97
+        "enter_rate": 9.97,
+        "zp_penetration": 15.3419,
+        "ss_penetration": 3.8469
       },
       "20260305": {
         "zp_imp": 9658,
@@ -497,7 +515,9 @@ const DRILL = {
         "conv_rate": 56.95,
         "ss_play_uv": 2259,
         "detail_enter_uv": 182,
-        "enter_rate": 8.06
+        "enter_rate": 8.06,
+        "zp_penetration": 21.6146,
+        "ss_penetration": 6.5097
       },
       "20260306": {
         "zp_imp": 9523,
@@ -515,7 +535,9 @@ const DRILL = {
         "conv_rate": 63.64,
         "ss_play_uv": 2162,
         "detail_enter_uv": 193,
-        "enter_rate": 8.93
+        "enter_rate": 8.93,
+        "zp_penetration": 17.5077,
+        "ss_penetration": 4.5357
       },
       "20260307": {
         "zp_imp": 14241,
@@ -533,7 +555,9 @@ const DRILL = {
         "conv_rate": 62.4,
         "ss_play_uv": 3013,
         "detail_enter_uv": 256,
-        "enter_rate": 8.5
+        "enter_rate": 8.5,
+        "zp_penetration": 20.3009,
+        "ss_penetration": 4.6374
       },
       "20260308": {
         "zp_imp": 11181,
@@ -551,7 +575,9 @@ const DRILL = {
         "conv_rate": 63.28,
         "ss_play_uv": 2036,
         "detail_enter_uv": 182,
-        "enter_rate": 8.94
+        "enter_rate": 8.94,
+        "zp_penetration": 15.7544,
+        "ss_penetration": 3.2636
       },
       "20260309": {
         "zp_imp": 19069,
@@ -569,7 +595,9 @@ const DRILL = {
         "conv_rate": 65.72,
         "ss_play_uv": 4261,
         "detail_enter_uv": 341,
-        "enter_rate": 8.0
+        "enter_rate": 8.0,
+        "zp_penetration": 22.6926,
+        "ss_penetration": 5.8495
       },
       "20260310": {
         "zp_imp": 30140,
@@ -587,7 +615,9 @@ const DRILL = {
         "conv_rate": 58.73,
         "ss_play_uv": 7107,
         "detail_enter_uv": 569,
-        "enter_rate": 8.01
+        "enter_rate": 8.01,
+        "zp_penetration": 23.8646,
+        "ss_penetration": 6.0384
       },
       "20260311": {
         "zp_imp": 19476,
@@ -605,7 +635,9 @@ const DRILL = {
         "conv_rate": 64.34,
         "ss_play_uv": 4057,
         "detail_enter_uv": 350,
-        "enter_rate": 8.63
+        "enter_rate": 8.63,
+        "zp_penetration": 15.1213,
+        "ss_penetration": 3.6699
       },
       "20260312": {
         "zp_imp": 31445,
@@ -623,7 +655,9 @@ const DRILL = {
         "conv_rate": 56.72,
         "ss_play_uv": 7716,
         "detail_enter_uv": 593,
-        "enter_rate": 7.69
+        "enter_rate": 7.69,
+        "zp_penetration": 17.666,
+        "ss_penetration": 4.971
       },
       "20260313": {
         "zp_imp": 18344,
@@ -641,7 +675,9 @@ const DRILL = {
         "conv_rate": 68.55,
         "ss_play_uv": 4297,
         "detail_enter_uv": 415,
-        "enter_rate": 9.66
+        "enter_rate": 9.66,
+        "zp_penetration": 13.6689,
+        "ss_penetration": 3.8965
       },
       "20260314": {
         "zp_imp": 19986,
@@ -659,7 +695,9 @@ const DRILL = {
         "conv_rate": 67.96,
         "ss_play_uv": 3280,
         "detail_enter_uv": 331,
-        "enter_rate": 10.09
+        "enter_rate": 10.09,
+        "zp_penetration": 14.8484,
+        "ss_penetration": 3.0318
       },
       "20260315": {
         "zp_imp": 13461,
@@ -677,7 +715,9 @@ const DRILL = {
         "conv_rate": 67.42,
         "ss_play_uv": 2333,
         "detail_enter_uv": 245,
-        "enter_rate": 10.5
+        "enter_rate": 10.5,
+        "zp_penetration": 11.0746,
+        "ss_penetration": 2.3852
       },
       "20260316": {
         "zp_imp": 10644,
@@ -695,7 +735,9 @@ const DRILL = {
         "conv_rate": 72.94,
         "ss_play_uv": 1823,
         "detail_enter_uv": 226,
-        "enter_rate": 12.4
+        "enter_rate": 12.4,
+        "zp_penetration": 10.5045,
+        "ss_penetration": 2.1911
       },
       "20260317": {
         "zp_imp": 11277,
@@ -713,7 +755,9 @@ const DRILL = {
         "conv_rate": 68.53,
         "ss_play_uv": 2116,
         "detail_enter_uv": 242,
-        "enter_rate": 11.44
+        "enter_rate": 11.44,
+        "zp_penetration": 10.9573,
+        "ss_penetration": 2.5898
       },
       "20260318": {
         "zp_imp": 16635,
@@ -731,7 +775,9 @@ const DRILL = {
         "conv_rate": 60.22,
         "ss_play_uv": 3990,
         "detail_enter_uv": 359,
-        "enter_rate": 9.0
+        "enter_rate": 9.0,
+        "zp_penetration": 14.9008,
+        "ss_penetration": 4.7933
       },
       "20260319": {
         "zp_imp": 15571,
@@ -749,7 +795,9 @@ const DRILL = {
         "conv_rate": 70.83,
         "ss_play_uv": 2307,
         "detail_enter_uv": 208,
-        "enter_rate": 9.02
+        "enter_rate": 9.02,
+        "zp_penetration": 13.4724,
+        "ss_penetration": 2.5964
       },
       "20260320": {
         "zp_imp": 16855,
@@ -767,7 +815,9 @@ const DRILL = {
         "conv_rate": 57.95,
         "ss_play_uv": 2524,
         "detail_enter_uv": 188,
-        "enter_rate": 7.45
+        "enter_rate": 7.45,
+        "zp_penetration": 13.8924,
+        "ss_penetration": 2.427
       },
       "20260321": {
         "zp_imp": 28772,
@@ -785,7 +835,9 @@ const DRILL = {
         "conv_rate": 67.17,
         "ss_play_uv": 2498,
         "detail_enter_uv": 226,
-        "enter_rate": 9.05
+        "enter_rate": 9.05,
+        "zp_penetration": 20.9679,
+        "ss_penetration": 1.7403
       },
       "20260322": {
         "zp_imp": 33164,
@@ -803,7 +855,9 @@ const DRILL = {
         "conv_rate": 55.76,
         "ss_play_uv": 3009,
         "detail_enter_uv": 204,
-        "enter_rate": 6.78
+        "enter_rate": 6.78,
+        "zp_penetration": 23.1562,
+        "ss_penetration": 2.0774
       },
       "20260323": {
         "zp_imp": 35701,
@@ -821,7 +875,9 @@ const DRILL = {
         "conv_rate": 53.96,
         "ss_play_uv": 5316,
         "detail_enter_uv": 290,
-        "enter_rate": 5.46
+        "enter_rate": 5.46,
+        "zp_penetration": 20.4192,
+        "ss_penetration": 2.5676
       },
       "20260324": {
         "zp_imp": 61230,
@@ -839,7 +895,9 @@ const DRILL = {
         "conv_rate": 36.79,
         "ss_play_uv": 9404,
         "detail_enter_uv": 377,
-        "enter_rate": 4.01
+        "enter_rate": 4.01,
+        "zp_penetration": 23.3482,
+        "ss_penetration": 2.654
       },
       "20260325": {
         "zp_imp": 62604,
@@ -857,7 +915,9 @@ const DRILL = {
         "conv_rate": 49.06,
         "ss_play_uv": 8538,
         "detail_enter_uv": 403,
-        "enter_rate": 4.72
+        "enter_rate": 4.72,
+        "zp_penetration": 22.2401,
+        "ss_penetration": 2.1099
       },
       "20260326": {
         "zp_imp": 42761,
@@ -875,7 +935,9 @@ const DRILL = {
         "conv_rate": 46.77,
         "ss_play_uv": 7432,
         "detail_enter_uv": 298,
-        "enter_rate": 4.01
+        "enter_rate": 4.01,
+        "zp_penetration": 14.2849,
+        "ss_penetration": 1.5778
       },
       "20260327": {
         "zp_imp": 34321,
@@ -893,7 +955,9 @@ const DRILL = {
         "conv_rate": 44.95,
         "ss_play_uv": 8417,
         "detail_enter_uv": 304,
-        "enter_rate": 3.61
+        "enter_rate": 3.61,
+        "zp_penetration": 11.7631,
+        "ss_penetration": 1.7221
       },
       "20260328": {
         "zp_imp": 47242,
@@ -911,7 +975,9 @@ const DRILL = {
         "conv_rate": 48.6,
         "ss_play_uv": 8168,
         "detail_enter_uv": 335,
-        "enter_rate": 4.1
+        "enter_rate": 4.1,
+        "zp_penetration": 15.1288,
+        "ss_penetration": 1.5748
       },
       "20260329": {
         "zp_imp": 45757,
@@ -929,7 +995,9 @@ const DRILL = {
         "conv_rate": 45.92,
         "ss_play_uv": 8891,
         "detail_enter_uv": 369,
-        "enter_rate": 4.15
+        "enter_rate": 4.15,
+        "zp_penetration": 14.5636,
+        "ss_penetration": 1.6107
       },
       "20260330": {
         "zp_imp": 43506,
@@ -947,7 +1015,9 @@ const DRILL = {
         "conv_rate": 52.38,
         "ss_play_uv": 6620,
         "detail_enter_uv": 302,
-        "enter_rate": 4.56
+        "enter_rate": 4.56,
+        "zp_penetration": 13.977,
+        "ss_penetration": 1.1455
       }
     }
   },
@@ -1007,7 +1077,9 @@ const DRILL = {
         "conv_rate": 27.94,
         "ss_play_uv": 2325,
         "detail_enter_uv": 68,
-        "enter_rate": 2.92
+        "enter_rate": 2.92,
+        "zp_penetration": 20.9939,
+        "ss_penetration": 7.6307
       },
       "20260225": {
         "zp_imp": 6312,
@@ -1025,7 +1097,9 @@ const DRILL = {
         "conv_rate": 21.87,
         "ss_play_uv": 2087,
         "detail_enter_uv": 50,
-        "enter_rate": 2.4
+        "enter_rate": 2.4,
+        "zp_penetration": 20.9617,
+        "ss_penetration": 7.0156
       },
       "20260226": {
         "zp_imp": 6408,
@@ -1043,7 +1117,9 @@ const DRILL = {
         "conv_rate": 22.91,
         "ss_play_uv": 1536,
         "detail_enter_uv": 36,
-        "enter_rate": 2.34
+        "enter_rate": 2.34,
+        "zp_penetration": 20.7575,
+        "ss_penetration": 6.1925
       },
       "20260227": {
         "zp_imp": 8054,
@@ -1061,7 +1137,9 @@ const DRILL = {
         "conv_rate": 8.16,
         "ss_play_uv": 1419,
         "detail_enter_uv": 30,
-        "enter_rate": 2.11
+        "enter_rate": 2.11,
+        "zp_penetration": 23.7025,
+        "ss_penetration": 6.1455
       },
       "20260228": {
         "zp_imp": 9741,
@@ -1079,7 +1157,9 @@ const DRILL = {
         "conv_rate": 17.27,
         "ss_play_uv": 1575,
         "detail_enter_uv": 43,
-        "enter_rate": 2.73
+        "enter_rate": 2.73,
+        "zp_penetration": 25.5402,
+        "ss_penetration": 5.876
       },
       "20260301": {
         "zp_imp": 10797,
@@ -1097,7 +1177,9 @@ const DRILL = {
         "conv_rate": 19.57,
         "ss_play_uv": 1626,
         "detail_enter_uv": 46,
-        "enter_rate": 2.83
+        "enter_rate": 2.83,
+        "zp_penetration": 25.3292,
+        "ss_penetration": 5.5115
       },
       "20260302": {
         "zp_imp": 10225,
@@ -1115,7 +1197,9 @@ const DRILL = {
         "conv_rate": 32.09,
         "ss_play_uv": 1243,
         "detail_enter_uv": 37,
-        "enter_rate": 2.98
+        "enter_rate": 2.98,
+        "zp_penetration": 22.9114,
+        "ss_penetration": 3.9302
       },
       "20260303": {
         "zp_imp": 12588,
@@ -1133,7 +1217,9 @@ const DRILL = {
         "conv_rate": 18.24,
         "ss_play_uv": 1991,
         "detail_enter_uv": 46,
-        "enter_rate": 2.31
+        "enter_rate": 2.31,
+        "zp_penetration": 27.0783,
+        "ss_penetration": 6.4149
       },
       "20260304": {
         "zp_imp": 12559,
@@ -1151,7 +1237,9 @@ const DRILL = {
         "conv_rate": 25.17,
         "ss_play_uv": 1647,
         "detail_enter_uv": 51,
-        "enter_rate": 3.1
+        "enter_rate": 3.1,
+        "zp_penetration": 27.0079,
+        "ss_penetration": 5.219
       },
       "20260305": {
         "zp_imp": 12626,
@@ -1169,7 +1257,9 @@ const DRILL = {
         "conv_rate": 22.13,
         "ss_play_uv": 2207,
         "detail_enter_uv": 69,
-        "enter_rate": 3.13
+        "enter_rate": 3.13,
+        "zp_penetration": 26.7832,
+        "ss_penetration": 6.3599
       },
       "20260306": {
         "zp_imp": 15988,
@@ -1187,7 +1277,9 @@ const DRILL = {
         "conv_rate": 24.29,
         "ss_play_uv": 3027,
         "detail_enter_uv": 77,
-        "enter_rate": 2.54
+        "enter_rate": 2.54,
+        "zp_penetration": 26.9114,
+        "ss_penetration": 6.3504
       },
       "20260307": {
         "zp_imp": 16570,
@@ -1205,7 +1297,9 @@ const DRILL = {
         "conv_rate": 29.08,
         "ss_play_uv": 3127,
         "detail_enter_uv": 86,
-        "enter_rate": 2.75
+        "enter_rate": 2.75,
+        "zp_penetration": 22.5624,
+        "ss_penetration": 4.8128
       },
       "20260308": {
         "zp_imp": 12802,
@@ -1223,7 +1317,9 @@ const DRILL = {
         "conv_rate": 27.93,
         "ss_play_uv": 1772,
         "detail_enter_uv": 48,
-        "enter_rate": 2.71
+        "enter_rate": 2.71,
+        "zp_penetration": 17.6063,
+        "ss_penetration": 2.8404
       },
       "20260309": {
         "zp_imp": 14192,
@@ -1241,7 +1337,9 @@ const DRILL = {
         "conv_rate": 34.76,
         "ss_play_uv": 1477,
         "detail_enter_uv": 45,
-        "enter_rate": 3.05
+        "enter_rate": 3.05,
+        "zp_penetration": 17.6036,
+        "ss_penetration": 2.0276
       },
       "20260310": {
         "zp_imp": 23595,
@@ -1259,7 +1357,9 @@ const DRILL = {
         "conv_rate": 27.74,
         "ss_play_uv": 3469,
         "detail_enter_uv": 92,
-        "enter_rate": 2.65
+        "enter_rate": 2.65,
+        "zp_penetration": 19.1386,
+        "ss_penetration": 2.9474
       },
       "20260311": {
         "zp_imp": 21457,
@@ -1277,7 +1377,9 @@ const DRILL = {
         "conv_rate": 34.52,
         "ss_play_uv": 3855,
         "detail_enter_uv": 136,
-        "enter_rate": 3.53
+        "enter_rate": 3.53,
+        "zp_penetration": 16.1673,
+        "ss_penetration": 3.4871
       },
       "20260312": {
         "zp_imp": 30052,
@@ -1295,7 +1397,9 @@ const DRILL = {
         "conv_rate": 27.65,
         "ss_play_uv": 5443,
         "detail_enter_uv": 163,
-        "enter_rate": 2.99
+        "enter_rate": 2.99,
+        "zp_penetration": 16.271,
+        "ss_penetration": 3.5066
       },
       "20260313": {
         "zp_imp": 16549,
@@ -1313,7 +1417,9 @@ const DRILL = {
         "conv_rate": 36.4,
         "ss_play_uv": 2195,
         "detail_enter_uv": 71,
-        "enter_rate": 3.23
+        "enter_rate": 3.23,
+        "zp_penetration": 12.4291,
+        "ss_penetration": 1.9904
       },
       "20260314": {
         "zp_imp": 14873,
@@ -1331,7 +1437,9 @@ const DRILL = {
         "conv_rate": 31.64,
         "ss_play_uv": 1516,
         "detail_enter_uv": 41,
-        "enter_rate": 2.7
+        "enter_rate": 2.7,
+        "zp_penetration": 11.1917,
+        "ss_penetration": 1.4013
       },
       "20260315": {
         "zp_imp": 13097,
@@ -1349,7 +1457,9 @@ const DRILL = {
         "conv_rate": 35.62,
         "ss_play_uv": 1335,
         "detail_enter_uv": 42,
-        "enter_rate": 3.15
+        "enter_rate": 3.15,
+        "zp_penetration": 10.877,
+        "ss_penetration": 1.3649
       },
       "20260316": {
         "zp_imp": 11701,
@@ -1367,7 +1477,9 @@ const DRILL = {
         "conv_rate": 37.81,
         "ss_play_uv": 1167,
         "detail_enter_uv": 37,
-        "enter_rate": 3.17
+        "enter_rate": 3.17,
+        "zp_penetration": 11.3824,
+        "ss_penetration": 1.4026
       },
       "20260317": {
         "zp_imp": 11677,
@@ -1385,7 +1497,9 @@ const DRILL = {
         "conv_rate": 29.46,
         "ss_play_uv": 987,
         "detail_enter_uv": 30,
-        "enter_rate": 3.04
+        "enter_rate": 3.04,
+        "zp_penetration": 11.2967,
+        "ss_penetration": 1.208
       },
       "20260318": {
         "zp_imp": 11203,
@@ -1403,7 +1517,9 @@ const DRILL = {
         "conv_rate": 33.95,
         "ss_play_uv": 918,
         "detail_enter_uv": 33,
-        "enter_rate": 3.59
+        "enter_rate": 3.59,
+        "zp_penetration": 10.5993,
+        "ss_penetration": 1.1028
       },
       "20260319": {
         "zp_imp": 16481,
@@ -1421,7 +1537,9 @@ const DRILL = {
         "conv_rate": 40.87,
         "ss_play_uv": 974,
         "detail_enter_uv": 27,
-        "enter_rate": 2.77
+        "enter_rate": 2.77,
+        "zp_penetration": 14.1772,
+        "ss_penetration": 1.0962
       },
       "20260320": {
         "zp_imp": 22193,
@@ -1439,7 +1557,9 @@ const DRILL = {
         "conv_rate": 34.82,
         "ss_play_uv": 1222,
         "detail_enter_uv": 44,
-        "enter_rate": 3.6
+        "enter_rate": 3.6,
+        "zp_penetration": 18.1634,
+        "ss_penetration": 1.175
       },
       "20260321": {
         "zp_imp": 27419,
@@ -1457,7 +1577,9 @@ const DRILL = {
         "conv_rate": 29.72,
         "ss_play_uv": 1209,
         "detail_enter_uv": 32,
-        "enter_rate": 2.65
+        "enter_rate": 2.65,
+        "zp_penetration": 19.8457,
+        "ss_penetration": 0.8423
       },
       "20260322": {
         "zp_imp": 26622,
@@ -1475,7 +1597,9 @@ const DRILL = {
         "conv_rate": 33.84,
         "ss_play_uv": 1591,
         "detail_enter_uv": 42,
-        "enter_rate": 2.64
+        "enter_rate": 2.64,
+        "zp_penetration": 18.94,
+        "ss_penetration": 1.0984
       },
       "20260323": {
         "zp_imp": 30837,
@@ -1493,7 +1617,9 @@ const DRILL = {
         "conv_rate": 33.06,
         "ss_play_uv": 2963,
         "detail_enter_uv": 78,
-        "enter_rate": 2.63
+        "enter_rate": 2.63,
+        "zp_penetration": 18.0658,
+        "ss_penetration": 1.4311
       },
       "20260324": {
         "zp_imp": 43613,
@@ -1511,7 +1637,9 @@ const DRILL = {
         "conv_rate": 29.66,
         "ss_play_uv": 5149,
         "detail_enter_uv": 141,
-        "enter_rate": 2.74
+        "enter_rate": 2.74,
+        "zp_penetration": 17.3493,
+        "ss_penetration": 1.4532
       },
       "20260325": {
         "zp_imp": 50289,
@@ -1529,7 +1657,9 @@ const DRILL = {
         "conv_rate": 43.45,
         "ss_play_uv": 6644,
         "detail_enter_uv": 280,
-        "enter_rate": 4.21
+        "enter_rate": 4.21,
+        "zp_penetration": 18.3496,
+        "ss_penetration": 1.6418
       },
       "20260326": {
         "zp_imp": 50070,
@@ -1547,7 +1677,9 @@ const DRILL = {
         "conv_rate": 48.55,
         "ss_play_uv": 5683,
         "detail_enter_uv": 274,
-        "enter_rate": 4.82
+        "enter_rate": 4.82,
+        "zp_penetration": 16.6065,
+        "ss_penetration": 1.2065
       },
       "20260327": {
         "zp_imp": 52261,
@@ -1565,7 +1697,9 @@ const DRILL = {
         "conv_rate": 28.36,
         "ss_play_uv": 5508,
         "detail_enter_uv": 129,
-        "enter_rate": 2.34
+        "enter_rate": 2.34,
+        "zp_penetration": 17.2497,
+        "ss_penetration": 1.1269
       },
       "20260328": {
         "zp_imp": 50327,
@@ -1583,7 +1717,9 @@ const DRILL = {
         "conv_rate": 40.25,
         "ss_play_uv": 6178,
         "detail_enter_uv": 217,
-        "enter_rate": 3.51
+        "enter_rate": 3.51,
+        "zp_penetration": 16.1622,
+        "ss_penetration": 1.1911
       },
       "20260329": {
         "zp_imp": 42178,
@@ -1601,7 +1737,9 @@ const DRILL = {
         "conv_rate": 30.43,
         "ss_play_uv": 10232,
         "detail_enter_uv": 267,
-        "enter_rate": 2.61
+        "enter_rate": 2.61,
+        "zp_penetration": 13.5737,
+        "ss_penetration": 1.8536
       },
       "20260330": {
         "zp_imp": 44940,
@@ -1619,7 +1757,9 @@ const DRILL = {
         "conv_rate": 28.93,
         "ss_play_uv": 8378,
         "detail_enter_uv": 182,
-        "enter_rate": 2.17
+        "enter_rate": 2.17,
+        "zp_penetration": 14.5399,
+        "ss_penetration": 1.4497
       }
     }
   }
@@ -1670,12 +1810,12 @@ function makeDrillChart(domId, cid, title, barKey, barName, lineKey, lineName, l
 
 function renderAllDrill(cid) {
   // 找片 2图
-  makeDrillChart('drillZpCtr', cid, '找片曝光 × CTR', 'zp_imp', '找片曝光PV', 'zp_ctr', 'CTR(%)', '#e74c3c', 'CTR(%)');
-  makeDrillChart('drillZp30s', cid, '找片曝光 × ≥30s率', 'zp_imp', '找片曝光PV', 'play_30s_rate', '≥30s率(%)', '#ff9800', '≥30s率(%)');
+  makeDrillChart('drillZpCtr', cid, '找片曝光渗透 × CTR', 'zp_penetration', '找片曝光渗透(%)', 'zp_ctr', 'CTR(%)', '#e74c3c', 'CTR(%)');
+  makeDrillChart('drillZp30s', cid, '找片曝光渗透 × ≥30s率', 'zp_penetration', '找片曝光渗透(%)', 'play_30s_rate', '≥30s率(%)', '#ff9800', '≥30s率(%)');
   // 刷刷 3图
-  makeDrillChart('drillSsEnter', cid, '刷刷播放UV × 底层页进入率', 'ss_play_uv', '刷刷播放UV', 'enter_rate', '底层页进入率(%)', '#e74c3c', '进入率(%)');
-  makeDrillChart('drillSsPdtm', cid, '刷刷播放UV × 均播时长', 'ss_play_uv', '刷刷播放UV', 'avg_pdtm_sec', '均播时长(s)', '#4caf50', '秒(s)');
-  makeDrillChart('drillSsConv', cid, '刷刷播放UV × 底层页消费深度', 'ss_play_uv', '刷刷播放UV', 'conv_rate', '消费深度(%)', '#2196f3', '消费深度(%)');
+  makeDrillChart('drillSsEnter', cid, '刷刷曝光渗透 × 底层页进入率', 'ss_penetration', '刷刷曝光渗透(%)', 'enter_rate', '底层页进入率(%)', '#e74c3c', '进入率(%)');
+  makeDrillChart('drillSsPdtm', cid, '刷刷曝光渗透 × 均播时长', 'ss_penetration', '刷刷曝光渗透(%)', 'avg_pdtm_sec', '均播时长(s)', '#4caf50', '秒(s)');
+  makeDrillChart('drillSsConv', cid, '刷刷曝光渗透 × 底层页消费深度', 'ss_penetration', '刷刷曝光渗透(%)', 'conv_rate', '消费深度(%)', '#2196f3', '消费深度(%)');
 }
 
 document.getElementById('drillCidSelect').addEventListener('change', e => renderAllDrill(e.target.value));
