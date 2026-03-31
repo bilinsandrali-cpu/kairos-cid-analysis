@@ -125,23 +125,27 @@ tr:hover{background:#f5f5ff}
   <div class="card">
     <div class="card-title">📊 找片场景</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>曝光渗透</b>：该CID在找片场景（排除猜追）曝光UV / 当日找片场景总曝光UV ｜ <b>CTR</b>：in_clck_poster_cnt/in_imp_poster_cnt ｜ <b>≥30s率</b>：一跳=找片（排除猜追own_ele__mod_id）有播放UV中≥30s占比
+      <b>曝光渗透</b>：该CID在找片场景（排除猜追）曝光UV / 当日找片场景总曝光UV ｜ <b>CTR</b>：in_clck_poster_cnt/in_imp_poster_cnt ｜ <b>≥30s率</b>：一跳=找片（排除猜追own_ele__mod_id）有播放UV中≥30s占比<br>
+      <b>完播率</b>：底层页播放UV中深度消费（≥10min）的比例，按日计算
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:400px"><div id="drillZpCtr" style="height:350px"></div></div>
       <div style="flex:1;min-width:400px"><div id="drillZp30s" style="height:350px"></div></div>
+      <div style="flex:1;min-width:400px"><div id="drillZpComp" style="height:350px"></div></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">📊 刷刷场景</div>
     <div class="note-box" style="margin-bottom:12px;font-size:12px">
-      <b>曝光渗透</b>：该CID在刷刷场景播放UV / 当日刷刷场景总播放UV ｜ <b>底层页进入率</b>：一跳=刷刷的底层页播放UV / 刷刷当前页播放UV ｜ <b>均播时长</b>：刷刷当前页VV平均播放秒数 ｜ <b>底层页消费深度</b>：一跳=刷刷的底层页VV/总VV
+      <b>曝光渗透</b>：该CID在刷刷场景播放UV / 当日刷刷场景总播放UV ｜ <b>底层页进入率</b>：一跳=刷刷的底层页播放UV / 刷刷当前页播放UV ｜ <b>均播时长</b>：刷刷当前页VV平均播放秒数 ｜ <b>底层页消费深度</b>：一跳=刷刷的底层页VV/总VV<br>
+      <b>完播率</b>：底层页播放UV中深度消费（≥10min）的比例，按日计算
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:300px"><div id="drillSsEnter" style="height:350px"></div></div>
       <div style="flex:1;min-width:300px"><div id="drillSsPdtm" style="height:350px"></div></div>
       <div style="flex:1;min-width:300px"><div id="drillSsConv" style="height:350px"></div></div>
+      <div style="flex:1;min-width:300px"><div id="drillSsComp" style="height:350px"></div></div>
     </div>
   </div>
 </div>
@@ -337,7 +341,8 @@ const DRILL = {
         "detail_enter_uv": 78,
         "enter_rate": 7.47,
         "zp_penetration": 15.8064,
-        "ss_penetration": 3.4264
+        "ss_penetration": 3.4264,
+        "completion_rate": 28.01
       },
       "20260225": {
         "zp_imp": 4030,
@@ -357,7 +362,8 @@ const DRILL = {
         "detail_enter_uv": 54,
         "enter_rate": 8.26,
         "zp_penetration": 14.3103,
-        "ss_penetration": 2.1985
+        "ss_penetration": 2.1985,
+        "completion_rate": 26.69
       },
       "20260226": {
         "zp_imp": 3743,
@@ -377,7 +383,8 @@ const DRILL = {
         "detail_enter_uv": 52,
         "enter_rate": 9.25,
         "zp_penetration": 13.3181,
-        "ss_penetration": 2.2658
+        "ss_penetration": 2.2658,
+        "completion_rate": 27.51
       },
       "20260227": {
         "zp_imp": 4654,
@@ -397,7 +404,8 @@ const DRILL = {
         "detail_enter_uv": 105,
         "enter_rate": 11.1,
         "zp_penetration": 15.2429,
-        "ss_penetration": 4.097
+        "ss_penetration": 4.097,
+        "completion_rate": 21.53
       },
       "20260228": {
         "zp_imp": 7375,
@@ -417,7 +425,8 @@ const DRILL = {
         "detail_enter_uv": 180,
         "enter_rate": 10.22,
         "zp_penetration": 20.8489,
-        "ss_penetration": 6.5699
+        "ss_penetration": 6.5699,
+        "completion_rate": 22.06
       },
       "20260301": {
         "zp_imp": 6510,
@@ -437,7 +446,8 @@ const DRILL = {
         "detail_enter_uv": 120,
         "enter_rate": 10.34,
         "zp_penetration": 16.4472,
-        "ss_penetration": 3.9319
+        "ss_penetration": 3.9319,
+        "completion_rate": 25.03
       },
       "20260302": {
         "zp_imp": 6855,
@@ -457,7 +467,8 @@ const DRILL = {
         "detail_enter_uv": 121,
         "enter_rate": 9.38,
         "zp_penetration": 16.3613,
-        "ss_penetration": 4.0788
+        "ss_penetration": 4.0788,
+        "completion_rate": 23.79
       },
       "20260303": {
         "zp_imp": 5748,
@@ -477,7 +488,8 @@ const DRILL = {
         "detail_enter_uv": 94,
         "enter_rate": 8.67,
         "zp_penetration": 13.8706,
-        "ss_penetration": 3.4926
+        "ss_penetration": 3.4926,
+        "completion_rate": 26.83
       },
       "20260304": {
         "zp_imp": 6374,
@@ -497,7 +509,8 @@ const DRILL = {
         "detail_enter_uv": 121,
         "enter_rate": 9.97,
         "zp_penetration": 15.3419,
-        "ss_penetration": 3.8469
+        "ss_penetration": 3.8469,
+        "completion_rate": 26.27
       },
       "20260305": {
         "zp_imp": 9658,
@@ -517,7 +530,8 @@ const DRILL = {
         "detail_enter_uv": 182,
         "enter_rate": 8.06,
         "zp_penetration": 21.6146,
-        "ss_penetration": 6.5097
+        "ss_penetration": 6.5097,
+        "completion_rate": 26.4
       },
       "20260306": {
         "zp_imp": 9523,
@@ -537,7 +551,8 @@ const DRILL = {
         "detail_enter_uv": 193,
         "enter_rate": 8.93,
         "zp_penetration": 17.5077,
-        "ss_penetration": 4.5357
+        "ss_penetration": 4.5357,
+        "completion_rate": 26.18
       },
       "20260307": {
         "zp_imp": 14241,
@@ -557,7 +572,8 @@ const DRILL = {
         "detail_enter_uv": 256,
         "enter_rate": 8.5,
         "zp_penetration": 20.3009,
-        "ss_penetration": 4.6374
+        "ss_penetration": 4.6374,
+        "completion_rate": 26.43
       },
       "20260308": {
         "zp_imp": 11181,
@@ -577,7 +593,8 @@ const DRILL = {
         "detail_enter_uv": 182,
         "enter_rate": 8.94,
         "zp_penetration": 15.7544,
-        "ss_penetration": 3.2636
+        "ss_penetration": 3.2636,
+        "completion_rate": 27.67
       },
       "20260309": {
         "zp_imp": 19069,
@@ -597,7 +614,8 @@ const DRILL = {
         "detail_enter_uv": 341,
         "enter_rate": 8.0,
         "zp_penetration": 22.6926,
-        "ss_penetration": 5.8495
+        "ss_penetration": 5.8495,
+        "completion_rate": 28.68
       },
       "20260310": {
         "zp_imp": 30140,
@@ -617,7 +635,8 @@ const DRILL = {
         "detail_enter_uv": 569,
         "enter_rate": 8.01,
         "zp_penetration": 23.8646,
-        "ss_penetration": 6.0384
+        "ss_penetration": 6.0384,
+        "completion_rate": 29.2
       },
       "20260311": {
         "zp_imp": 19476,
@@ -637,7 +656,8 @@ const DRILL = {
         "detail_enter_uv": 350,
         "enter_rate": 8.63,
         "zp_penetration": 15.1213,
-        "ss_penetration": 3.6699
+        "ss_penetration": 3.6699,
+        "completion_rate": 33.51
       },
       "20260312": {
         "zp_imp": 31445,
@@ -657,7 +677,8 @@ const DRILL = {
         "detail_enter_uv": 593,
         "enter_rate": 7.69,
         "zp_penetration": 17.666,
-        "ss_penetration": 4.971
+        "ss_penetration": 4.971,
+        "completion_rate": 30.83
       },
       "20260313": {
         "zp_imp": 18344,
@@ -677,7 +698,8 @@ const DRILL = {
         "detail_enter_uv": 415,
         "enter_rate": 9.66,
         "zp_penetration": 13.6689,
-        "ss_penetration": 3.8965
+        "ss_penetration": 3.8965,
+        "completion_rate": 34.21
       },
       "20260314": {
         "zp_imp": 19986,
@@ -697,7 +719,8 @@ const DRILL = {
         "detail_enter_uv": 331,
         "enter_rate": 10.09,
         "zp_penetration": 14.8484,
-        "ss_penetration": 3.0318
+        "ss_penetration": 3.0318,
+        "completion_rate": 31.54
       },
       "20260315": {
         "zp_imp": 13461,
@@ -717,7 +740,8 @@ const DRILL = {
         "detail_enter_uv": 245,
         "enter_rate": 10.5,
         "zp_penetration": 11.0746,
-        "ss_penetration": 2.3852
+        "ss_penetration": 2.3852,
+        "completion_rate": 33.55
       },
       "20260316": {
         "zp_imp": 10644,
@@ -737,7 +761,8 @@ const DRILL = {
         "detail_enter_uv": 226,
         "enter_rate": 12.4,
         "zp_penetration": 10.5045,
-        "ss_penetration": 2.1911
+        "ss_penetration": 2.1911,
+        "completion_rate": 37.82
       },
       "20260317": {
         "zp_imp": 11277,
@@ -757,7 +782,8 @@ const DRILL = {
         "detail_enter_uv": 242,
         "enter_rate": 11.44,
         "zp_penetration": 10.9573,
-        "ss_penetration": 2.5898
+        "ss_penetration": 2.5898,
+        "completion_rate": 38.26
       },
       "20260318": {
         "zp_imp": 16635,
@@ -777,7 +803,8 @@ const DRILL = {
         "detail_enter_uv": 359,
         "enter_rate": 9.0,
         "zp_penetration": 14.9008,
-        "ss_penetration": 4.7933
+        "ss_penetration": 4.7933,
+        "completion_rate": 34.24
       },
       "20260319": {
         "zp_imp": 15571,
@@ -797,7 +824,8 @@ const DRILL = {
         "detail_enter_uv": 208,
         "enter_rate": 9.02,
         "zp_penetration": 13.4724,
-        "ss_penetration": 2.5964
+        "ss_penetration": 2.5964,
+        "completion_rate": 33.99
       },
       "20260320": {
         "zp_imp": 16855,
@@ -817,7 +845,8 @@ const DRILL = {
         "detail_enter_uv": 188,
         "enter_rate": 7.45,
         "zp_penetration": 13.8924,
-        "ss_penetration": 2.427
+        "ss_penetration": 2.427,
+        "completion_rate": 30.57
       },
       "20260321": {
         "zp_imp": 28772,
@@ -837,7 +866,8 @@ const DRILL = {
         "detail_enter_uv": 226,
         "enter_rate": 9.05,
         "zp_penetration": 20.9679,
-        "ss_penetration": 1.7403
+        "ss_penetration": 1.7403,
+        "completion_rate": 28.61
       },
       "20260322": {
         "zp_imp": 33164,
@@ -857,7 +887,8 @@ const DRILL = {
         "detail_enter_uv": 204,
         "enter_rate": 6.78,
         "zp_penetration": 23.1562,
-        "ss_penetration": 2.0774
+        "ss_penetration": 2.0774,
+        "completion_rate": 29.24
       },
       "20260323": {
         "zp_imp": 35701,
@@ -877,7 +908,8 @@ const DRILL = {
         "detail_enter_uv": 290,
         "enter_rate": 5.46,
         "zp_penetration": 20.4192,
-        "ss_penetration": 2.5676
+        "ss_penetration": 2.5676,
+        "completion_rate": 31.59
       },
       "20260324": {
         "zp_imp": 61230,
@@ -897,7 +929,8 @@ const DRILL = {
         "detail_enter_uv": 377,
         "enter_rate": 4.01,
         "zp_penetration": 23.3482,
-        "ss_penetration": 2.654
+        "ss_penetration": 2.654,
+        "completion_rate": 31.43
       },
       "20260325": {
         "zp_imp": 62604,
@@ -917,7 +950,8 @@ const DRILL = {
         "detail_enter_uv": 403,
         "enter_rate": 4.72,
         "zp_penetration": 22.2401,
-        "ss_penetration": 2.1099
+        "ss_penetration": 2.1099,
+        "completion_rate": 32.97
       },
       "20260326": {
         "zp_imp": 42761,
@@ -937,7 +971,8 @@ const DRILL = {
         "detail_enter_uv": 298,
         "enter_rate": 4.01,
         "zp_penetration": 14.2849,
-        "ss_penetration": 1.5778
+        "ss_penetration": 1.5778,
+        "completion_rate": 36.67
       },
       "20260327": {
         "zp_imp": 34321,
@@ -957,7 +992,8 @@ const DRILL = {
         "detail_enter_uv": 304,
         "enter_rate": 3.61,
         "zp_penetration": 11.7631,
-        "ss_penetration": 1.7221
+        "ss_penetration": 1.7221,
+        "completion_rate": 34.2
       },
       "20260328": {
         "zp_imp": 47242,
@@ -977,7 +1013,8 @@ const DRILL = {
         "detail_enter_uv": 335,
         "enter_rate": 4.1,
         "zp_penetration": 15.1288,
-        "ss_penetration": 1.5748
+        "ss_penetration": 1.5748,
+        "completion_rate": 30.42
       },
       "20260329": {
         "zp_imp": 45757,
@@ -997,7 +1034,8 @@ const DRILL = {
         "detail_enter_uv": 369,
         "enter_rate": 4.15,
         "zp_penetration": 14.5636,
-        "ss_penetration": 1.6107
+        "ss_penetration": 1.6107,
+        "completion_rate": 31.95
       },
       "20260330": {
         "zp_imp": 43506,
@@ -1017,7 +1055,8 @@ const DRILL = {
         "detail_enter_uv": 302,
         "enter_rate": 4.56,
         "zp_penetration": 13.977,
-        "ss_penetration": 1.1455
+        "ss_penetration": 1.1455,
+        "completion_rate": 34.7
       }
     }
   },
@@ -1079,7 +1118,8 @@ const DRILL = {
         "detail_enter_uv": 68,
         "enter_rate": 2.92,
         "zp_penetration": 20.9939,
-        "ss_penetration": 7.6307
+        "ss_penetration": 7.6307,
+        "completion_rate": 14.13
       },
       "20260225": {
         "zp_imp": 6312,
@@ -1099,7 +1139,8 @@ const DRILL = {
         "detail_enter_uv": 50,
         "enter_rate": 2.4,
         "zp_penetration": 20.9617,
-        "ss_penetration": 7.0156
+        "ss_penetration": 7.0156,
+        "completion_rate": 14.97
       },
       "20260226": {
         "zp_imp": 6408,
@@ -1119,7 +1160,8 @@ const DRILL = {
         "detail_enter_uv": 36,
         "enter_rate": 2.34,
         "zp_penetration": 20.7575,
-        "ss_penetration": 6.1925
+        "ss_penetration": 6.1925,
+        "completion_rate": 10.16
       },
       "20260227": {
         "zp_imp": 8054,
@@ -1139,7 +1181,8 @@ const DRILL = {
         "detail_enter_uv": 30,
         "enter_rate": 2.11,
         "zp_penetration": 23.7025,
-        "ss_penetration": 6.1455
+        "ss_penetration": 6.1455,
+        "completion_rate": 12.75
       },
       "20260228": {
         "zp_imp": 9741,
@@ -1159,7 +1202,8 @@ const DRILL = {
         "detail_enter_uv": 43,
         "enter_rate": 2.73,
         "zp_penetration": 25.5402,
-        "ss_penetration": 5.876
+        "ss_penetration": 5.876,
+        "completion_rate": 9.71
       },
       "20260301": {
         "zp_imp": 10797,
@@ -1179,7 +1223,8 @@ const DRILL = {
         "detail_enter_uv": 46,
         "enter_rate": 2.83,
         "zp_penetration": 25.3292,
-        "ss_penetration": 5.5115
+        "ss_penetration": 5.5115,
+        "completion_rate": 11.53
       },
       "20260302": {
         "zp_imp": 10225,
@@ -1199,7 +1244,8 @@ const DRILL = {
         "detail_enter_uv": 37,
         "enter_rate": 2.98,
         "zp_penetration": 22.9114,
-        "ss_penetration": 3.9302
+        "ss_penetration": 3.9302,
+        "completion_rate": 10.79
       },
       "20260303": {
         "zp_imp": 12588,
@@ -1219,7 +1265,8 @@ const DRILL = {
         "detail_enter_uv": 46,
         "enter_rate": 2.31,
         "zp_penetration": 27.0783,
-        "ss_penetration": 6.4149
+        "ss_penetration": 6.4149,
+        "completion_rate": 8.18
       },
       "20260304": {
         "zp_imp": 12559,
@@ -1239,7 +1286,8 @@ const DRILL = {
         "detail_enter_uv": 51,
         "enter_rate": 3.1,
         "zp_penetration": 27.0079,
-        "ss_penetration": 5.219
+        "ss_penetration": 5.219,
+        "completion_rate": 9.39
       },
       "20260305": {
         "zp_imp": 12626,
@@ -1259,7 +1307,8 @@ const DRILL = {
         "detail_enter_uv": 69,
         "enter_rate": 3.13,
         "zp_penetration": 26.7832,
-        "ss_penetration": 6.3599
+        "ss_penetration": 6.3599,
+        "completion_rate": 8.29
       },
       "20260306": {
         "zp_imp": 15988,
@@ -1279,7 +1328,8 @@ const DRILL = {
         "detail_enter_uv": 77,
         "enter_rate": 2.54,
         "zp_penetration": 26.9114,
-        "ss_penetration": 6.3504
+        "ss_penetration": 6.3504,
+        "completion_rate": 8.15
       },
       "20260307": {
         "zp_imp": 16570,
@@ -1299,7 +1349,8 @@ const DRILL = {
         "detail_enter_uv": 86,
         "enter_rate": 2.75,
         "zp_penetration": 22.5624,
-        "ss_penetration": 4.8128
+        "ss_penetration": 4.8128,
+        "completion_rate": 9.66
       },
       "20260308": {
         "zp_imp": 12802,
@@ -1319,7 +1370,8 @@ const DRILL = {
         "detail_enter_uv": 48,
         "enter_rate": 2.71,
         "zp_penetration": 17.6063,
-        "ss_penetration": 2.8404
+        "ss_penetration": 2.8404,
+        "completion_rate": 13.83
       },
       "20260309": {
         "zp_imp": 14192,
@@ -1339,7 +1391,8 @@ const DRILL = {
         "detail_enter_uv": 45,
         "enter_rate": 3.05,
         "zp_penetration": 17.6036,
-        "ss_penetration": 2.0276
+        "ss_penetration": 2.0276,
+        "completion_rate": 13.42
       },
       "20260310": {
         "zp_imp": 23595,
@@ -1359,7 +1412,8 @@ const DRILL = {
         "detail_enter_uv": 92,
         "enter_rate": 2.65,
         "zp_penetration": 19.1386,
-        "ss_penetration": 2.9474
+        "ss_penetration": 2.9474,
+        "completion_rate": 9.34
       },
       "20260311": {
         "zp_imp": 21457,
@@ -1379,7 +1433,8 @@ const DRILL = {
         "detail_enter_uv": 136,
         "enter_rate": 3.53,
         "zp_penetration": 16.1673,
-        "ss_penetration": 3.4871
+        "ss_penetration": 3.4871,
+        "completion_rate": 12.12
       },
       "20260312": {
         "zp_imp": 30052,
@@ -1399,7 +1454,8 @@ const DRILL = {
         "detail_enter_uv": 163,
         "enter_rate": 2.99,
         "zp_penetration": 16.271,
-        "ss_penetration": 3.5066
+        "ss_penetration": 3.5066,
+        "completion_rate": 12.96
       },
       "20260313": {
         "zp_imp": 16549,
@@ -1419,7 +1475,8 @@ const DRILL = {
         "detail_enter_uv": 71,
         "enter_rate": 3.23,
         "zp_penetration": 12.4291,
-        "ss_penetration": 1.9904
+        "ss_penetration": 1.9904,
+        "completion_rate": 15.35
       },
       "20260314": {
         "zp_imp": 14873,
@@ -1439,7 +1496,8 @@ const DRILL = {
         "detail_enter_uv": 41,
         "enter_rate": 2.7,
         "zp_penetration": 11.1917,
-        "ss_penetration": 1.4013
+        "ss_penetration": 1.4013,
+        "completion_rate": 14.39
       },
       "20260315": {
         "zp_imp": 13097,
@@ -1459,7 +1517,8 @@ const DRILL = {
         "detail_enter_uv": 42,
         "enter_rate": 3.15,
         "zp_penetration": 10.877,
-        "ss_penetration": 1.3649
+        "ss_penetration": 1.3649,
+        "completion_rate": 14.79
       },
       "20260316": {
         "zp_imp": 11701,
@@ -1479,7 +1538,8 @@ const DRILL = {
         "detail_enter_uv": 37,
         "enter_rate": 3.17,
         "zp_penetration": 11.3824,
-        "ss_penetration": 1.4026
+        "ss_penetration": 1.4026,
+        "completion_rate": 14.99
       },
       "20260317": {
         "zp_imp": 11677,
@@ -1499,7 +1559,8 @@ const DRILL = {
         "detail_enter_uv": 30,
         "enter_rate": 3.04,
         "zp_penetration": 11.2967,
-        "ss_penetration": 1.208
+        "ss_penetration": 1.208,
+        "completion_rate": 14.73
       },
       "20260318": {
         "zp_imp": 11203,
@@ -1519,7 +1580,8 @@ const DRILL = {
         "detail_enter_uv": 33,
         "enter_rate": 3.59,
         "zp_penetration": 10.5993,
-        "ss_penetration": 1.1028
+        "ss_penetration": 1.1028,
+        "completion_rate": 16.11
       },
       "20260319": {
         "zp_imp": 16481,
@@ -1539,7 +1601,8 @@ const DRILL = {
         "detail_enter_uv": 27,
         "enter_rate": 2.77,
         "zp_penetration": 14.1772,
-        "ss_penetration": 1.0962
+        "ss_penetration": 1.0962,
+        "completion_rate": 15.49
       },
       "20260320": {
         "zp_imp": 22193,
@@ -1559,7 +1622,8 @@ const DRILL = {
         "detail_enter_uv": 44,
         "enter_rate": 3.6,
         "zp_penetration": 18.1634,
-        "ss_penetration": 1.175
+        "ss_penetration": 1.175,
+        "completion_rate": 10.78
       },
       "20260321": {
         "zp_imp": 27419,
@@ -1579,7 +1643,8 @@ const DRILL = {
         "detail_enter_uv": 32,
         "enter_rate": 2.65,
         "zp_penetration": 19.8457,
-        "ss_penetration": 0.8423
+        "ss_penetration": 0.8423,
+        "completion_rate": 11.59
       },
       "20260322": {
         "zp_imp": 26622,
@@ -1599,7 +1664,8 @@ const DRILL = {
         "detail_enter_uv": 42,
         "enter_rate": 2.64,
         "zp_penetration": 18.94,
-        "ss_penetration": 1.0984
+        "ss_penetration": 1.0984,
+        "completion_rate": 14.87
       },
       "20260323": {
         "zp_imp": 30837,
@@ -1619,7 +1685,8 @@ const DRILL = {
         "detail_enter_uv": 78,
         "enter_rate": 2.63,
         "zp_penetration": 18.0658,
-        "ss_penetration": 1.4311
+        "ss_penetration": 1.4311,
+        "completion_rate": 15.79
       },
       "20260324": {
         "zp_imp": 43613,
@@ -1639,7 +1706,8 @@ const DRILL = {
         "detail_enter_uv": 141,
         "enter_rate": 2.74,
         "zp_penetration": 17.3493,
-        "ss_penetration": 1.4532
+        "ss_penetration": 1.4532,
+        "completion_rate": 17.77
       },
       "20260325": {
         "zp_imp": 50289,
@@ -1659,7 +1727,8 @@ const DRILL = {
         "detail_enter_uv": 280,
         "enter_rate": 4.21,
         "zp_penetration": 18.3496,
-        "ss_penetration": 1.6418
+        "ss_penetration": 1.6418,
+        "completion_rate": 22.15
       },
       "20260326": {
         "zp_imp": 50070,
@@ -1679,7 +1748,8 @@ const DRILL = {
         "detail_enter_uv": 274,
         "enter_rate": 4.82,
         "zp_penetration": 16.6065,
-        "ss_penetration": 1.2065
+        "ss_penetration": 1.2065,
+        "completion_rate": 23.09
       },
       "20260327": {
         "zp_imp": 52261,
@@ -1699,7 +1769,8 @@ const DRILL = {
         "detail_enter_uv": 129,
         "enter_rate": 2.34,
         "zp_penetration": 17.2497,
-        "ss_penetration": 1.1269
+        "ss_penetration": 1.1269,
+        "completion_rate": 17.54
       },
       "20260328": {
         "zp_imp": 50327,
@@ -1719,7 +1790,8 @@ const DRILL = {
         "detail_enter_uv": 217,
         "enter_rate": 3.51,
         "zp_penetration": 16.1622,
-        "ss_penetration": 1.1911
+        "ss_penetration": 1.1911,
+        "completion_rate": 18.33
       },
       "20260329": {
         "zp_imp": 42178,
@@ -1739,7 +1811,8 @@ const DRILL = {
         "detail_enter_uv": 267,
         "enter_rate": 2.61,
         "zp_penetration": 13.5737,
-        "ss_penetration": 1.8536
+        "ss_penetration": 1.8536,
+        "completion_rate": 20.63
       },
       "20260330": {
         "zp_imp": 44940,
@@ -1759,7 +1832,8 @@ const DRILL = {
         "detail_enter_uv": 182,
         "enter_rate": 2.17,
         "zp_penetration": 14.5399,
-        "ss_penetration": 1.4497
+        "ss_penetration": 1.4497,
+        "completion_rate": 20.03
       }
     }
   }
@@ -1809,13 +1883,15 @@ function makeDrillChart(domId, cid, title, barKey, barName, lineKey, lineName, l
 }
 
 function renderAllDrill(cid) {
-  // 找片 2图
+  // 找片 3图
   makeDrillChart('drillZpCtr', cid, '找片曝光渗透 × CTR', 'zp_penetration', '找片曝光渗透(%)', 'zp_ctr', 'CTR(%)', '#e74c3c', 'CTR(%)');
   makeDrillChart('drillZp30s', cid, '找片曝光渗透 × ≥30s率', 'zp_penetration', '找片曝光渗透(%)', 'play_30s_rate', '≥30s率(%)', '#ff9800', '≥30s率(%)');
-  // 刷刷 3图
+  makeDrillChart('drillZpComp', cid, '找片曝光渗透 × 完播率', 'zp_penetration', '找片曝光渗透(%)', 'completion_rate', '完播率(%)', '#9c27b0', '完播率(%)');
+  // 刷刷 4图
   makeDrillChart('drillSsEnter', cid, '刷刷曝光渗透 × 底层页进入率', 'ss_penetration', '刷刷曝光渗透(%)', 'enter_rate', '底层页进入率(%)', '#e74c3c', '进入率(%)');
   makeDrillChart('drillSsPdtm', cid, '刷刷曝光渗透 × 均播时长', 'ss_penetration', '刷刷曝光渗透(%)', 'avg_pdtm_sec', '均播时长(s)', '#4caf50', '秒(s)');
   makeDrillChart('drillSsConv', cid, '刷刷曝光渗透 × 底层页消费深度', 'ss_penetration', '刷刷曝光渗透(%)', 'conv_rate', '消费深度(%)', '#2196f3', '消费深度(%)');
+  makeDrillChart('drillSsComp', cid, '刷刷曝光渗透 × 完播率', 'ss_penetration', '刷刷曝光渗透(%)', 'completion_rate', '完播率(%)', '#9c27b0', '完播率(%)');
 }
 
 document.getElementById('drillCidSelect').addEventListener('change', e => renderAllDrill(e.target.value));
